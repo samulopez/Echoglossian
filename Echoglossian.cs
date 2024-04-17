@@ -9,17 +9,17 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using Dalamud.Game.Addon.Events;
+using System.Threading.Tasks;
+
+using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Command;
 using Dalamud.Game.Text.Sanitizer;
 using Dalamud.Interface.Internal;
 using Dalamud.IoC;
-using Dalamud.Logging;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;
-using ImGuiScene;
 using XivCommon;
 
 namespace Echoglossian
@@ -433,6 +433,21 @@ namespace Echoglossian
     private void Command(string command, string arguments)
     {
       this.config = true;
+    }
+
+    private void EgloAddonHandler()
+    {
+      AddonLifecycle.RegisterListener(AddonEvent.PreReceiveEvent, "RecommendList", this.UiRecommendListHandler);
+      AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "RecommendList", this.UiRecommendListHandlerAsync);
+      AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "AreaMap", this.UiAreaMapHandler);
+      AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "ScenarioTree", this.UiScenarioTreeHandler);
+      AddonLifecycle.RegisterListener(AddonEvent.PreUpdate, "Journal", this.UiJournalQuestHandler);
+      AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "Journal", this.UiJournalDetailHandler);
+      AddonLifecycle.RegisterListener(AddonEvent.PreRequestedUpdate, "JournalDetail", this.UiJournalDetailHandler);
+      AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
+      AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
+      AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "TalkSubtitle", this.UpdateUI);
+      AddonLifecycle.RegisterListener(AddonEvent.PostSetup, "TalkSubtitle", this.UpdateUI);
     }
   }
 }

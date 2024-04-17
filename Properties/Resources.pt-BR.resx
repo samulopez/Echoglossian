@@ -249,4 +249,7 @@
   <data name="ConfigTab8Name" xml:space="preserve">
     <value>Solução de problemas</value>
   </data>
+  <data name="TranslateJournalToggle" xml:space="preserve">
+    <value>Traduzir nome, descrição e objetivos da missão (WIP)</value>
+  </data>
 </root>

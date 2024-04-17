@@ -406,4 +406,7 @@
   <data name="ConfigTab9CheckboxClipboardTooltipText" xml:space="preserve">
     <value>This setting copies the last translation and source text to the clipboard (Works with Talk and BattleTalk)</value>
   </data>
+  <data name="TranslateJournalToggle" xml:space="preserve">
+    <value>Translate quest name, description and objectives (WIP)</value>
+  </data>
 </root>

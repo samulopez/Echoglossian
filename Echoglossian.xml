@@ -62,7 +62,9 @@
         </member>
         <member name="M:Echoglossian.DeepLTranslator.MyRegex">
             <remarks>
-            Pattern explanation:<br/>
+            Pattern:<br/>
+            <code>(?&lt;=[.!?])\\s+</code><br/>
+            Explanation:<br/>
             <code>
             ○ Zero-width positive lookbehind.<br/>
                 ○ Match a character in the set [!.?] right-to-left.<br/>
@@ -88,6 +90,18 @@
         <member name="M:Echoglossian.EFCoreSqlite.Migrations.EchoglossianDBupd.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:Echoglossian.EFCoreSqlite.Migrations.AddObjectivesToQuestPlate">
+            <inheritdoc />
+        </member>
+        <member name="M:Echoglossian.EFCoreSqlite.Migrations.AddObjectivesToQuestPlate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Echoglossian.EFCoreSqlite.Migrations.AddObjectivesToQuestPlate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Echoglossian.EFCoreSqlite.Migrations.AddObjectivesToQuestPlate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
         <member name="M:Echoglossian.EFCoreSqlite.Models.BattleTalkMessage.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.DateTime,System.Nullable{System.DateTime})">
             <summary>
             Initializes a new instance of the <see cref="T:Echoglossian.EFCoreSqlite.Models.BattleTalkMessage"/> class.
@@ -103,18 +117,18 @@
             <param name="createdDate"></param>
             <param name="updatedDate"></param>
         </member>
-        <member name="M:Echoglossian.EFCoreSqlite.Models.Journal.QuestPlate.#ctor(System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.DateTime,System.Nullable{System.DateTime})">
+        <member name="M:Echoglossian.EFCoreSqlite.Models.Journal.QuestPlate.#ctor(System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.DateTime,System.Nullable{System.DateTime})">
             <summary>
             Initializes a new instance of the <see cref="T:Echoglossian.EFCoreSqlite.Models.Journal.QuestPlate"/> class.
             </summary>
             <param name="questName"></param>
             <param name="originalQuestMessage"></param>
             <param name="originalLang"></param>
+            <param name="translatedQuestName"></param>
             <param name="translatedQuestMessage"></param>
+            <param name="questId"></param>
             <param name="translationLang"></param>
             <param name="translationEngine"></param>
-            <param name="questId"></param>
-            <param name="translatedQuestName"></param>
             <param name="createdDate"></param>
             <param name="updatedDate"></param>
         </member>
@@ -610,6 +624,11 @@
               Looks up a localized string similar to Translate in-game Error Toast Messages.
             </summary>
         </member>
+        <member name="P:Echoglossian.Properties.Resources.TranslateJournalToggle">
+            <summary>
+              Looks up a localized string similar to Translate quest name, description and objectives (WIP).
+            </summary>
+        </member>
         <member name="P:Echoglossian.Properties.Resources.TranslateNpcNamesToggle">
             <summary>
               Looks up a localized string similar to Translate NPCs names in dialogue boxes.
@@ -741,6 +760,12 @@
         </member>
         <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
             <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
+        </member>
+        <member name="M:System.Text.RegularExpressions.Generated.Utilities.IndexOfAnyWhiteSpace(System.ReadOnlySpan{System.Char})">
+            <summary>Finds the next index of any character that matches a whitespace character.</summary>
+        </member>
+        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiExceptWhiteSpace">
+            <summary>Supports searching for characters in or not in "\0\u0001\u0002\u0003\u0004\u0005\u0006\a\b\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f!\"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007f".</summary>
         </member>
     </members>
 </doc>

@@ -276,4 +276,7 @@
   <data name="ConfigTab8Name" xml:space="preserve">
     <value>Résolution des problèmes</value>
   </data>
+  <data name="TranslateJournalToggle" xml:space="preserve">
+    <value>Traduire le nom, la description et les objectifs de la quête (WIP)</value>
+  </data>
 </root>

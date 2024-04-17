@@ -805,6 +805,15 @@ namespace Echoglossian.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Translate quest name, description and objectives (WIP).
+        /// </summary>
+        public static string TranslateJournalToggle {
+            get {
+                return ResourceManager.GetString("TranslateJournalToggle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Translate NPCs names in dialogue boxes.
         /// </summary>
         public static string TranslateNpcNamesToggle {

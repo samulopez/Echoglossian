@@ -395,6 +395,10 @@
           <source>This setting copies the last translation and source text to the clipboard (Works with Talk and BattleTalk)</source>
           <target state="new">This setting copies the last translation and source text to the clipboard (Works with Talk and BattleTalk)</target>
         </trans-unit>
+        <trans-unit id="TranslateJournalToggle" translate="yes" xml:space="preserve">
+          <source>Translate quest name, description and objectives (WIP)</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Traducir el nombre, la descripción y los objetivos de la misión (WIP)</target>
+        </trans-unit>
       </group>
     </body>
   </file>
