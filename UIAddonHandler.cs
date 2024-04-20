@@ -103,25 +103,31 @@ namespace Echoglossian
         return;
       }
 
-      switch (args)
+      switch (args.Type)
       {
-        case AddonSetupArgs setupArgs:
-          this.Handleargs(setupArgs);
+        case AddonArgsType.Setup:
+          var setupArgs = args;
+          this.Handleargs((AddonSetupArgs)setupArgs);
           break;
-        case AddonUpdateArgs updateArgs:
-          this.HandleUpdateArgs(updateArgs);
+        case AddonArgsType.Update:
+          var updateArgs = args;
+          this.HandleUpdateArgs((AddonUpdateArgs)updateArgs);
           break;
-        case AddonDrawArgs drawArgs:
-          this.HandleDrawArgs(drawArgs);
+        case AddonArgsType.Draw:
+          var drawArgs = args;
+          this.HandleDrawArgs((AddonDrawArgs)drawArgs);
           break;
-        case AddonFinalizeArgs finalizeArgs:
-          this.HandleFinalizeArgs(finalizeArgs);
+        case AddonArgsType.Finalize:
+          var finalizeArgs = args;
+          this.HandleFinalizeArgs((AddonFinalizeArgs)finalizeArgs);
           break;
-        case AddonRequestedUpdateArgs requestedUpdateArgs:
-          this.HandleRequestedUpdateArgs(requestedUpdateArgs);
+        case AddonArgsType.RequestedUpdate:
+          var requestedUpdateArgs = args;
+          this.HandleRequestedUpdateArgs((AddonRequestedUpdateArgs)requestedUpdateArgs);
           break;
-        case AddonRefreshArgs refreshArgs:
-          this.HandleRefreshArgs(refreshArgs);
+        case AddonArgsType.Refresh:
+          var refreshArgs = args;
+          this.HandleRefreshArgs((AddonRefreshArgs)refreshArgs);
           break;
         default:
           Echoglossian.PluginLog.Error($"AddonArgs type not found: {args.GetType()}");
@@ -131,6 +137,12 @@ namespace Echoglossian
 
     private unsafe void Handleargs(AddonSetupArgs args)
     {
+      if (args == null)
+      {
+        Echoglossian.PluginLog.Error("AddonSetupArgs is null");
+        return;
+      }
+
       Echoglossian.PluginLog.Information($"Addonargs: {args.AtkValues}");
       this.translationSemaphore = new SemaphoreSlim(1, 1);
 
