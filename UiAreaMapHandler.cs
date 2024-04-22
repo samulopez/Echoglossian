@@ -37,7 +37,17 @@ namespace Echoglossian
 
       try
       {
+        if (setupAtkValues[142].Type != FFXIVClientStructs.FFXIV.Component.GUI.ValueType.String || setupAtkValues[142].String == null)
+        {
+          return;
+        }
+
         var questNameText = MemoryHelper.ReadSeStringAsString(out _, (nint)setupAtkValues[142].String);
+        if (questNameText == string.Empty)
+        {
+          return;
+        }
+
         QuestPlate questPlate = this.FormatQuestPlate(questNameText, string.Empty);
         QuestPlate foundQuestPlate = this.FindQuestPlateByName(questPlate);
         if (foundQuestPlate != null)

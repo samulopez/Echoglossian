@@ -38,6 +38,11 @@ namespace Echoglossian
 
       try
       {
+        if (setupAtkValues[7].Type != FFXIVClientStructs.FFXIV.Component.GUI.ValueType.String || setupAtkValues[0].String == null)
+        {
+          return;
+        }
+
         var questNameText = MemoryHelper.ReadSeStringAsString(out _, (nint)setupAtkValues[7].String);
         if (questNameText == null || questNameText.Length == 0)
         {
