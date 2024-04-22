@@ -51,6 +51,11 @@ namespace Echoglossian
           continue;
         }
 
+        if (todoList->UldManager.NodeList[i]->NodeID < 10)
+        {
+          continue;
+        }
+
         var component = todoList->UldManager.NodeList[i]->GetAsAtkComponentNode();
         for (var j = 0; j < component->Component->UldManager.NodeListCount; j++)
         {
@@ -130,6 +135,7 @@ namespace Echoglossian
           var translatedNameText = Translate(quest.Text);
           var translatedObjectiveText = Translate(objective.Text);
           PluginLog.Debug($"Name translated: {quest.Text} -> {translatedNameText}");
+          PluginLog.Debug($"Objective translated: {translatedObjectiveText}");
           QuestPlate translatedQuestPlate = new(
             quest.Text,
             string.Empty,
