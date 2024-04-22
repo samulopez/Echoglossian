@@ -99,7 +99,7 @@ namespace Echoglossian
         for (var i = 0; i < startingObjectiveIndex; i++)
         {
           var quest = textsToTranslate[i];
-          var objective = textsToTranslate[startingObjectiveIndex + i];
+          var objective = textsToTranslate[textsToTranslate.Count - 1 - i];
           if (this.translatedQuestNames.ContainsKey(quest.Text))
           {
             continue;
