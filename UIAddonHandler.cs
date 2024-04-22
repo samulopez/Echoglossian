@@ -143,34 +143,53 @@ namespace Echoglossian
         return;
       }
 
-      Echoglossian.PluginLog.Information($"Addonargs: {args.AtkValues}");
+
+      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleArgs: {args.AddonName}");
+      Echoglossian.PluginLog.Information($"Addonargs.AtkValues in HandleArgs: {args.AtkValues}");
+
       this.translationSemaphore = new SemaphoreSlim(1, 1);
+
+      if (args is not AddonSetupArgs setupArgs)
+      {
+        return;
+      }
 
       var setupAtkValues = (AtkValue*)args.AtkValues;
 
-      if (setupAtkValues[0].String != null)
+      if (setupAtkValues == null)
       {
-
-        // TODO: Figure out how to get the original text from the addon
-        // var originalText = Marshal.PtrToStringUTF8(new IntPtr(setupAtkValues[0].String));
+        return;
       }
-      else
+
+      try
       {
+        if (setupAtkValues[0].String != null)
+        {
 
-        var addonInfo = (AtkUnitBase*)args.Addon;
+          // TODO: Figure out how to get the original text from the addon
+          // var originalText = Marshal.PtrToStringUTF8(new IntPtr(setupAtkValues[0].String));
+        }
+        else
+        {
+          var addonInfo = (AtkUnitBase*)args.Addon;
 
-        Echoglossian.PluginLog.Information($"Addon Info: {addonInfo->ToString}");
+          Echoglossian.PluginLog.Information($"Addon Info: {addonInfo->ToString}");
 
 
 
-        var addonName = addonInfo->GetTextNodeById(4);
+          var addonName = addonInfo->GetTextNodeById(4);
 
-        var addonText = addonInfo->GetTextNodeById(6);
-        Echoglossian.PluginLog.Information($"Addon Details----------------: {addonName->NodeText} -> {addonText->NodeText}");
+          var addonText = addonInfo->GetTextNodeById(6);
+          Echoglossian.PluginLog.Information($"Addon Details----------------: {addonName->NodeText} -> {addonText->NodeText}");
 
-        var originalName = addonName->NodeText.ToString();
-        var originalAddonText = addonText->NodeText.ToString();
-        Echoglossian.PluginLog.Information($"AddonSetup-----------: {originalName} -> {originalAddonText}");
+          var originalName = addonName->NodeText.ToString();
+          var originalAddonText = addonText->NodeText.ToString();
+          Echoglossian.PluginLog.Information($"AddonSetup-----------: {originalName} -> {originalAddonText}");
+        }
+      }
+      catch (Exception e)
+      {
+        Echoglossian.PluginLog.Error($"Error in UIAddonHandler HandleArgs: {e}");
       }
 
       // throw new NotImplementedException();

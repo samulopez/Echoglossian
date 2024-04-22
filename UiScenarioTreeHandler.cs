@@ -30,6 +30,7 @@ namespace Echoglossian
       }
 
       var setupAtkValues = (AtkValue*)setupArgs.AtkValues;
+
       if (setupAtkValues == null)
       {
         return;
@@ -73,7 +74,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning("Exception: " + e.StackTrace);
+        PluginLog.Warning("Exception at UiScenarioTreeHandler: " + e.StackTrace);
       }
     }
   }

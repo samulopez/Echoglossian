@@ -70,6 +70,20 @@ namespace Echoglossian
             continue;
           }
 
+          if (IsValidTimeFormat(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr)) == true)
+          {
+            // skip text if time format
+#if DEBUG
+            Echoglossian.PluginLog.Debug($"Skipping time format translation");
+#endif
+            continue;
+          }
+
+          /*if (IsValidTimeFormat(originalStep.ToString()))
+          {
+            continue;
+          }*/
+
           textsToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j));
         }
       }

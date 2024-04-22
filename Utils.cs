@@ -9,7 +9,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-
+using System.Text.RegularExpressions;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Logging;
 using Echoglossian.Properties;
@@ -229,6 +229,21 @@ namespace Echoglossian
 
       target = newValue;
       return true;
+    }
+
+    private static bool IsValidTimeFormat(string time)
+    {
+      string pattern = @"^(\d{1,3}):(\d{2})$";
+      Match match = Regex.Match(time, pattern);
+
+      if (match.Success)
+      {
+        int minutes = int.Parse(match.Groups[1].Value);
+        int seconds = int.Parse(match.Groups[2].Value);
+        return minutes < 1000 && seconds < 60;
+      }
+
+      return false;
     }
   }
 }
