@@ -70,19 +70,14 @@ namespace Echoglossian
             continue;
           }
 
-          if (IsValidTimeFormat(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr)) == true)
+          if (IsValidTimeFormat(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr)))
           {
             // skip text if time format
 #if DEBUG
-            Echoglossian.PluginLog.Debug($"Skipping time format translation");
+            PluginLog.Debug($"Skipping time format translation");
 #endif
             continue;
           }
-
-          /*if (IsValidTimeFormat(originalStep.ToString()))
-          {
-            continue;
-          }*/
 
           textsToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j));
         }
@@ -105,12 +100,18 @@ namespace Echoglossian
         {
           var quest = textsToTranslate[i];
           var objective = textsToTranslate[startingObjectiveIndex + i];
+          if (this.translatedQuestNames.ContainsKey(quest.Text))
+          {
+            continue;
+          }
+
           QuestPlate questPlate = this.FormatQuestPlate(quest.Text, string.Empty);
           QuestPlate foundQuestPlate = this.FindQuestPlateByName(questPlate);
           if (foundQuestPlate != null)
           {
             PluginLog.Debug($"Name from database: {quest.Text} -> {foundQuestPlate.TranslatedQuestName}");
             todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(foundQuestPlate.TranslatedQuestName);
+            this.translatedQuestNames.TryAdd(foundQuestPlate.TranslatedQuestName, true);
 
             if (foundQuestPlate.Objectives.TryGetValue(objective.Text, out var storedObjectiveText))
             {
@@ -145,6 +146,7 @@ namespace Echoglossian
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
           todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(translatedNameText);
           todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedObjectiveText);
+          this.translatedQuestNames.TryAdd(translatedNameText, true);
         }
       }
       catch (Exception e)
