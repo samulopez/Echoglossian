@@ -34,11 +34,8 @@ namespace Echoglossian
       PluginLog.Debug($"Language: {ClientState.ClientLanguage.Humanize()}");
       PluginLog.Debug($"Translate _ToDoList");
 
-      // first half will be the quest names, second half will be the quest objectives
-      // quest names are in the database, quest objectives are in a local variable.
-      // We can't store objectives in the db because they change.
-      List<ToDoItem> textsToTranslate = [];
-
+      List<ToDoItem> questNamesToTranslate = [];
+      List<ToDoItem> objectivesToTranslate = [];
       for (var i = 0; i < todoList->UldManager.NodeListCount; i++)
       {
         if (!todoList->UldManager.NodeList[i]->IsVisible)
@@ -51,7 +48,10 @@ namespace Echoglossian
           continue;
         }
 
-        if (todoList->UldManager.NodeList[i]->NodeID < 10)
+        var nodeID = todoList->UldManager.NodeList[i]->NodeID;
+
+        // don't translate unneeded fate information
+        if (nodeID < 10)
         {
           continue;
         }
@@ -84,27 +84,59 @@ namespace Echoglossian
             continue;
           }
 
-          textsToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j));
+          if (nodeID > 60000)
+          {
+            questNamesToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j, nodeID));
+          }
+          else
+          {
+            objectivesToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j, nodeID));
+          }
         }
       }
 
-      if (textsToTranslate.Count == 0)
+      if (questNamesToTranslate.Count == 0)
       {
         return;
       }
 
-      this.TranslateTodoItems(textsToTranslate, todoList);
+      objectivesToTranslate.Reverse();
+
+      this.TranslateTodoItems(questNamesToTranslate, objectivesToTranslate, todoList);
     }
 
-    private unsafe void TranslateTodoItems(List<ToDoItem> textsToTranslate, AtkUnitBase* todoList)
+    private List<ToDoItem> GetQuestObjectives(uint currentObjectiveNode, int objectiveIndex, List<ToDoItem> objectivesToTranslate, List<ToDoItem> questObjectives)
+    {
+      var currentIndex = objectiveIndex + 1;
+      if (currentIndex >= objectivesToTranslate.Count)
+      {
+        return questObjectives;
+      }
+
+      var objective = objectivesToTranslate[currentIndex];
+
+      // objectives of the same quest use adjacent node ids
+      if (Math.Abs(currentObjectiveNode - objective.NodeID) > 1)
+      {
+        return questObjectives;
+      }
+
+      questObjectives.Add(objective);
+      return this.GetQuestObjectives(objective.NodeID, currentIndex, objectivesToTranslate, questObjectives);
+    }
+
+    private unsafe void TranslateTodoItems(List<ToDoItem> questNamesToTranslate, List<ToDoItem> objectivesToTranslate, AtkUnitBase* todoList)
     {
       try
       {
-        var startingObjectiveIndex = textsToTranslate.Count / 2;
-        for (var i = 0; i < startingObjectiveIndex; i++)
+        var objectiveIndex = 0;
+        foreach (var quest in questNamesToTranslate)
         {
-          var quest = textsToTranslate[i];
-          var objective = textsToTranslate[textsToTranslate.Count - 1 - i];
+          var currentObjective = objectivesToTranslate[objectiveIndex];
+          List<ToDoItem> objectives = [currentObjective];
+          objectives = this.GetQuestObjectives(currentObjective.NodeID, objectiveIndex, objectivesToTranslate, objectives);
+          objectiveIndex += objectives.Count;
+
           if (this.translatedQuestNames.ContainsKey(quest.Text))
           {
             continue;
@@ -118,24 +150,26 @@ namespace Echoglossian
             todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(foundQuestPlate.TranslatedQuestName);
             this.translatedQuestNames.TryAdd(foundQuestPlate.TranslatedQuestName, true);
 
-            if (foundQuestPlate.Objectives.TryGetValue(objective.Text, out var storedObjectiveText))
+            foreach (var objective in objectives)
             {
-              todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(storedObjectiveText);
-              continue;
+              if (foundQuestPlate.Objectives.TryGetValue(objective.Text, out var storedObjectiveText))
+              {
+                todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(storedObjectiveText);
+                continue;
+              }
+
+              var translatedQuestObjective = Translate(objective.Text);
+              foundQuestPlate.Objectives.Add(objective.Text, translatedQuestObjective);
+              string resultUpdate = this.UpdateQuestPlate(foundQuestPlate);
+              PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {resultUpdate}");
+              todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedQuestObjective);
             }
 
-            var translatedQuestObjective = Translate(objective.Text);
-            foundQuestPlate.Objectives.Add(objective.Text, translatedQuestObjective);
-            string resultUpdate = this.UpdateQuestPlate(foundQuestPlate);
-            PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {resultUpdate}");
-            todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedQuestObjective);
             continue;
           }
 
           var translatedNameText = Translate(quest.Text);
-          var translatedObjectiveText = Translate(objective.Text);
           PluginLog.Debug($"Name translated: {quest.Text} -> {translatedNameText}");
-          PluginLog.Debug($"Objective translated: {translatedObjectiveText}");
           QuestPlate translatedQuestPlate = new(
             quest.Text,
             string.Empty,
@@ -147,11 +181,19 @@ namespace Echoglossian
             this.configuration.ChosenTransEngine,
             DateTime.Now,
             DateTime.Now);
-          translatedQuestPlate.Objectives.Add(objective.Text, translatedObjectiveText);
+          todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(translatedNameText);
+
+          foreach (var objective in objectives)
+          {
+            var translatedObjectiveText = Translate(objective.Text);
+            PluginLog.Debug($"Objective translated: {translatedObjectiveText}");
+            translatedQuestPlate.Objectives.Add(objective.Text, translatedObjectiveText);
+            todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedObjectiveText);
+          }
+
           string result = this.InsertQuestPlate(translatedQuestPlate);
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
-          todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(translatedNameText);
-          todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedObjectiveText);
+
           this.translatedQuestNames.TryAdd(translatedNameText, true);
         }
       }
@@ -175,11 +217,14 @@ namespace Echoglossian
 
     public int IndexJ { get; set; }
 
-    public ToDoItem(string text, int indexI, int indexJ)
+    public uint NodeID { get; set; }
+
+    public ToDoItem(string text, int indexI, int indexJ, uint nodeID)
     {
       this.Text = text;
       this.IndexI = indexI;
       this.IndexJ = indexJ;
+      this.NodeID = nodeID;
     }
   }
 }
