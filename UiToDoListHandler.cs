@@ -36,6 +36,7 @@ namespace Echoglossian
 
       List<ToDoItem> questNamesToTranslate = [];
       List<ToDoItem> objectivesToTranslate = [];
+      List<ToDoItem> levelQuestObjectivesToTranslate = [];
       for (var i = 0; i < todoList->UldManager.NodeListCount; i++)
       {
         if (!todoList->UldManager.NodeList[i]->IsVisible)
@@ -51,7 +52,7 @@ namespace Echoglossian
         var nodeID = todoList->UldManager.NodeList[i]->NodeID;
 
         // don't translate unneeded fate information
-        if (nodeID < 10)
+        if (nodeID == 8 || nodeID == 9)
         {
           continue;
         }
@@ -69,6 +70,7 @@ namespace Echoglossian
             continue;
           }
 
+          var childrenNodeID = component->Component->UldManager.NodeList[j]->NodeID;
           var originalStep = component->Component->UldManager.NodeList[j]->GetAsAtkTextNode()->NodeText;
           if (originalStep.IsEmpty == 1)
           {
@@ -84,13 +86,26 @@ namespace Echoglossian
             continue;
           }
 
-          if (nodeID > 60000)
+          // don't translate unneeded levelquest information
+          if (nodeID == 4 && childrenNodeID == 8)
+          {
+            continue;
+          }
+
+          if (nodeID > 60000 || (nodeID == 4 && childrenNodeID == 3))
           {
             questNamesToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j, nodeID));
           }
           else
           {
-            objectivesToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j, nodeID));
+            if (nodeID == 4 || nodeID == 5)
+            {
+              levelQuestObjectivesToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j, nodeID));
+            }
+            else
+            {
+              objectivesToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j, nodeID));
+            }
           }
         }
       }
@@ -102,7 +117,7 @@ namespace Echoglossian
 
       objectivesToTranslate.Reverse();
 
-      this.TranslateTodoItems(questNamesToTranslate, objectivesToTranslate, todoList);
+      this.TranslateTodoItems(questNamesToTranslate, objectivesToTranslate, levelQuestObjectivesToTranslate, todoList);
     }
 
     private List<ToDoItem> GetQuestObjectives(uint currentObjectiveNode, int objectiveIndex, List<ToDoItem> objectivesToTranslate, List<ToDoItem> questObjectives)
@@ -125,17 +140,26 @@ namespace Echoglossian
       return this.GetQuestObjectives(objective.NodeID, currentIndex, objectivesToTranslate, questObjectives);
     }
 
-    private unsafe void TranslateTodoItems(List<ToDoItem> questNamesToTranslate, List<ToDoItem> objectivesToTranslate, AtkUnitBase* todoList)
+    private unsafe void TranslateTodoItems(List<ToDoItem> questNamesToTranslate, List<ToDoItem> objectivesToTranslate, List<ToDoItem> levelQuestObjectivesToTranslate, AtkUnitBase* todoList)
     {
       try
       {
         var objectiveIndex = 0;
         foreach (var quest in questNamesToTranslate)
         {
-          var currentObjective = objectivesToTranslate[objectiveIndex];
-          List<ToDoItem> objectives = [currentObjective];
-          objectives = this.GetQuestObjectives(currentObjective.NodeID, objectiveIndex, objectivesToTranslate, objectives);
+          List<ToDoItem> objectives = new();
+          if (objectiveIndex < objectivesToTranslate.Count)
+          {
+            var currentObjective = objectivesToTranslate[objectiveIndex];
+            objectives.Add(currentObjective);
+            objectives = this.GetQuestObjectives(currentObjective.NodeID, objectiveIndex, objectivesToTranslate, objectives);
+          }
+
           objectiveIndex += objectives.Count;
+          if (quest.NodeID == 4)
+          {
+            objectives.AddRange(levelQuestObjectivesToTranslate);
+          }
 
           if (this.translatedQuestNames.ContainsKey(quest.Text))
           {
@@ -154,6 +178,7 @@ namespace Echoglossian
             {
               if (foundQuestPlate.Objectives.TryGetValue(objective.Text, out var storedObjectiveText))
               {
+                PluginLog.Debug($"Objective from database: {objective.Text} {storedObjectiveText}");
                 todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(storedObjectiveText);
                 continue;
               }
