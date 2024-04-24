@@ -76,6 +76,8 @@ namespace Echoglossian
 
     public int ChosenTransEngine = 0;
 
+    public bool TranslateAlreadyTranslatedTexts = false;
+
     public Vector2 ImGuiWindowPosCorrection = new(0.0f, 0.0f);
 
     public Vector2 ImGuiToastWindowPosCorrection = new(0.0f, 0.0f);
@@ -99,6 +101,8 @@ namespace Echoglossian
     public bool CopyTranslationToClipboard = false;
 
     public string DeeplTranslatorApiKey = string.Empty;
+
+    public bool DeeplTranslatorUsingApiKey = false;
 
     public float FontScale = 1;
 

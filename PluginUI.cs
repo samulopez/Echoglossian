@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.Numerics;
 
 using Echoglossian.Properties;
-
 using ImGuiNET;
 
 namespace Echoglossian;
@@ -17,6 +16,12 @@ public partial class Echoglossian
 {
   // public string[] FontSizes = Array.ConvertAll(Enumerable.Range(4, 72).ToArray(), x => x.ToString());
   private List<string> LanguageList;
+
+  private List<string> enginesList = new()
+  {
+    "Google Translate",
+    "DeepL",
+  };
 
   private void EchoglossianConfigUi()
   {
@@ -421,13 +426,54 @@ public partial class Echoglossian
 
       if (ImGui.BeginTabItem(Resources.ConfigTab7Name))
       {
-        var transEngine = this.configuration.ChosenTransEngine;
+        ImGui.Checkbox(Resources.TranslateTextsAgain, ref this.configuration.TranslateAlreadyTranslatedTexts);
+
+        if (ImGui.Combo(Resources.TranslationEngineChoose, ref chosenTransEngine, this.enginesList.ToArray(), this.enginesList.ToArray().Length))
+        {
+          this.configuration.ChosenTransEngine = chosenTransEngine;
+        }
 
         ImGui.BeginGroup();
-        if (transEngine == 0)
+        switch (this.configuration.ChosenTransEngine)
         {
-          ImGui.TextWrapped(Resources.SettingsForGTransText);
-          ImGui.TextWrapped(Resources.TranslationEngineSettingsNotRequired);
+          case 0:
+            ImGui.TextWrapped(Resources.SettingsForGTransText);
+            ImGui.TextWrapped(Resources.TranslationEngineSettingsNotRequired);
+            this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
+            break;
+          case 1:
+            ImGui.TextWrapped(Resources.SettingsForDeepLTransText);
+            ImGui.Spacing();
+
+            var isDeeplTranslatorUsingApiKey = this.configuration.DeeplTranslatorUsingApiKey;
+            if (ImGui.Checkbox(Resources.DeepLTransAPIKey, ref isDeeplTranslatorUsingApiKey))
+            {
+              this.configuration.DeeplTranslatorUsingApiKey = isDeeplTranslatorUsingApiKey;
+              this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
+            }
+
+            if (this.configuration.DeeplTranslatorUsingApiKey)
+            {
+              if (ImGui.Button(Resources.DeepLTranslatorAPIKeyLink))
+              {
+                saveConfig = true;
+                Process.Start(new ProcessStartInfo
+                {
+                  FileName = "https://www.deepl.com/pro-api",
+                  UseShellExecute = true,
+                });
+                this.config = false;
+              }
+
+              ImGui.Spacing();
+
+              if (ImGui.InputText(Resources.DeeplTranslatorApiKey, ref this.configuration.DeeplTranslatorApiKey, 100))
+              {
+                this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
+              }
+            }
+
+            break;
         }
 
         ImGui.EndGroup();

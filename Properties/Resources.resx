@@ -409,4 +409,22 @@
   <data name="TranslateJournalToggle" xml:space="preserve">
     <value>Translate quest name, description and objectives (WIP)</value>
   </data>
+  <data name="DeeplTranslatorApiKey" xml:space="preserve">
+    <value>Add your DeepL API Key</value>
+  </data>
+  <data name="DeepLTranslatorAPIKeyLink" xml:space="preserve">
+    <value>Click here to create a DeepL API Key</value>
+  </data>
+  <data name="SettingsForDeepLTransText" xml:space="preserve">
+    <value>Optional settings for DeepL:</value>
+  </data>
+  <data name="TranslationEngineChoose" xml:space="preserve">
+    <value>Choose the translation engine</value>
+  </data>
+  <data name="DeepLTransAPIKey" xml:space="preserve">
+    <value>Use API Key (recommended)</value>
+  </data>
+  <data name="TranslateTextsAgain" xml:space="preserve">
+    <value>Translate again stored translated texts with the selected translation engine</value>
+  </data>
 </root>

@@ -62,26 +62,19 @@ namespace Echoglossian
     public bool FindTalkMessage(TalkMessage talkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindTalkOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindTalkOperationsErrorLog.txt", append: true);
-#endif
       try
       {
-#if DEBUG
-        PluginLog.Verbose(this.configDir);
-        logStream.WriteLineAsync($"Before Talk Messages table query: {talkMessage}");
-#endif
-
         IQueryable<TalkMessage> existingTalkMessage =
           context.TalkMessage.Where(t =>
             t.SenderName == talkMessage.SenderName &&
             t.OriginalTalkMessage == talkMessage.OriginalTalkMessage &&
             t.TranslationLang == talkMessage.TranslationLang);
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingTalkMessage = existingTalkMessage.Where(t => t.TranslationEngine == talkMessage.TranslationEngine);
+        }
+
         TalkMessage localFoundTalkMessage = existingTalkMessage.FirstOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After Talk Messages table query: {localFoundTalkMessage}");
-#endif
         if (existingTalkMessage.FirstOrDefault() == null ||
             localFoundTalkMessage?.OriginalTalkMessage != talkMessage.OriginalTalkMessage)
         {
@@ -94,20 +87,12 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return false;
       }
     }
 
     public bool FindToastMessage(ToastMessage toastMessage)
     {
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindToastOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindToastOperationsErrorLog.txt", append: true);
-
-#endif
       try
       {
         List<ToastMessage> cache = this.OtherToastsCache;
@@ -122,18 +107,18 @@ namespace Echoglossian
           }
         }
 
-#if DEBUG
-        logStream.WriteLineAsync($"Before Toast Messages table query: {toastMessage}");
-#endif
         IEnumerable<ToastMessage> existingToastMessage =
           cache.Where(t => t.OriginalToastMessage == toastMessage.OriginalToastMessage &&
                            t.TranslationLang == toastMessage.TranslationLang &&
                            t.ToastType == toastMessage.ToastType);
 
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingToastMessage = existingToastMessage.Where(t => t.TranslationEngine == toastMessage.TranslationEngine);
+        }
+
         ToastMessage localFoundToastMessage = existingToastMessage.SingleOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After Toast Messages table query: {localFoundToastMessage}");
-#endif
+
         if (localFoundToastMessage == null ||
             localFoundToastMessage.OriginalToastMessage != toastMessage.OriginalToastMessage)
         {
@@ -146,20 +131,12 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return false;
       }
     }
 
     public bool FindErrorToastMessage(ToastMessage toastMessage)
     {
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindToastOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindToastOperationsErrorLog.txt", append: true);
-
-#endif
       try
       {
         List<ToastMessage> cache = this.ErrorToastsCache;
@@ -173,19 +150,18 @@ namespace Echoglossian
             return false;
           }
         }
-
-#if DEBUG
-        logStream.WriteLineAsync($"Before Toast Messages table query: {toastMessage}");
-#endif
         IEnumerable<ToastMessage> existingToastMessage =
           cache.Where(t => t.OriginalToastMessage == toastMessage.OriginalToastMessage &&
                                           t.TranslationLang == toastMessage.TranslationLang &&
                                           t.ToastType == toastMessage.ToastType);
 
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingToastMessage = existingToastMessage.Where(t => t.TranslationEngine == toastMessage.TranslationEngine);
+        }
+
         ToastMessage localFoundToastMessage = existingToastMessage.SingleOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After Toast Messages table query: {localFoundToastMessage}");
-#endif
+
         if (localFoundToastMessage == null ||
             localFoundToastMessage.OriginalToastMessage != toastMessage.OriginalToastMessage)
         {
@@ -198,9 +174,6 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return false;
       }
     }
@@ -208,26 +181,20 @@ namespace Echoglossian
     public bool FindBattleTalkMessage(BattleTalkMessage battleTalkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindBattleTalkOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindBattleTalkOperationsErrorLog.txt", append: true);
-#endif
       try
       {
-#if DEBUG
-        logStream.WriteLineAsync($"Before BattleTalk Messages table query: {battleTalkMessage}");
-#endif
-
         IQueryable<BattleTalkMessage> existingBattleTalkMessage =
           context.BattleTalkMessage.Where(t =>
             t.SenderName == battleTalkMessage.SenderName &&
             t.OriginalBattleTalkMessage == battleTalkMessage.OriginalBattleTalkMessage &&
             t.TranslationLang == battleTalkMessage.TranslationLang);
 
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingBattleTalkMessage = existingBattleTalkMessage.Where(t => t.TranslationEngine == battleTalkMessage.TranslationEngine);
+        }
+
         BattleTalkMessage localFoundBattleTalkMessage = existingBattleTalkMessage.FirstOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After BattleTalk Messages table query: {localFoundBattleTalkMessage}");
-#endif
         if (existingBattleTalkMessage.FirstOrDefault() == null ||
             localFoundBattleTalkMessage?.OriginalBattleTalkMessage != battleTalkMessage.OriginalBattleTalkMessage)
         {
@@ -240,9 +207,6 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return false;
       }
     }
@@ -250,26 +214,20 @@ namespace Echoglossian
     public QuestPlate FindQuestPlate(QuestPlate questPlate)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindQuestPlateOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindQuestPlateOperationsErrorLog.txt", append: true);
-#endif
       try
       {
-#if DEBUG
-        logStream.WriteLineAsync($"Before QuestPlate table query: {questPlate}");
-#endif
-
         IQueryable<QuestPlate> existingQuestPlate =
           context.QuestPlate.Where(t =>
             t.QuestName == questPlate.QuestName &&
             t.OriginalQuestMessage == questPlate.OriginalQuestMessage &&
             t.TranslationLang == questPlate.TranslationLang);
 
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingQuestPlate = existingQuestPlate.Where(t => t.TranslationEngine == questPlate.TranslationEngine);
+        }
+
         QuestPlate localFoundQuestPlate = existingQuestPlate.FirstOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After QuestPlate table query: {localFoundQuestPlate}");
-#endif
         if (localFoundQuestPlate == null || localFoundQuestPlate.OriginalQuestMessage != questPlate.OriginalQuestMessage)
         {
           return null;
@@ -280,9 +238,6 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return null;
       }
     }
@@ -290,25 +245,20 @@ namespace Echoglossian
     public QuestPlate FindQuestPlateByName(QuestPlate questPlate)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindQuestPlateByNameOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindQuestPlateByNameOperationsErrorLog.txt", append: true);
-#endif
       try
       {
-#if DEBUG
-        logStream.WriteLineAsync($"Before QuestPlate table query: {questPlate}");
-#endif
-
         IQueryable<QuestPlate> existingQuestPlate =
           context.QuestPlate.Where(t =>
             t.QuestName == questPlate.QuestName &&
             t.TranslationLang == questPlate.TranslationLang);
 
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingQuestPlate = existingQuestPlate.Where(t => t.TranslationEngine == questPlate.TranslationEngine);
+        }
+
         QuestPlate localFoundQuestPlate = existingQuestPlate.FirstOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After QuestPlate table query: {localFoundQuestPlate}");
-#endif
+
         if (localFoundQuestPlate == null || localFoundQuestPlate.QuestName != questPlate.QuestName)
         {
           return null;
@@ -319,9 +269,6 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return null;
       }
     }

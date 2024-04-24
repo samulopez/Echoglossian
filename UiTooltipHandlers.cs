@@ -32,17 +32,11 @@ namespace Echoglossian
       string payloadText = payload.ToString();
 
       string desc = tooltipDescription.TextValue;
-      Task<string> status = TranslateAsync(desc);
+      Task<string> status = this.TranslateAsync(desc);
 
       PluginLog.Warning($"Tooltip desc: {desc}");
       PluginLog.Verbose($"Tooltip trans: {status.Result}");
 #endif
-    }
-
-    private static async Task<string> TranslateAsync(string text)
-    {
-      string translation = await Task.Run(() => Translate(text));
-      return translation;
     }
   }
 }

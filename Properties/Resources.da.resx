@@ -275,4 +275,22 @@
   <data name="TranslateJournalToggle" xml:space="preserve">
     <value>Oversæt opgavenavn, beskrivelse og mål (WIP)</value>
   </data>
+  <data name="DeeplTranslatorApiKey" xml:space="preserve">
+    <value>Tilføj din DeepL API-nøgle</value>
+  </data>
+  <data name="SettingsForDeepLTransText" xml:space="preserve">
+    <value>Valgfrie indstillinger for DeepL:</value>
+  </data>
+  <data name="DeepLTranslatorAPIKeyLink" xml:space="preserve">
+    <value>Klik her for at oprette en DeepL API-nøgle</value>
+  </data>
+  <data name="TranslationEngineChoose" xml:space="preserve">
+    <value>Vælg oversættelsesmotoren</value>
+  </data>
+  <data name="DeepLTransAPIKey" xml:space="preserve">
+    <value>Brug API-nøgle (anbefales)</value>
+  </data>
+  <data name="TranslateTextsAgain" xml:space="preserve">
+    <value>Oversæt igen gemte oversatte tekster med den valgte oversættelsesmotor</value>
+  </data>
 </root>

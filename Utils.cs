@@ -77,6 +77,9 @@ namespace Echoglossian
       this.configuration.UseImGuiForToasts = false;
       this.configuration.SwapTextsUsingImGui = false;
       this.configuration.ChosenTransEngine = 0;
+      this.configuration.TranslateAlreadyTranslatedTexts = false;
+      this.configuration.DeeplTranslatorApiKey = string.Empty;
+      this.configuration.DeeplTranslatorUsingApiKey = false;
       this.configuration.PluginVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
       this.configuration.Version = 5;
 
@@ -115,15 +118,15 @@ namespace Echoglossian
     [Flags]
     public enum TransEngines
     {
-      Google = 1 << 0, // Google Translator (free engine)
-      Deepl = 1 << 1, // DeepL Translator
-      Bing = 1 << 2, // Microsoft Bing Translator (free engine)
-      Yandex = 1 << 3, // Yandex Translator
-      GTranslate = 1 << 4, // Uses Google, Bing and Yandex (free engines)
-      Amazon = 1 << 5, // Amazon Translate
-      Azure = 1 << 6, // Microsoft Azure Translate
-      ChatGPT = 1 << 7, // Chat GPT
-      GoogleCloud = 1 << 8, // Google Cloud Translate
+      Google = 0, // Google Translator (free engine)
+      Deepl = 1, // DeepL Translator
+      Bing = 2, // Microsoft Bing Translator (free engine)
+      Yandex = 3, // Yandex Translator
+      GTranslate = 4, // Uses Google, Bing and Yandex (free engines)
+      Amazon = 5, // Amazon Translate
+      Azure = 6, // Microsoft Azure Translate
+      ChatGPT = 7, // Chat GPT
+      GoogleCloud = 8, // Google Cloud Translate
       All = Google | Deepl | Bing | Yandex | GTranslate | Amazon | Azure | ChatGPT | GoogleCloud,
     }
 
