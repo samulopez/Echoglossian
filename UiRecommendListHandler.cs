@@ -28,20 +28,26 @@ namespace Echoglossian
 
       try
       {
-        var questListNode = recommendList->GetNodeById(5)->GetAsAtkComponentNode()->Component;
-        for (var i = 0; i < questListNode->UldManager.NodeListCount; i++)
+        var questListNode = recommendList->GetNodeById(5);
+        if (questListNode == null || !questListNode->IsVisible)
         {
-          if (!questListNode->UldManager.NodeList[i]->IsVisible)
+          return;
+        }
+
+        var questListComponent = questListNode->GetAsAtkComponentNode()->Component;
+        for (var i = 0; i < questListComponent->UldManager.NodeListCount; i++)
+        {
+          if (!questListComponent->UldManager.NodeList[i]->IsVisible)
           {
             continue;
           }
 
-          if (questListNode->UldManager.NodeList[i]->Type == NodeType.Collision || questListNode->UldManager.NodeList[i]->Type == NodeType.Res)
+          if (questListComponent->UldManager.NodeList[i]->Type == NodeType.Collision || questListComponent->UldManager.NodeList[i]->Type == NodeType.Res)
           {
             continue;
           }
 
-          var questItemNode = questListNode->UldManager.NodeList[i]->GetAsAtkComponentNode();
+          var questItemNode = questListComponent->UldManager.NodeList[i]->GetAsAtkComponentNode();
           var questNameNode = questItemNode->Component->UldManager.SearchNodeById(5);
           if (questNameNode == null || !questNameNode->IsVisible || questNameNode->Type != NodeType.Text)
           {
