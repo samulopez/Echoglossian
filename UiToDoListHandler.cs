@@ -31,9 +31,6 @@ namespace Echoglossian
         return;
       }
 
-      PluginLog.Debug($"Language: {ClientState.ClientLanguage.Humanize()}");
-      PluginLog.Debug($"Translate _ToDoList");
-
       List<ToDoItem> questNamesToTranslate = [];
       List<ToDoItem> objectivesToTranslate = [];
       List<ToDoItem> levelQuestObjectivesToTranslate = [];
@@ -230,6 +227,7 @@ namespace Echoglossian
 
     private unsafe void UiToDoListHandler(AddonEvent type, AddonArgs args)
     {
+      PluginLog.Debug($"UiToDoListHandler AddonEvent: {type} {args.AddonName}");
       this.TranslateToDoList();
     }
   }
