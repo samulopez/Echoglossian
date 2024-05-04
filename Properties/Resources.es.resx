@@ -249,6 +249,30 @@
   <data name="ConfigTab8Name" xml:space="preserve">
     <value>Solución de problemas</value>
   </data>
+  <data name="PluginAssetsDownloadedText" xml:space="preserve">
+    <value>¡Activos de plugin descargados!</value>
+  </data>
+  <data name="PluginAssetsNotDownloadedText" xml:space="preserve">
+    <value>Si ve texto ilegible o caracteres no válidos en la ventana de traducción\nes un indicativo de que algunas fuentes de recursos del complemento pueden faltar o estar dañadas.\n\n Al hacer clic en el botón de abajo, se activa una comprobación de recursos y se vuelven a descargar.</value>
+  </data>
+  <data name="DownloadPluginAssetsButtonText" xml:space="preserve">
+    <value>Forzar la redescarga de los activos del plugin</value>
+  </data>
+  <data name="CurrentPluginAssetsStatus" xml:space="preserve">
+    <value>¿Se descargan los activos del plugin?</value>
+  </data>
+  <data name="ConfigTab9Name" xml:space="preserve">
+    <value>Ajustes varios</value>
+  </data>
+  <data name="ConfigTab9Text" xml:space="preserve">
+    <value>Opciones y configuraciones de varios complementos</value>
+  </data>
+  <data name="ConfigTab9CheckboxClipboardText" xml:space="preserve">
+    <value>Copie automáticamente la última traducción en el portapapeles del complemento</value>
+  </data>
+  <data name="ConfigTab9CheckboxClipboardTooltipText" xml:space="preserve">
+    <value>Esta configuración copia la última traducción y el texto de origen en el portapapeles (funciona con Talk y BattleTalk)</value>
+  </data>
   <data name="TranslateJournalToggle" xml:space="preserve">
     <value>Traducir el nombre, la descripción y los objetivos de la misión (WIP)</value>
   </data>

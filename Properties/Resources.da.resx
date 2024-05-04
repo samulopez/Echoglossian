@@ -12,9 +12,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="choice" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\choice.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="CloseButtonLabel" xml:space="preserve">
     <value>Luk</value>
   </data>
@@ -45,15 +42,8 @@
   <data name="ConfigTabAbout" xml:space="preserve">
     <value>Om Echoglossian</value>
   </data>
-  <data name="ConfigWindowTitle" xml:space="preserve">
-    <value>Ekkoglossisk konfiguration</value>
-    <comment>Config Window title bar</comment>
-  </data>
   <data name="ContribText" xml:space="preserve">
     <value>Støt os enten ved at bidrage til projektudviklingen, indsende problemer eller hjælpe os med en kop kaffe.</value>
-  </data>
-  <data name="cutscenechoice" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\cutscenechoice.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="DisclaimerText1" xml:space="preserve">
     <value>Dette plugin har til formål at løse et af de største problemer for publikum, der ikke taler hverken engelsk, tysk, fransk eller japansk: Forståelse af dialoger og andre elementer i game UI.</value>
@@ -77,9 +67,6 @@
     <value>Åbner vinduet Echoglossian config</value>
     <comment>Shown in plugin install window</comment>
   </data>
-  <data name="HoverTooltipIndicator" xml:space="preserve">
-    <value>(?)</value>
-  </data>
   <data name="ImguiAdjustmentsLabel" xml:space="preserve">
     <value>Juster de indstillinger, der er relateret til oversættelsesoverlejringen:</value>
   </data>
@@ -97,15 +84,6 @@
   </data>
   <data name="LanguageSelectLabelText" xml:space="preserve">
     <value>Sprog, der skal oversættes til</value>
-  </data>
-  <data name="logo" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\logo.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="minfilia" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\minfilia.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Echoglossian</value>
   </data>
   <data name="NEListText" xml:space="preserve">
     <value>Den ikke-udtømmende liste over spørgsmål og TODO'er er tilgængelig i linket nedenfor:</value>
@@ -156,9 +134,6 @@
   <data name="PatronButtonLabel" xml:space="preserve">
     <value>Køb lokinmodar en kop kaffe</value>
   </data>
-  <data name="pix" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pix.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="PixQrWindowLabel" xml:space="preserve">
     <value>PIX-qrcode</value>
   </data>
@@ -170,9 +145,6 @@
   </data>
   <data name="PluginInterfaceLanguageSelectorText" xml:space="preserve">
     <value>Config Vindue Sprog:</value>
-  </data>
-  <data name="prttws" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\images\prttws.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="QRCodeInstructionsText" xml:space="preserve">
     <value>Scan QR-koden for at sende mig en PIX - kun gyldig i Brasilien</value>
@@ -244,7 +216,7 @@
     <value>Afventer oversættelse...</value>
   </data>
   <data name="WhatToTranslateText" xml:space="preserve">
-    <value>Vælg, hvilken type tekst du vil oversætte</value>
+    <value>Vælg hvilken slags tekst du vil have oversat i den tilsvarende fane nedenfor!</value>
   </data>
   <data name="ResetConfigsButton" xml:space="preserve">
     <value>Nulstil indstillinger</value>
@@ -275,6 +247,30 @@
   </data>
   <data name="ConfigTab8Name" xml:space="preserve">
     <value>Fejlfinding</value>
+  </data>
+  <data name="PluginAssetsDownloadedText" xml:space="preserve">
+    <value>Plugin aktiver downloadet!</value>
+  </data>
+  <data name="PluginAssetsNotDownloadedText" xml:space="preserve">
+    <value>Hvis du ser forvansket tekst eller ugyldige tegn i oversættelsesvinduet\ndet er en indikation af, at nogle plugin-aktivskrifttyper muligvis mangler eller er beskadiget.\n\n Hvis du klikker på knappen nedenfor, udløser det en aktivkontrol og downloader dem igen.</value>
+  </data>
+  <data name="DownloadPluginAssetsButtonText" xml:space="preserve">
+    <value>Tving plugin-aktiver til at downloade plugin-aktiver igen</value>
+  </data>
+  <data name="CurrentPluginAssetsStatus" xml:space="preserve">
+    <value>Downloades plugin-aktiverne?</value>
+  </data>
+  <data name="ConfigTab9Name" xml:space="preserve">
+    <value>Diverse indstillinger</value>
+  </data>
+  <data name="ConfigTab9Text" xml:space="preserve">
+    <value>Diverse plugin-indstillinger og indstillinger</value>
+  </data>
+  <data name="ConfigTab9CheckboxClipboardText" xml:space="preserve">
+    <value>Kopier automatisk den sidste oversættelse til plugin-udklipsholderen</value>
+  </data>
+  <data name="ConfigTab9CheckboxClipboardTooltipText" xml:space="preserve">
+    <value>Denne indstilling kopierer den seneste oversættelse og kildetekst til Udklipsholder (Works with Talk og BattleTalk)</value>
   </data>
   <data name="TranslateJournalToggle" xml:space="preserve">
     <value>Oversæt opgavenavn, beskrivelse og mål (WIP)</value>

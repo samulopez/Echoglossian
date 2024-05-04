@@ -12,12 +12,11 @@
         </trans-unit>
         <trans-unit id="CloseButtonLabel" translate="yes" xml:space="preserve">
           <source>Close</source>
-          <target state="needs-review-translation" state-qualifier="tm-suggestion">Fermer</target>
+          <target state="translated" state-qualifier="tm-suggestion">Fermer</target>
         </trans-unit>
         <trans-unit id="ConfigTab0Name" translate="yes" xml:space="preserve">
           <source>Whats, Whens and Hows</source>
-          <target state="needs-review-translation" state-qualifier="tm-suggestion">Principal</target>
-          <note from="MultilingualUpdate" annotates="source" priority="2">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
+          <target state="translated" state-qualifier="tm-suggestion">Principal</target>
         </trans-unit>
         <trans-unit id="ConfigTab1Name" translate="yes" xml:space="preserve">
           <source>Talk settings</source>
@@ -365,39 +364,39 @@
         </trans-unit>
         <trans-unit id="PluginAssetsDownloadedText" translate="yes" xml:space="preserve">
           <source>Plugin assets downloaded!</source>
-          <target state="new">Plugin assets downloaded!</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Plugin assets téléchargés !</target>
         </trans-unit>
         <trans-unit id="PluginAssetsNotDownloadedText" translate="yes" xml:space="preserve">
           <source>If you see garbled text or invalid characters in the translation window\nit is an indicative that some plugin asset fonts may be missing or corrupted.\n\n Clicking the button below triggers an asset check and re-downloads them.</source>
-          <target state="new">If you see garbled text or invalid characters in the translation window\nit is an indicative that some plugin asset fonts may be missing or corrupted.\n\n Clicking the button below triggers an asset check and re-downloads them.</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Si vous voyez du texte brouillé ou des caractères non valides dans la fenêtre de traduction\ncela indique que certaines polices de ressources du plug-in sont peut-être manquantes ou corrompues.\n\n Cliquez sur le bouton ci-dessous pour déclencher une vérification des ressources et les télécharger à nouveau.</target>
         </trans-unit>
         <trans-unit id="DownloadPluginAssetsButtonText" translate="yes" xml:space="preserve">
           <source>Force re-download plugin assets</source>
-          <target state="new">Force re-download plugin assets</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Forcer le retéléchargement des ressources du plug-in</target>
         </trans-unit>
         <trans-unit id="CurrentPluginAssetsStatus" translate="yes" xml:space="preserve">
           <source>Are the plugin assets downloaded?</source>
-          <target state="new">Are the plugin assets downloaded?</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Les ressources du plugin sont-elles téléchargées ?</target>
         </trans-unit>
         <trans-unit id="ConfigTab9Name" translate="yes" xml:space="preserve">
           <source>Misc. Settings</source>
-          <target state="new">Misc. Settings</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Paramètres divers</target>
         </trans-unit>
         <trans-unit id="ConfigTab9Text" translate="yes" xml:space="preserve">
           <source>Miscellaneous Plugin Options and Settings</source>
-          <target state="new">Miscellaneous Plugin Options and Settings</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Divers Options et paramètres du plugin</target>
         </trans-unit>
         <trans-unit id="ConfigTab9CheckboxClipboardText" translate="yes" xml:space="preserve">
           <source>Automatically copy the last translation to the Plugin Clipboard</source>
-          <target state="new">Automatically copy the last translation to the Plugin Clipboard</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Copier automatiquement la dernière traduction dans le presse-papiers du plugin</target>
         </trans-unit>
         <trans-unit id="ConfigTab9CheckboxClipboardTooltipText" translate="yes" xml:space="preserve">
           <source>This setting copies the last translation and source text to the clipboard (Works with Talk and BattleTalk)</source>
-          <target state="new">This setting copies the last translation and source text to the clipboard (Works with Talk and BattleTalk)</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Ce paramètre copie la dernière traduction et le texte source dans le presse-papiers (fonctionne avec Talk et BattleTalk)</target>
         </trans-unit>
         <trans-unit id="TranslateJournalToggle" translate="yes" xml:space="preserve">
           <source>Translate quest name, description and objectives (WIP)</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Traduire le nom, la description et les objectifs de la quête (WIP)</target>
+          <target state="translated" state-qualifier="mt-suggestion">Traduire le nom, la description et les objectifs de la quête (WIP)</target>
         </trans-unit>
       </group>
     </body>

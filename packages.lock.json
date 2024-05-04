@@ -4,11 +4,11 @@
     "net8.0-windows7.0": {
       "AWSSDK.Translate": {
         "type": "Direct",
-        "requested": "[3.7.300.78, )",
-        "resolved": "3.7.300.78",
-        "contentHash": "b92oWz7Vi9/f7sU029fWU8gPbN90PK1NKBsdQYXqstAD04EAH3X++kg0c8VIQMAdvsn6jsQStqaMfbMxk13umw==",
+        "requested": "[3.7.300.86, )",
+        "resolved": "3.7.300.86",
+        "contentHash": "C2mQzJfJKW5ous63xSG3M7Mmsa3XANYZM8ocKyS64lhQNr4XLwTpz+ccXnDbAlhGQYKjmBDpHmFEYitxMHX7Ug==",
         "dependencies": {
-          "AWSSDK.Core": "[3.7.303.18, 4.0.0)"
+          "AWSSDK.Core": "[3.7.303.26, 4.0.0)"
         }
       },
       "DalamudPackager": {
@@ -35,9 +35,9 @@
       },
       "HtmlAgilityPack": {
         "type": "Direct",
-        "requested": "[1.11.60, )",
-        "resolved": "1.11.60",
-        "contentHash": "7Uzaf1Mxeuxne33LpTZfSsuRW4sRRX6FWMolOSxXcaAwcKvFevH2E+P6tb4dMWhdyUdBfi0N0yyPZ8hqodfEYg=="
+        "requested": "[1.11.61, )",
+        "resolved": "1.11.61",
+        "contentHash": "hqZASeEFHS9quHvfZSwaULoAJLWkOYVPiQjc3P9J4pQS8vSYzrP3bxe04Vm7vYYuxwbQhq9hCSVvZVLTyRaNaQ=="
       },
       "Lumina.Excel": {
         "type": "Direct",
@@ -136,8 +136,8 @@
       },
       "AWSSDK.Core": {
         "type": "Transitive",
-        "resolved": "3.7.303.18",
-        "contentHash": "AE3V6DzDeuzmjXmdsUfGfCiL+E12PPu4JvCFQxOnpyv7OOzAw9g6QMjkeag4Vy8ZC4Oa5c1KZVzZ9uGaI0HOSA=="
+        "resolved": "3.7.303.26",
+        "contentHash": "4QGTkTVTpVyUpnVWaB2W1ggWlnj4WvlsauXG0m6H0cg91nvw+K6l2N5V6dBxP5wxZReASksj8NDrBpJtCE7VQQ=="
       },
       "Humanizer.Core": {
         "type": "Transitive",

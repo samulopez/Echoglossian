@@ -276,6 +276,30 @@
   <data name="ConfigTab8Name" xml:space="preserve">
     <value>Résolution des problèmes</value>
   </data>
+  <data name="PluginAssetsDownloadedText" xml:space="preserve">
+    <value>Plugin assets téléchargés !</value>
+  </data>
+  <data name="PluginAssetsNotDownloadedText" xml:space="preserve">
+    <value>Si vous voyez du texte brouillé ou des caractères non valides dans la fenêtre de traduction\ncela indique que certaines polices de ressources du plug-in sont peut-être manquantes ou corrompues.\n\n Cliquez sur le bouton ci-dessous pour déclencher une vérification des ressources et les télécharger à nouveau.</value>
+  </data>
+  <data name="DownloadPluginAssetsButtonText" xml:space="preserve">
+    <value>Forcer le retéléchargement des ressources du plug-in</value>
+  </data>
+  <data name="CurrentPluginAssetsStatus" xml:space="preserve">
+    <value>Les ressources du plugin sont-elles téléchargées ?</value>
+  </data>
+  <data name="ConfigTab9Name" xml:space="preserve">
+    <value>Paramètres divers</value>
+  </data>
+  <data name="ConfigTab9Text" xml:space="preserve">
+    <value>Divers Options et paramètres du plugin</value>
+  </data>
+  <data name="ConfigTab9CheckboxClipboardText" xml:space="preserve">
+    <value>Copier automatiquement la dernière traduction dans le presse-papiers du plugin</value>
+  </data>
+  <data name="ConfigTab9CheckboxClipboardTooltipText" xml:space="preserve">
+    <value>Ce paramètre copie la dernière traduction et le texte source dans le presse-papiers (fonctionne avec Talk et BattleTalk)</value>
+  </data>
   <data name="TranslateJournalToggle" xml:space="preserve">
     <value>Traduire le nom, la description et les objectifs de la quête (WIP)</value>
   </data>

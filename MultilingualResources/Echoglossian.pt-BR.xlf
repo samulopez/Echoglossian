@@ -355,43 +355,43 @@
         </trans-unit>
         <trans-unit id="ConfigTab8Name" translate="yes" xml:space="preserve">
           <source>Troubleshooting</source>
-          <target state="needs-review-translation" state-qualifier="tm-suggestion">Solução de problemas</target>
+          <target state="translated" state-qualifier="tm-suggestion">Solução de problemas</target>
         </trans-unit>
         <trans-unit id="PluginAssetsDownloadedText" translate="yes" xml:space="preserve">
           <source>Plugin assets downloaded!</source>
-          <target state="new">Plugin assets downloaded!</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Ativos de plug-in baixados!</target>
         </trans-unit>
         <trans-unit id="PluginAssetsNotDownloadedText" translate="yes" xml:space="preserve">
           <source>If you see garbled text or invalid characters in the translation window\nit is an indicative that some plugin asset fonts may be missing or corrupted.\n\n Clicking the button below triggers an asset check and re-downloads them.</source>
-          <target state="new">If you see garbled text or invalid characters in the translation window\nit is an indicative that some plugin asset fonts may be missing or corrupted.\n\n Clicking the button below triggers an asset check and re-downloads them.</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Se você vir texto distorcido ou caracteres inválidos na janela de tradução\né um indicativo de que algumas fontes de ativos de plug-in podem estar ausentes ou corrompidas.\n\n Clicar no botão abaixo aciona uma verificação de ativos e os baixa novamente.</target>
         </trans-unit>
         <trans-unit id="DownloadPluginAssetsButtonText" translate="yes" xml:space="preserve">
           <source>Force re-download plugin assets</source>
-          <target state="new">Force re-download plugin assets</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Forçar o redownload de ativos de plug-in</target>
         </trans-unit>
         <trans-unit id="CurrentPluginAssetsStatus" translate="yes" xml:space="preserve">
           <source>Are the plugin assets downloaded?</source>
-          <target state="new">Are the plugin assets downloaded?</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Os ativos do plugin são baixados?</target>
         </trans-unit>
         <trans-unit id="ConfigTab9Name" translate="yes" xml:space="preserve">
           <source>Misc. Settings</source>
-          <target state="new">Misc. Settings</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Configurações diversas</target>
         </trans-unit>
         <trans-unit id="ConfigTab9Text" translate="yes" xml:space="preserve">
           <source>Miscellaneous Plugin Options and Settings</source>
-          <target state="new">Miscellaneous Plugin Options and Settings</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Opções e configurações de plug-ins diversos</target>
         </trans-unit>
         <trans-unit id="ConfigTab9CheckboxClipboardText" translate="yes" xml:space="preserve">
           <source>Automatically copy the last translation to the Plugin Clipboard</source>
-          <target state="new">Automatically copy the last translation to the Plugin Clipboard</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Copie automaticamente a última tradução para a Área de Transferência do Plugin</target>
         </trans-unit>
         <trans-unit id="ConfigTab9CheckboxClipboardTooltipText" translate="yes" xml:space="preserve">
           <source>This setting copies the last translation and source text to the clipboard (Works with Talk and BattleTalk)</source>
-          <target state="new">This setting copies the last translation and source text to the clipboard (Works with Talk and BattleTalk)</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Esta configuração copia a última tradução e o texto de origem para a área de transferência (Funciona com Talk e BattleTalk)</target>
         </trans-unit>
         <trans-unit id="TranslateJournalToggle" translate="yes" xml:space="preserve">
           <source>Translate quest name, description and objectives (WIP)</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Traduzir nome, descrição e objetivos da missão (WIP)</target>
+          <target state="translated" state-qualifier="mt-suggestion">Traduzir nome, descrição e objetivos da missão (WIP)</target>
         </trans-unit>
       </group>
     </body>
