@@ -28,8 +28,6 @@ namespace Echoglossian
 
     public BattleTalkMessage FoundBattleTalkMessage { get; set; }
 
-    public QuestPlate FoundQuestPlate { get; set; }
-
     public async void CreateOrUseDb()
     {
       using (EchoglossianDbContext context = new EchoglossianDbContext(this.configDir))
@@ -249,6 +247,85 @@ namespace Echoglossian
       }
     }
 
+    public QuestPlate FindQuestPlate(QuestPlate questPlate)
+    {
+      using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
+#if DEBUG
+      using StreamWriter logStream = new($"{this.configDir}DbFindQuestPlateOperationsLog.txt", append: true);
+      using StreamWriter logStream2 = new($"{this.configDir}DbFindQuestPlateOperationsErrorLog.txt", append: true);
+#endif
+      try
+      {
+#if DEBUG
+        logStream.WriteLineAsync($"Before QuestPlate table query: {questPlate}");
+#endif
+
+        IQueryable<QuestPlate> existingQuestPlate =
+          context.QuestPlate.Where(t =>
+            t.QuestName == questPlate.QuestName &&
+            t.OriginalQuestMessage == questPlate.OriginalQuestMessage &&
+            t.TranslationLang == questPlate.TranslationLang);
+
+        QuestPlate localFoundQuestPlate = existingQuestPlate.FirstOrDefault();
+#if DEBUG
+        logStream.WriteLineAsync($"After QuestPlate table query: {localFoundQuestPlate}");
+#endif
+        if (localFoundQuestPlate == null || localFoundQuestPlate.OriginalQuestMessage != questPlate.OriginalQuestMessage)
+        {
+          return null;
+        }
+
+        localFoundQuestPlate.UpdateObjectivesFromText();
+        return localFoundQuestPlate;
+      }
+      catch (Exception e)
+      {
+#if DEBUG
+        logStream2.WriteLineAsync($"Query operation error: {e}");
+#endif
+        return null;
+      }
+    }
+
+    public QuestPlate FindQuestPlateByName(QuestPlate questPlate)
+    {
+      using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
+#if DEBUG
+      using StreamWriter logStream = new($"{this.configDir}DbFindQuestPlateByNameOperationsLog.txt", append: true);
+      using StreamWriter logStream2 = new($"{this.configDir}DbFindQuestPlateByNameOperationsErrorLog.txt", append: true);
+#endif
+      try
+      {
+#if DEBUG
+        logStream.WriteLineAsync($"Before QuestPlate table query: {questPlate}");
+#endif
+
+        IQueryable<QuestPlate> existingQuestPlate =
+          context.QuestPlate.Where(t =>
+            t.QuestName == questPlate.QuestName &&
+            t.TranslationLang == questPlate.TranslationLang);
+
+        QuestPlate localFoundQuestPlate = existingQuestPlate.FirstOrDefault();
+#if DEBUG
+        logStream.WriteLineAsync($"After QuestPlate table query: {localFoundQuestPlate}");
+#endif
+        if (localFoundQuestPlate == null || localFoundQuestPlate.QuestName != questPlate.QuestName)
+        {
+          return null;
+        }
+
+        localFoundQuestPlate.UpdateObjectivesFromText();
+        return localFoundQuestPlate;
+      }
+      catch (Exception e)
+      {
+#if DEBUG
+        logStream2.WriteLineAsync($"Query operation error: {e}");
+#endif
+        return null;
+      }
+    }
+
     public string InsertTalkData(TalkMessage talkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
@@ -440,6 +517,66 @@ namespace Echoglossian
         this.LoadAllOtherToasts();
 
         return "Data inserted to ToastMessages table.";
+      }
+      catch (Exception e)
+      {
+        return $"ErrorSavingData: {e}";
+      }
+    }
+
+    public string InsertQuestPlate(QuestPlate questPlate)
+    {
+      using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
+#if DEBUG
+      using StreamWriter logStream = new($"{this.configDir}DbInsertQuestPlateOperationsLog.txt", append: true);
+#endif
+      try
+      {
+        questPlate.UpdateObjectiveAsText();
+        context.QuestPlate.Attach(questPlate);
+#if DEBUG
+        logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");
+#endif
+        if (this.configuration.CopyTranslationToClipboard)
+        {
+          ImGui.SetClipboardText(questPlate.ToString());
+        }
+
+        context.SaveChangesAsync();
+#if DEBUG
+        logStream.WriteLineAsync($"After 'SaveChanges': {context.QuestPlate.Local}");
+#endif
+        return "Data inserted to QuestPlate table.";
+      }
+      catch (Exception e)
+      {
+        return $"ErrorSavingData: {e}";
+      }
+    }
+
+    public string UpdateQuestPlate(QuestPlate questPlate)
+    {
+      using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
+#if DEBUG
+      using StreamWriter logStream = new($"{this.configDir}DbUpdateQuestPlateOperationsLog.txt", append: true);
+#endif
+      try
+      {
+        questPlate.UpdateObjectiveAsText();
+        context.QuestPlate.Update(questPlate);
+#if DEBUG
+        logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");
+#endif
+        if (this.configuration.CopyTranslationToClipboard)
+        {
+          ImGui.SetClipboardText(questPlate.ToString());
+        }
+
+        context.SaveChangesAsync();
+#if DEBUG
+        logStream.WriteLineAsync($"After 'SaveChanges': {context.QuestPlate.Local}");
+#endif
+        return "Data updated on QuestPlate table.";
       }
       catch (Exception e)
       {

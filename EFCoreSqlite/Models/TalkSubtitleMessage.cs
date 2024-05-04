@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Echoglossian.EFCoreSqlite.Models
 {
-  [Table("TalkSubtitleMessages")]
+  [Table("talksubtitlemessages")]
   public class TalkSubtitleMessage
   {
     [Key]

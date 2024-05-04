@@ -1,4 +1,4 @@
-﻿// <copyright file="UiTalkHandler.cs" company="lokinmodar">
+﻿// <copyright file="UiTalkSubtitleHandler.cs" company="lokinmodar">
 // Copyright (c) lokinmodar. All rights reserved.
 // Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
 // </copyright>
@@ -7,30 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
-using Dalamud.Interface.Windowing;
-using Dalamud.Plugin.Services;
-
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ImGuiNET;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Echoglossian
 {
   public partial class Echoglossian
   {
-
-
     private Dictionary<string, string> translations = new Dictionary<string, string>();
-
-    public void EgloAddonHandler()
-    {
-      AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "TalkSubtitle", this.UpdateUI);
-      AddonLifecycle.RegisterListener(AddonEvent.PostSetup, "TalkSubtitle", this.UpdateUI);
-      /* AddonLifecycle.RegisterListener(AddonEvent.PreRequestedUpdate, "TalkSubtitle", this.UpdateUI);*/
-    }
 
     private unsafe void UpdateUI(AddonEvent type, AddonArgs args)
     {
@@ -127,19 +112,19 @@ namespace Echoglossian
     }
 
     /*PluginLog.Verbose($"AddonEvent: {type}");
-var addon = (AtkUnitBase*)args.Addon;
+  var addon = (AtkUnitBase*)args.Addon;
 
-// PluginLog.Verbose($"Addon: {addon->ToString}");
+  // PluginLog.Verbose($"Addon: {addon->ToString}");
 
-var targetNode = addon->GetNodeById(2);
+  var targetNode = addon->GetNodeById(2);
 
-// PluginLog.Verbose($"targetNode: {targetNode->ToString}");
+  // PluginLog.Verbose($"targetNode: {targetNode->ToString}");
 
-targetNode->NodeFlags |= NodeFlags.EmitsEvents | NodeFlags.Enabled;
+  targetNode->NodeFlags |= NodeFlags.EmitsEvents | NodeFlags.Enabled;
 
-this.TalkSubtitleHandler((IntPtr)addon, (IntPtr)targetNode);
+  this.TalkSubtitleHandler((IntPtr)addon, (IntPtr)targetNode);
 
-*//*EventManager.AddEvent((nint)addon, (nint)targetNode, AddonEventType., this.TalkSubtitleHandler);*/
+  *//*EventManager.AddEvent((nint)addon, (nint)targetNode, AddonEventType., this.TalkSubtitleHandler);*/
 
     /*private unsafe void TalkSubtitleHandler(IntPtr addon, IntPtr node)
     {
@@ -214,9 +199,9 @@ this.TalkSubtitleHandler((IntPtr)addon, (IntPtr)targetNode);
         originalText = text.StringPtr == null || text.BufUsed == 0
           ? string.Empty
           : Marshal.PtrToStringUTF8(new IntPtr(text.StringPtr));
-#if DEBUG
+  #if DEBUG
         PluginLog.Verbose($"talkSubtitleText: {originalText}");
-#endif
+  #endif
       }
   }
     catch (Exception e)

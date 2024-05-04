@@ -6,6 +6,8 @@
 using System;
 
 using Echoglossian.EFCoreSqlite.Models;
+using Echoglossian.EFCoreSqlite.Models.Journal;
+using Humanizer;
 
 namespace Echoglossian
 {
@@ -26,6 +28,12 @@ namespace Echoglossian
     public ToastMessage FormatToastMessage(string type, string text)
     {
       return new ToastMessage(type, text, LangIdentify(text), string.Empty,
+        this.LanguagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
+    }
+
+    public QuestPlate FormatQuestPlate(string questName, string questMessage)
+    {
+      return new QuestPlate(questName, questMessage, ClientState.ClientLanguage.Humanize(), string.Empty, string.Empty, string.Empty,
         this.LanguagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
     }
   }

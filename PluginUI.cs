@@ -390,11 +390,16 @@ public partial class Echoglossian
         ImGui.EndTabItem();
       }
 
-      if (ImGui.BeginTabItem(
-        Resources.ConfigTab4Name,
-        ref this.configuration.TranslateJournal))
+      if (ImGui.BeginTabItem(Resources.ConfigTab4Name))
       {
-        ImGui.Text("This is the Cucumber tab!\nblah blah blah blah blah");
+        if (this.configuration.Translate)
+        {
+          /* - Journal - */
+          saveConfig |= ImGui.Checkbox(
+            Resources.TranslateJournalToggle,
+            ref this.configuration.TranslateJournal);
+        }
+
         ImGui.EndTabItem();
       }
 
