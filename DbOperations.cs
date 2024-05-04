@@ -275,7 +275,7 @@ namespace Echoglossian
           return null;
         }
 
-        localFoundQuestPlate.UpdateObjectivesFromText();
+        localFoundQuestPlate.UpdateFieldsFromText();
         return localFoundQuestPlate;
       }
       catch (Exception e)
@@ -314,7 +314,7 @@ namespace Echoglossian
           return null;
         }
 
-        localFoundQuestPlate.UpdateObjectivesFromText();
+        localFoundQuestPlate.UpdateFieldsFromText();
         return localFoundQuestPlate;
       }
       catch (Exception e)
@@ -532,7 +532,7 @@ namespace Echoglossian
 #endif
       try
       {
-        questPlate.UpdateObjectiveAsText();
+        questPlate.UpdateFieldsAsText();
         context.QuestPlate.Attach(questPlate);
 #if DEBUG
         logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");
@@ -562,7 +562,7 @@ namespace Echoglossian
 #endif
       try
       {
-        questPlate.UpdateObjectiveAsText();
+        questPlate.UpdateFieldsAsText();
         context.QuestPlate.Update(questPlate);
 #if DEBUG
         logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");

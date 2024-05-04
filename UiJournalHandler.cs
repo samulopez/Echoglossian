@@ -17,9 +17,180 @@ namespace Echoglossian
 {
   public partial class Echoglossian
   {
-
     // used to be sure we don't translate the same quest name twice
     private readonly Dictionary<string, bool> translatedQuestNames = new();
+
+    private unsafe List<SummaryQuest> TranslateSummaries(
+      AtkComponentBase* journalBox,
+      QuestPlate foundQuestPlate,
+      string summaryText)
+    {
+      List<SummaryQuest> summaries = new();
+      if (summaryText == string.Empty)
+      {
+        return summaries;
+      }
+
+      for (var i = 0; i < journalBox->UldManager.NodeListCount; i++)
+      {
+        if (journalBox->UldManager.NodeList[i]->NodeID < 480700 || journalBox->UldManager.NodeList[i]->NodeID > 480750)
+        {
+          continue;
+        }
+
+        if (!journalBox->UldManager.NodeList[i]->IsVisible)
+        {
+          continue;
+        }
+
+        var summaryItemNode = journalBox->UldManager.NodeList[i]->GetAsAtkComponentNode();
+        var summaryNode = summaryItemNode->Component->UldManager.SearchNodeById(2);
+        if (summaryNode == null || summaryNode->Type != NodeType.Text || !summaryNode->IsVisible)
+        {
+          continue;
+        }
+
+        var summaryTextNode = summaryNode->GetAsAtkTextNode();
+        if (summaryTextNode->NodeText.IsEmpty == 1)
+        {
+          continue;
+        }
+
+        var originalText = MemoryHelper.ReadSeStringAsString(out _, (nint)summaryTextNode->NodeText.StringPtr);
+        if (foundQuestPlate != null && foundQuestPlate.Summaries.TryGetValue(originalText, out var storedSummaryText))
+        {
+          summaries.Add(new(originalText, storedSummaryText, summaryTextNode, false));
+          continue;
+        }
+
+        var translatedText = Translate(originalText);
+        summaries.Add(new(originalText, translatedText, summaryTextNode, true));
+      }
+
+      return summaries;
+    }
+
+    private unsafe void TranslateQuestOnJournalBox(
+      AtkComponentBase* journalBox,
+      QuestPlate foundQuestPlate,
+      string questName,
+      string questMessage,
+      string objectiveText,
+      string summaryText,
+      AtkTextNode* questNameNode,
+      AtkTextNode* descriptionNode,
+      AtkTextNode* objectiveNode,
+      AtkTextNode* summaryNode
+      )
+    {
+      string translatedQuestName;
+      string translatedQuestMessage;
+      string translatedQuestObjective;
+      string translatedQuestSummary = string.Empty;
+      List<SummaryQuest> summaries;
+
+      if (foundQuestPlate != null)
+      {
+        translatedQuestName = foundQuestPlate.TranslatedQuestName;
+        translatedQuestMessage = foundQuestPlate.TranslatedQuestMessage;
+        var shouldUpdateQuest = false;
+
+        if (foundQuestPlate.Objectives.TryGetValue(objectiveText, out var storedObjectiveText))
+        {
+          translatedQuestObjective = storedObjectiveText;
+        }
+        else
+        {
+          translatedQuestObjective = Translate(objectiveText);
+          foundQuestPlate.Objectives.Add(objectiveText, translatedQuestObjective);
+          shouldUpdateQuest = true;
+        }
+
+        if (summaryText != string.Empty)
+        {
+          if (foundQuestPlate.Summaries.TryGetValue(summaryText, out var storedSummaryText))
+          {
+            translatedQuestSummary = storedSummaryText;
+          }
+          else
+          {
+            translatedQuestSummary = Translate(summaryText);
+            foundQuestPlate.Summaries.Add(summaryText, translatedQuestSummary);
+            shouldUpdateQuest = true;
+          }
+        }
+
+        summaries = this.TranslateSummaries(journalBox, foundQuestPlate, summaryText);
+        foreach (var summary in summaries)
+        {
+          if (summary.IsTranslated)
+          {
+            foundQuestPlate.Summaries.Add(summary.OriginalText, summary.TranslatedText);
+            shouldUpdateQuest = true;
+          }
+        }
+
+        if (shouldUpdateQuest)
+        {
+          string result = this.UpdateQuestPlate(foundQuestPlate);
+          PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {result}");
+        }
+
+        PluginLog.Debug($"From database - Name: {foundQuestPlate.TranslatedQuestName}, Message: {foundQuestPlate.TranslatedQuestMessage}");
+      }
+      else
+      {
+        translatedQuestName = Translate(questName);
+        translatedQuestMessage = Translate(questMessage);
+        translatedQuestObjective = Translate(objectiveText);
+
+        QuestPlate translatedQuestPlate = new(
+          questName,
+          questMessage,
+          ClientState.ClientLanguage.Humanize(),
+          translatedQuestName,
+          translatedQuestMessage,
+          string.Empty,
+          langDict[languageInt].Code,
+          this.configuration.ChosenTransEngine,
+          DateTime.Now,
+          DateTime.Now);
+
+        if (summaryText != string.Empty)
+        {
+          translatedQuestSummary = Translate(summaryText);
+          translatedQuestPlate.Summaries.Add(summaryText, translatedQuestSummary);
+        }
+
+        summaries = this.TranslateSummaries(journalBox, foundQuestPlate, summaryText);
+        foreach (var summary in summaries)
+        {
+          translatedQuestPlate.Summaries.Add(summary.OriginalText, summary.TranslatedText);
+        }
+
+        translatedQuestPlate.Objectives.Add(objectiveText, translatedQuestObjective);
+        string result = this.InsertQuestPlate(translatedQuestPlate);
+
+        PluginLog.Debug($"Translated quest name: {translatedQuestName}");
+        PluginLog.Debug($"Translated quest message: {translatedQuestMessage}");
+        PluginLog.Debug($"Translated quest objective: {translatedQuestObjective}");
+        PluginLog.Debug($"Translated quest summary: {translatedQuestSummary}");
+        PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+      }
+
+      questNameNode->SetText(translatedQuestName);
+      descriptionNode->SetText(translatedQuestMessage);
+      objectiveNode->SetText(translatedQuestObjective);
+      if (summaryText != string.Empty && summaryNode != null)
+      {
+        summaryNode->SetText(translatedQuestSummary);
+      }
+
+      foreach (var summary in summaries)
+      {
+        summary.Node->SetText(summary.TranslatedText);
+      }
+    }
 
     private unsafe bool TranslateJournalBox(AtkUnitBase* journalDetail)
     {
@@ -49,6 +220,19 @@ namespace Echoglossian
           return true;
         }
 
+        var summaryText = string.Empty;
+        AtkTextNode* summaryNode = null;
+        var summaryBox = journalBox->UldManager.SearchNodeById(48);
+        if (summaryBox != null && summaryBox->IsVisible)
+        {
+          var summaryResNode = summaryBox->GetComponent()->UldManager.SearchNodeById(2);
+          if (summaryResNode != null && summaryResNode->Type == NodeType.Text)
+          {
+            summaryNode = summaryResNode->GetAsAtkTextNode();
+            summaryText = MemoryHelper.ReadSeStringAsString(out _, (nint)summaryNode->NodeText.StringPtr);
+          }
+        }
+
         var questName = MemoryHelper.ReadSeStringAsString(out _, (nint)questNameNode->NodeText.StringPtr);
         var descriptionNode = description->GetAsAtkTextNode();
         var questMessage = MemoryHelper.ReadSeStringAsString(out _, (nint)descriptionNode->NodeText.StringPtr);
@@ -60,58 +244,8 @@ namespace Echoglossian
         PluginLog.Debug($"Quest name: {questName}");
         PluginLog.Debug($"Quest message: {questMessage}");
         PluginLog.Debug($"Objective text: {objectiveText}");
-
-        string translatedQuestName;
-        string translatedQuestMessage;
-        string translatedQuestObjective;
-
-        if (foundQuestPlate != null)
-        {
-          translatedQuestName = foundQuestPlate.TranslatedQuestName;
-          translatedQuestMessage = foundQuestPlate.TranslatedQuestMessage;
-          if (foundQuestPlate.Objectives.TryGetValue(objectiveText, out var storedObjectiveText))
-          {
-            translatedQuestObjective = storedObjectiveText;
-          }
-          else
-          {
-            translatedQuestObjective = Translate(objectiveText);
-            foundQuestPlate.Objectives.Add(objectiveText, translatedQuestObjective);
-            string result = this.UpdateQuestPlate(foundQuestPlate);
-            PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {result}");
-          }
-
-          PluginLog.Debug($"From database - Name: {foundQuestPlate.TranslatedQuestName}, Message: {foundQuestPlate.TranslatedQuestMessage}");
-        }
-        else
-        {
-          translatedQuestName = Translate(questName);
-          translatedQuestMessage = Translate(questMessage);
-          translatedQuestObjective = Translate(objectiveText);
-
-          PluginLog.Debug($"Translated quest name: {translatedQuestName}");
-          PluginLog.Debug($"Translated quest message: {translatedQuestMessage}");
-          PluginLog.Debug($"Translated quest objective: {translatedQuestObjective}");
-
-          QuestPlate translatedQuestPlate = new(
-            questName,
-            questMessage,
-            ClientState.ClientLanguage.Humanize(),
-            translatedQuestName,
-            translatedQuestMessage,
-            string.Empty,
-            langDict[languageInt].Code,
-            this.configuration.ChosenTransEngine,
-            DateTime.Now,
-            DateTime.Now);
-          translatedQuestPlate.Objectives.Add(objectiveText, translatedQuestObjective);
-          string result = this.InsertQuestPlate(translatedQuestPlate);
-          PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
-        }
-
-        questNameNode->SetText(translatedQuestName);
-        descriptionNode->SetText(translatedQuestMessage);
-        objectiveNode->SetText(translatedQuestObjective);
+        PluginLog.Debug($"Summary text: {summaryText}");
+        this.TranslateQuestOnJournalBox(journalBox, foundQuestPlate, questName, questMessage, objectiveText, summaryText, questNameNode, descriptionNode, objectiveNode, summaryNode);
       }
       catch (Exception e)
       {
@@ -271,28 +405,27 @@ namespace Echoglossian
             PluginLog.Debug($"Name from database: {questName->NodeText} -> {foundQuestPlate.TranslatedQuestName}");
             questName->SetText(foundQuestPlate.TranslatedQuestName);
             this.translatedQuestNames.TryAdd(foundQuestPlate.TranslatedQuestName, true);
+            continue;
           }
-          else
-          {
-            var translatedNameText = Translate(questNameText);
-            PluginLog.Debug($"Name translated: {questNameText} -> {translatedNameText}");
-            QuestPlate translatedQuestPlate = new(
-              questNameText,
-              string.Empty,
-              ClientState.ClientLanguage.Humanize(),
-              translatedNameText,
-              string.Empty,
-              string.Empty,
-              langDict[languageInt].Code,
-              this.configuration.ChosenTransEngine,
-              DateTime.Now,
-              DateTime.Now);
 
-            string result = this.InsertQuestPlate(translatedQuestPlate);
-            PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
-            questName->SetText(translatedNameText);
-            this.translatedQuestNames.TryAdd(translatedNameText, true);
-          }
+          var translatedNameText = Translate(questNameText);
+          PluginLog.Debug($"Name translated: {questNameText} -> {translatedNameText}");
+          QuestPlate translatedQuestPlate = new(
+            questNameText,
+            string.Empty,
+            ClientState.ClientLanguage.Humanize(),
+            translatedNameText,
+            string.Empty,
+            string.Empty,
+            langDict[languageInt].Code,
+            this.configuration.ChosenTransEngine,
+            DateTime.Now,
+            DateTime.Now);
+
+          string result = this.InsertQuestPlate(translatedQuestPlate);
+          PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+          questName->SetText(translatedNameText);
+          this.translatedQuestNames.TryAdd(translatedNameText, true);
         }
       }
       catch (Exception e)
@@ -311,6 +444,25 @@ namespace Echoglossian
     {
       PluginLog.Debug($"UiJournalQuestHandler AddonEvent: {type} {args.AddonName}");
       this.TranslateJournalQuests();
+    }
+  }
+
+  public unsafe class SummaryQuest
+  {
+    public string OriginalText { get; set; }
+
+    public string TranslatedText { get; set; }
+
+    public AtkTextNode* Node { get; set; }
+
+    public bool IsTranslated { get; set; }
+
+    public SummaryQuest(string originalText, string translatedText, AtkTextNode* node, bool isTranslated)
+    {
+      this.OriginalText = originalText;
+      this.TranslatedText = translatedText;
+      this.Node = node;
+      this.IsTranslated = isTranslated;
     }
   }
 }

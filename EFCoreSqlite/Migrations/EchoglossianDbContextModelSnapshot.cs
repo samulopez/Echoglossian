@@ -107,6 +107,9 @@ namespace Echoglossian.EFCoreSqlite.Migrations
             .ValueGeneratedOnAddOrUpdate()
             .HasColumnType("BLOB");
 
+          b.Property<string>("SummariesAsText")
+            .HasColumnType("TEXT");
+
           b.Property<string>("TranslatedQuestMessage")
             .IsRequired()
             .HasMaxLength(2500)
