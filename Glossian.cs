@@ -156,6 +156,11 @@ namespace Echoglossian
           return sanitizedString;
         }
 
+        if (sanitizedString == "???")
+        {
+          return sanitizedString;
+        }
+
         string parsedText;
         if (sanitizedString.StartsWith("..."))
         {
