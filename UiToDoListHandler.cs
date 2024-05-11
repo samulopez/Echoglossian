@@ -17,6 +17,8 @@ namespace Echoglossian
 {
   public partial class Echoglossian
   {
+    private const string EmptyObjective = "???";
+
     private unsafe void TranslateToDoList()
     {
       if (!this.configuration.TranslateJournal)
@@ -173,6 +175,12 @@ namespace Echoglossian
 
             foreach (var objective in objectives)
             {
+              if (objective.Text == EmptyObjective)
+              {
+                // let's not store empty objectives on the database
+                continue;
+              }
+
               if (foundQuestPlate.Objectives.TryGetValue(objective.Text, out var storedObjectiveText))
               {
                 PluginLog.Debug($"Objective from database: {objective.Text} {storedObjectiveText}");
@@ -181,7 +189,7 @@ namespace Echoglossian
               }
 
               var translatedQuestObjective = Translate(objective.Text);
-              foundQuestPlate.Objectives.Add(objective.Text, translatedQuestObjective);
+              foundQuestPlate.Objectives.TryAdd(objective.Text, translatedQuestObjective);
               string resultUpdate = this.UpdateQuestPlate(foundQuestPlate);
               PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {resultUpdate}");
               todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedQuestObjective);
@@ -207,9 +215,15 @@ namespace Echoglossian
 
           foreach (var objective in objectives)
           {
+            if (objective.Text == EmptyObjective)
+            {
+              // let's not store empty objectives on the database
+              continue;
+            }
+
             var translatedObjectiveText = Translate(objective.Text);
             PluginLog.Debug($"Objective translated: {translatedObjectiveText}");
-            translatedQuestPlate.Objectives.Add(objective.Text, translatedObjectiveText);
+            translatedQuestPlate.Objectives.TryAdd(objective.Text, translatedObjectiveText);
             todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedObjectiveText);
           }
 
