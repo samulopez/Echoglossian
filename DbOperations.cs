@@ -56,6 +56,39 @@ namespace Echoglossian
       }
     }
 
+    public TalkMessage FindAndReturnTalkMessage(TalkMessage talkMessage)
+    {
+      using EchoglossianDbContext context = new EchoglossianDbContext(Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+
+      var pluginConfig = Echoglossian.PluginInterface.GetPluginConfig() as Config;
+
+      try
+      {
+        IQueryable<TalkMessage> existingTalkMessage =
+          context.TalkMessage.Where(t =>
+            t.SenderName == talkMessage.SenderName &&
+            t.OriginalTalkMessage == talkMessage.OriginalTalkMessage &&
+            t.TranslationLang == talkMessage.TranslationLang);
+        if (pluginConfig.TranslateAlreadyTranslatedTexts)
+        {
+          existingTalkMessage = existingTalkMessage.Where(t => t.TranslationEngine == talkMessage.TranslationEngine);
+        }
+
+        TalkMessage localFoundTalkMessage = existingTalkMessage.FirstOrDefault();
+        if (existingTalkMessage.FirstOrDefault() == null ||
+            localFoundTalkMessage?.OriginalTalkMessage != talkMessage.OriginalTalkMessage)
+        {
+          return null;
+        }
+
+        return localFoundTalkMessage;
+      }
+      catch (Exception e)
+      {
+        return null;
+      }
+    }
+
     public static bool FindTalkMessage(TalkMessage talkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
