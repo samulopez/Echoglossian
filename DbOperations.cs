@@ -131,7 +131,7 @@ namespace Echoglossian
       }
     }
 
-    public bool FindToastMessage(ToastMessage toastMessage)
+    public ToastMessage FindToastMessage(ToastMessage toastMessage)
     {
       try
       {
@@ -143,7 +143,7 @@ namespace Echoglossian
 
           if (cache == null || cache.Count == 0)
           {
-            return false;
+            return null;
           }
         }
 
@@ -164,21 +164,19 @@ namespace Echoglossian
         if (localFoundToastMessage == null ||
             localFoundToastMessage.OriginalToastMessage != toastMessage.OriginalToastMessage)
         {
-          this.FoundToastMessage = null;
-          return false;
+          return null;
         }
 
-        this.FoundToastMessage = localFoundToastMessage;
-        return true;
+        return localFoundToastMessage;
       }
       catch (Exception e)
       {
-        PluginLog.Debug($"FindToastMessage exception {e}");
-        return false;
+        PluginLog.Warning($"FindToastMessage exception {e}");
+        return null;
       }
     }
 
-    public bool FindErrorToastMessage(ToastMessage toastMessage)
+    public ToastMessage FindErrorToastMessage(ToastMessage toastMessage)
     {
       try
       {
@@ -190,7 +188,7 @@ namespace Echoglossian
 
           if (cache == null || cache.Count == 0)
           {
-            return false;
+            return null;
           }
         }
 
@@ -209,17 +207,15 @@ namespace Echoglossian
         if (localFoundToastMessage == null ||
             localFoundToastMessage.OriginalToastMessage != toastMessage.OriginalToastMessage)
         {
-          this.FoundToastMessage = null;
-          return false;
+          return null;
         }
 
-        this.FoundToastMessage = localFoundToastMessage;
-        return true;
+        return localFoundToastMessage;
       }
       catch (Exception e)
       {
-        PluginLog.Debug($"FindErrorToastMessage exception {e}");
-        return false;
+        PluginLog.Warning($"FindAndReturnErrorToastMessage exception {e}");
+        return null;
       }
     }
 
@@ -452,7 +448,6 @@ namespace Echoglossian
         context.TalkMessage.Attach(talkMessage);
 
         context.SaveChangesAsync();
-
         return "Data inserted to TalkMessages table.";
       }
       catch (Exception e)
@@ -520,21 +515,13 @@ namespace Echoglossian
     public string InsertErrorToastMessageData(ToastMessage toastMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-      /*#if DEBUG
-            using StreamWriter logStream = new($"{this.configDir}DbInsertToastOperationsLog.txt", append: true);
-      #endif*/
+
       try
       {
         bool isInThere;
         if (this.ErrorToastsCache != null && this.ErrorToastsCache.Count > 0)
         {
-#if DEBUG
           PluginLog.Debug($"Total ErrorToasts in cache: {this.ErrorToastsCache.Count}");
-          /* foreach (ToastMessage t in this.ErrorToastsCache)
-           {
-             PluginLog.Debug($"{this.ErrorToastsCache.GetEnumerator().Current} :{t}");
-           }*/
-#endif
           isInThere = this.ErrorToastsCache.Exists(t => toastMessage.ToastType == t.ToastType &&
                                                         toastMessage.TranslationLang == t.TranslationLang &&
                                                         toastMessage.OriginalToastMessage == t.OriginalToastMessage &&
@@ -567,21 +554,14 @@ namespace Echoglossian
     public string InsertOtherToastMessageData(ToastMessage toastMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-      /*#if DEBUG
-            using StreamWriter logStream = new($"{this.configDir}DbInsertToastOperationsLog.txt", append: true);
-      #endif*/
+
       try
       {
         bool isInThere;
         if (this.OtherToastsCache != null && this.OtherToastsCache.Count > 0)
         {
-#if DEBUG
           PluginLog.Debug($"Total ErrorToasts in cache: {this.OtherToastsCache.Count}");
-          /* foreach (ToastMessage t in this.OtherToastsCache)
-           {
-             PluginLog.Debug($"{this.OtherToastsCache.GetEnumerator().Current} :{t}");
-           }*/
-#endif
+
           isInThere = this.OtherToastsCache.Exists(t => toastMessage.ToastType == t.ToastType &&
                                                         toastMessage.TranslationLang == t.TranslationLang &&
                                                         toastMessage.OriginalToastMessage == t.OriginalToastMessage &&
@@ -614,25 +594,17 @@ namespace Echoglossian
     public string InsertQuestPlate(QuestPlate questPlate)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-      /*#if DEBUG
-            using StreamWriter logStream = new($"{this.configDir}DbInsertQuestPlateOperationsLog.txt", append: true);
-      #endif*/
+
       try
       {
         questPlate.UpdateFieldsAsText();
         context.QuestPlate.Attach(questPlate);
-        /*#if DEBUG
-                logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");
-        #endif*/
         if (this.configuration.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(questPlate.ToString());
         }
 
         context.SaveChangesAsync();
-        /*#if DEBUG
-                logStream.WriteLineAsync($"After 'SaveChanges': {context.QuestPlate.Local}");
-        #endif*/
         return "Data inserted to QuestPlate table.";
       }
       catch (Exception e)
@@ -644,25 +616,16 @@ namespace Echoglossian
     public string UpdateQuestPlate(QuestPlate questPlate)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-      /*#if DEBUG
-            using StreamWriter logStream = new($"{this.configDir}DbUpdateQuestPlateOperationsLog.txt", append: true);
-      #endif*/
       try
       {
         questPlate.UpdateFieldsAsText();
         context.QuestPlate.Update(questPlate);
-        /*#if DEBUG
-                logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");
-        #endif*/
         if (this.configuration.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(questPlate.ToString());
         }
 
         context.SaveChangesAsync();
-        /*#if DEBUG
-                logStream.WriteLineAsync($"After 'SaveChanges': {context.QuestPlate.Local}");
-        #endif*/
         return "Data updated on QuestPlate table.";
       }
       catch (Exception e)
@@ -675,9 +638,6 @@ namespace Echoglossian
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
       this.ErrorToastsCache = new List<ToastMessage>();
-      /*#if DEBUG
-            using StreamWriter logStream = new($"{this.configDir}DbErrorToastListQueryOperationsLog.txt", append: true);
-      #endif*/
       try
       {
         IQueryable<ToastMessage> existingToastMessages =
@@ -688,17 +648,10 @@ namespace Echoglossian
         {
           this.ErrorToastsCache.Add(t);
         }
-
-        /*#if DEBUG
-                logStream.WriteLineAsync($"After Toast Messages table query: {this.ErrorToastsCache.ToArray()}");
-        #endif*/
       }
       catch (Exception e)
       {
-        /*#if DEBUG
-                logStream.WriteLineAsync($"Query operation error: {e}");
-        #endif*/
-        PluginLog.Debug("Could not find any Error Toasts in Database");
+        PluginLog.Warning("Could not find any Error Toasts in Database");
       }
     }
 
@@ -706,9 +659,7 @@ namespace Echoglossian
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
       this.OtherToastsCache = new List<ToastMessage>();
-      /*#if DEBUG
-            using StreamWriter logStream = new($"{this.configDir}DbOtherToastListQueryOperationsLog.txt", append: true);
-      #endif*/
+
       try
       {
         IQueryable<ToastMessage> existingToastMessages =
@@ -719,17 +670,10 @@ namespace Echoglossian
         {
           this.OtherToastsCache.Add(t);
         }
-
-        /*#if DEBUG
-                logStream.WriteLineAsync($"After Toast Messages table query: {this.OtherToastsCache.ToArray()}");
-        #endif*/
       }
       catch (Exception e)
       {
-        /*#if DEBUG
-                logStream.WriteLineAsync($"Query operation error: {e}");
-        #endif*/
-        PluginLog.Debug("Could not find any Other Toasts in Database");
+        PluginLog.Warning("Could not find any Other Toasts in Database");
       }
     }
   }

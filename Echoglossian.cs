@@ -260,9 +260,9 @@ namespace Echoglossian
       this.wideTextToastTranslationSemaphore = new SemaphoreSlim(1, 1);
       this.questToastTranslationSemaphore = new SemaphoreSlim(1, 1);
 
-      ToastGui.Toast += this.OnToast;
-      ToastGui.ErrorToast += this.OnErrorToast;
-      ToastGui.QuestToast += this.OnQuestToast;
+      ToastGui.Toast += this.OnToastAsync;
+      ToastGui.ErrorToast += this.OnErrorToastAsync;
+      ToastGui.QuestToast += this.OnQuestToastAsync;
 
       this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
       this.uiBattleTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
@@ -290,9 +290,9 @@ namespace Echoglossian
 
     protected virtual void Dispose(bool disposing)
     {
-      ToastGui.Toast -= this.OnToast;
-      ToastGui.ErrorToast -= this.OnErrorToast;
-      ToastGui.QuestToast -= this.OnQuestToast;
+      ToastGui.Toast -= this.OnToastAsync;
+      ToastGui.ErrorToast -= this.OnErrorToastAsync;
+      ToastGui.QuestToast -= this.OnQuestToastAsync;
 
       PluginInterface.UiBuilder.OpenConfigUi -= this.ConfigWindow;
 
@@ -523,6 +523,15 @@ namespace Echoglossian
         AddonLifecycle.RegisterListener(AddonEvent.PreRequestedUpdate, "JournalDetail", this.UiJournalDetailHandler);
         AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
         AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
+      }
+
+      if (this.configuration.TranslateToast)
+      {
+        AddonLifecycle.RegisterListener(AddonEvent.PreDraw, "_TextError", this.UiTextErrorHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PreDraw, "_AreaText", this.UiAreaTextHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PreDraw, "_WideText", this.UiWideTextHandler);
+        // TODO: _TextClassChange
+        // TODO: quest?
       }
 
       /*"PreSetup","PostSetup", "PreUpdate", "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", "PreRefresh", "PostRefresh" */
