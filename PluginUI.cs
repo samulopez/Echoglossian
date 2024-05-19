@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 
 using Echoglossian.Properties;
@@ -58,6 +59,13 @@ public partial class Echoglossian
       {
         this.configuration.UnsupportedLanguage = false;
         this.configuration.OverlayOnlyLanguage = languageOnlySupportedThruOverlay;
+      }
+
+      if (!langDict[languageInt].SupportedEngines.Contains(this.configuration.ChosenTransEngine))
+      {
+        // use Google Translate as default
+        this.configuration.ChosenTransEngine = 0;
+        this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
       }
 
       PluginInterface.UiBuilder.RebuildFonts();
@@ -428,7 +436,8 @@ public partial class Echoglossian
       {
         ImGui.Checkbox(Resources.TranslateTextsAgain, ref this.configuration.TranslateAlreadyTranslatedTexts);
 
-        if (ImGui.Combo(Resources.TranslationEngineChoose, ref chosenTransEngine, this.enginesList.ToArray(), this.enginesList.ToArray().Length))
+        var engines = this.enginesList.Where((_, i) => langDict[languageInt].SupportedEngines.Contains(i)).ToArray();
+        if (ImGui.Combo(Resources.TranslationEngineChoose, ref chosenTransEngine, engines, engines.Length))
         {
           this.configuration.ChosenTransEngine = chosenTransEngine;
         }

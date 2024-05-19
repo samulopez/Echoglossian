@@ -92,7 +92,7 @@ namespace Echoglossian
         var translation = this.client.TranslateTextAsync(
           text,
           this.FormatSourceLanguage(sourceLanguage),
-          targetLanguage.ToUpper()).Result;
+          this.FormatTargetLanguage(targetLanguage)).Result;
         this.pluginLog.Debug($"FinalTranslatedText: {translation.Text}");
         return translation.Text;
       }
@@ -112,7 +112,7 @@ namespace Echoglossian
         var translation = await this.client.TranslateTextAsync(
           text,
           this.FormatSourceLanguage(sourceLanguage),
-          targetLanguage.ToUpper());
+          this.FormatTargetLanguage(targetLanguage));
         this.pluginLog.Debug($"FinalTranslatedText: {translation.Text}");
         return translation.Text;
       }
@@ -165,7 +165,7 @@ namespace Echoglossian
             splitting = "newlines",
             lang = new
             {
-              target_lang = targetLanguage.ToUpper(),
+              target_lang = this.FormatFreeTargetLanguage(targetLanguage),
               source_lang_user_selected = this.FormatSourceLanguage(sourceLanguage),
             },
             commonJobParams = new
@@ -238,6 +238,40 @@ namespace Echoglossian
           return "FR";
         default:
           return "EN";
+      }
+    }
+
+    private string FormatTargetLanguage(string source)
+    {
+      switch (source)
+      {
+        case "en":
+          return "EN-GB";
+        case "no":
+          return "NB";
+        case "pt":
+          return "PT-BR";
+        case "zh-CN":
+          return "ZH";
+        default:
+          return source.ToUpper();
+      }
+    }
+
+    private string FormatFreeTargetLanguage(string source)
+    {
+      switch (source)
+      {
+        case "en":
+          return "EN";
+        case "no":
+          return "NB";
+        case "pt":
+          return "PT";
+        case "zh-CN":
+          return "ZH";
+        default:
+          return source.ToUpper();
       }
     }
   }
