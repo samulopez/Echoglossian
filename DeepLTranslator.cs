@@ -96,10 +96,10 @@ namespace Echoglossian
         this.pluginLog.Debug($"FinalTranslatedText: {translation.Text}");
         return translation.Text;
       }
-      catch (DeepLException exception)
+      catch (Exception exception)
       {
         this.pluginLog.Warning($"DeepLTranslator Translate: {exception.Message}");
-        throw;
+        return text;
       }
     }
 
@@ -116,10 +116,10 @@ namespace Echoglossian
         this.pluginLog.Debug($"FinalTranslatedText: {translation.Text}");
         return translation.Text;
       }
-      catch (DeepLException exception)
+      catch (Exception exception)
       {
         this.pluginLog.Warning($"DeepLTranslator TranslateAsync: {exception.Message}");
-        throw;
+        return text;
       }
     }
 
@@ -213,14 +213,14 @@ namespace Echoglossian
         }
         else
         {
-          this.pluginLog.Warning($"An error occurred: {response.StatusCode}");
+          this.pluginLog.Warning($"DeepLTranslator FreeTranslateAsync error: {response.StatusCode}");
           return text;
         }
       }
       catch (Exception exception)
       {
         this.pluginLog.Warning($"DeepLTranslator FreeTranslateAsync: {exception.Message}");
-        throw;
+        return text;
       }
     }
 
