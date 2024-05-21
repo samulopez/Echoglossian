@@ -440,6 +440,7 @@ public partial class Echoglossian
         if (ImGui.Combo(Resources.TranslationEngineChoose, ref chosenTransEngine, engines, engines.Length))
         {
           this.configuration.ChosenTransEngine = chosenTransEngine;
+          this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
         }
 
         ImGui.BeginGroup();
@@ -448,7 +449,6 @@ public partial class Echoglossian
           case 0:
             ImGui.TextWrapped(Resources.SettingsForGTransText);
             ImGui.TextWrapped(Resources.TranslationEngineSettingsNotRequired);
-            this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
             break;
           case 1:
             ImGui.TextWrapped(Resources.SettingsForDeepLTransText);

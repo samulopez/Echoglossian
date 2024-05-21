@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Dalamud.Logging;
 using Echoglossian.EFCoreSqlite;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.EFCoreSqlite.Models.Journal;
@@ -19,9 +18,6 @@ namespace Echoglossian
 {
   public partial class Echoglossian
   {
-#if DEBUG
-
-#endif
     public TalkMessage FoundTalkMessage { get; set; }
 
     public ToastMessage FoundToastMessage { get; set; }
@@ -96,12 +92,12 @@ namespace Echoglossian
       try
       {
         List<ToastMessage> cache = this.OtherToastsCache;
-        if (cache.Count == 0 || cache == null)
+        if (cache == null || cache.Count == 0)
         {
           this.LoadAllOtherToasts();
           cache = this.OtherToastsCache;
 
-          if (cache.Count == 0 || cache == null)
+          if (cache == null || cache.Count == 0)
           {
             return false;
           }
@@ -117,7 +113,7 @@ namespace Echoglossian
           existingToastMessage = existingToastMessage.Where(t => t.TranslationEngine == toastMessage.TranslationEngine);
         }
 
-        ToastMessage localFoundToastMessage = existingToastMessage.SingleOrDefault();
+        ToastMessage localFoundToastMessage = existingToastMessage.FirstOrDefault();
 
         if (localFoundToastMessage == null ||
             localFoundToastMessage.OriginalToastMessage != toastMessage.OriginalToastMessage)
@@ -131,6 +127,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
+        PluginLog.Debug($"FindToastMessage exception {e}");
         return false;
       }
     }
@@ -140,16 +137,17 @@ namespace Echoglossian
       try
       {
         List<ToastMessage> cache = this.ErrorToastsCache;
-        if (cache.Count == 0 || cache == null)
+        if (cache == null || cache.Count == 0)
         {
           this.LoadAllErrorToasts();
           cache = this.ErrorToastsCache;
 
-          if (cache.Count == 0 || cache == null)
+          if (cache == null || cache.Count == 0)
           {
             return false;
           }
         }
+
         IEnumerable<ToastMessage> existingToastMessage =
           cache.Where(t => t.OriginalToastMessage == toastMessage.OriginalToastMessage &&
                                           t.TranslationLang == toastMessage.TranslationLang &&
@@ -160,7 +158,7 @@ namespace Echoglossian
           existingToastMessage = existingToastMessage.Where(t => t.TranslationEngine == toastMessage.TranslationEngine);
         }
 
-        ToastMessage localFoundToastMessage = existingToastMessage.SingleOrDefault();
+        ToastMessage localFoundToastMessage = existingToastMessage.FirstOrDefault();
 
         if (localFoundToastMessage == null ||
             localFoundToastMessage.OriginalToastMessage != toastMessage.OriginalToastMessage)
@@ -174,6 +172,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
+        PluginLog.Debug($"FindErrorToastMessage exception {e}");
         return false;
       }
     }
@@ -366,7 +365,7 @@ namespace Echoglossian
       try
       {
         bool isInThere;
-        if (this.ErrorToastsCache.Count > 0 && this.ErrorToastsCache != null)
+        if (this.ErrorToastsCache != null && this.ErrorToastsCache.Count > 0)
         {
 #if DEBUG
           PluginLog.Verbose($"Total ErrorToasts in cache: {this.ErrorToastsCache.Count}");
@@ -375,8 +374,10 @@ namespace Echoglossian
              PluginLog.Verbose($"{this.ErrorToastsCache.GetEnumerator().Current} :{t}");
            }*/
 #endif
-          isInThere = this.ErrorToastsCache.Any(t => toastMessage.ToastType == t.ToastType && toastMessage.TranslationLang == t.TranslationLang &&
-                                                     toastMessage.OriginalToastMessage == t.OriginalToastMessage);
+          isInThere = this.ErrorToastsCache.Exists(t => toastMessage.ToastType == t.ToastType &&
+                                                        toastMessage.TranslationLang == t.TranslationLang &&
+                                                        toastMessage.OriginalToastMessage == t.OriginalToastMessage &&
+                                                        toastMessage.TranslationEngine == t.TranslationEngine);
         }
         else
         {
@@ -423,7 +424,7 @@ namespace Echoglossian
       try
       {
         bool isInThere;
-        if (this.OtherToastsCache.Count > 0 && this.OtherToastsCache != null)
+        if (this.OtherToastsCache != null && this.OtherToastsCache.Count > 0)
         {
 #if DEBUG
           PluginLog.Verbose($"Total ErrorToasts in cache: {this.OtherToastsCache.Count}");
@@ -432,8 +433,10 @@ namespace Echoglossian
              PluginLog.Verbose($"{this.OtherToastsCache.GetEnumerator().Current} :{t}");
            }*/
 #endif
-          isInThere = this.OtherToastsCache.Any(t => toastMessage.ToastType == t.ToastType && toastMessage.TranslationLang == t.TranslationLang &&
-                                                     toastMessage.OriginalToastMessage == t.OriginalToastMessage);
+          isInThere = this.OtherToastsCache.Exists(t => toastMessage.ToastType == t.ToastType &&
+                                                        toastMessage.TranslationLang == t.TranslationLang &&
+                                                        toastMessage.OriginalToastMessage == t.OriginalToastMessage &&
+                                                        toastMessage.TranslationEngine == t.TranslationEngine);
         }
         else
         {
