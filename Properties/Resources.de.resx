@@ -303,4 +303,22 @@
   <data name="TranslateJournalToggle" xml:space="preserve">
     <value>Questnamen, Beschreibung und Ziele übersetzen (WIP)</value>
   </data>
+  <data name="DeeplTranslatorApiKey" xml:space="preserve">
+    <value>Fügen Sie Ihren DeepL-API-Schlüssel hinzu</value>
+  </data>
+  <data name="SettingsForDeepLTransText" xml:space="preserve">
+    <value>Optionale Einstellungen für DeepL:</value>
+  </data>
+  <data name="DeepLTranslatorAPIKeyLink" xml:space="preserve">
+    <value>Klicken Sie hier, um einen DeepL-API-Schlüssel zu erstellen</value>
+  </data>
+  <data name="TranslationEngineChoose" xml:space="preserve">
+    <value>Wählen Sie die Übersetzungsmaschine</value>
+  </data>
+  <data name="DeepLTransAPIKey" xml:space="preserve">
+    <value>API-Schlüssel verwenden (empfohlen)</value>
+  </data>
+  <data name="TranslateTextsAgain" xml:space="preserve">
+    <value>Übersetzen Sie gespeicherte übersetzte Texte erneut mit der ausgewählten Übersetzungsmaschine</value>
+  </data>
 </root>

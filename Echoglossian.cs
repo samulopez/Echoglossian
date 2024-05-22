@@ -97,6 +97,8 @@ namespace Echoglossian
 
     private UIAddonHandler UIAddonHandler;
 
+    private TranslationService translationService;
+
     public List<ToastMessage> ErrorToastsCache { get; set; }
 
     public List<ToastMessage> QuestToastsCache { get; set; }
@@ -187,6 +189,7 @@ namespace Echoglossian
 
       TransEngines t = (TransEngines)chosenTransEngine;
       transEngineName = t.ToString();
+      this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
 
       this.LoadAllErrorToasts();
       this.LoadAllOtherToasts();

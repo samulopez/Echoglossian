@@ -16,7 +16,15 @@
         </member>
         <member name="M:Echoglossian.Echoglossian.Translate(System.String)">
             <summary>
-            Translates the sentences passed to it. Uses Google Translate Free endpoint.
+            Translates the sentences passed to it using the selected engine.
+            </summary>
+            <param name="text">Text to be translated.</param>
+            <returns>Returns the translated text passed in the call parameter.</returns>
+            <exception cref="T:System.Exception">Returns exception in case something goes wrong in the translation steps.</exception>
+        </member>
+        <member name="M:Echoglossian.Echoglossian.TranslateAsync(System.String)">
+            <summary>
+            Translates the sentences passed to it using the selected engine.
             </summary>
             <param name="text">Text to be translated.</param>
             <returns>Returns the translated text passed in the call parameter.</returns>
@@ -59,18 +67,6 @@
             <param name="sourceLanguage"></param>
             <param name="targetLanguage"></param>
             <returns>A <see cref="T:System.Threading.Tasks.Task`1"/> representing the result of the asynchronous operation.</returns>
-        </member>
-        <member name="M:Echoglossian.DeepLTranslator.MyRegex">
-            <remarks>
-            Pattern:<br/>
-            <code>(?&lt;=[.!?])\\s+</code><br/>
-            Explanation:<br/>
-            <code>
-            ○ Zero-width positive lookbehind.<br/>
-                ○ Match a character in the set [!.?] right-to-left.<br/>
-            ○ Match a whitespace character atomically at least once.<br/>
-            </code>
-            </remarks>
         </member>
         <member name="M:Echoglossian.EFCoreSqlite.EchoglossianDbContext.#ctor(System.String)">
             <summary>
@@ -351,6 +347,21 @@
               Looks up a localized resource of type System.Byte[].
             </summary>
         </member>
+        <member name="P:Echoglossian.Properties.Resources.DeepLTransAPIKey">
+            <summary>
+              Looks up a localized string similar to Use API Key (recommended).
+            </summary>
+        </member>
+        <member name="P:Echoglossian.Properties.Resources.DeeplTranslatorApiKey">
+            <summary>
+              Looks up a localized string similar to Add your DeepL API Key.
+            </summary>
+        </member>
+        <member name="P:Echoglossian.Properties.Resources.DeepLTranslatorAPIKeyLink">
+            <summary>
+              Looks up a localized string similar to Click here to create a DeepL API Key.
+            </summary>
+        </member>
         <member name="P:Echoglossian.Properties.Resources.DisclaimerText1">
             <summary>
               Looks up a localized string similar to This plugin is aimed at solving one of the biggest issues for audiences that do not speak either English, German, French or Japanese: Understanding dialogues and other elements of the Game UI..
@@ -586,6 +597,11 @@
               Looks up a localized string similar to Send me a PIX donation!.
             </summary>
         </member>
+        <member name="P:Echoglossian.Properties.Resources.SettingsForDeepLTransText">
+            <summary>
+              Looks up a localized string similar to Optional settings for DeepL:.
+            </summary>
+        </member>
         <member name="P:Echoglossian.Properties.Resources.SettingsForGTransText">
             <summary>
               Looks up a localized string similar to Settings for Google Translate:.
@@ -661,6 +677,11 @@
               Looks up a localized string similar to Translate in-game dialogues.
             </summary>
         </member>
+        <member name="P:Echoglossian.Properties.Resources.TranslateTextsAgain">
+            <summary>
+              Looks up a localized string similar to Translate again stored translated texts with the selected translation engine.
+            </summary>
+        </member>
         <member name="P:Echoglossian.Properties.Resources.TranslateToastToggleText">
             <summary>
               Looks up a localized string similar to Translate in-game Toast Messages.
@@ -674,6 +695,11 @@
         <member name="P:Echoglossian.Properties.Resources.TranslationEnabled">
             <summary>
               Looks up a localized string similar to Translations are Enabled!.
+            </summary>
+        </member>
+        <member name="P:Echoglossian.Properties.Resources.TranslationEngineChoose">
+            <summary>
+              Looks up a localized string similar to Choose the translation engine.
             </summary>
         </member>
         <member name="P:Echoglossian.Properties.Resources.TranslationEngineSettingsNotRequired">
@@ -731,53 +757,6 @@
             <param name="uiFont"></param>
             <param name="fontLoaded"></param>
             <param name="addonName"></param>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.MyRegex_0">
-            <summary>Custom <see cref="T:System.Text.RegularExpressions.Regex"/>-derived type for the MyRegex method.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.MyRegex_0.Instance">
-            <summary>Cached, thread-safe singleton instance.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_0.#ctor">
-            <summary>Initializes the instance.</summary>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.MyRegex_0.RunnerFactory">
-            <summary>Provides a factory for creating <see cref="T:System.Text.RegularExpressions.RegexRunner"/> instances to be used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_0.RunnerFactory.CreateInstance">
-            <summary>Creates an instance of a <see cref="T:System.Text.RegularExpressions.RegexRunner"/> used by methods on <see cref="T:System.Text.RegularExpressions.Regex"/>.</summary>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.MyRegex_0.RunnerFactory.Runner">
-            <summary>Provides the runner that contains the custom logic implementing the specified regular expression.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_0.RunnerFactory.Runner.Scan(System.ReadOnlySpan{System.Char})">
-            <summary>Scan the <paramref name="inputSpan"/> starting from base.runtextstart for the next match.</summary>
-            <param name="inputSpan">The text being scanned by the regular expression.</param>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_0.RunnerFactory.Runner.TryFindNextPossibleStartingPosition(System.ReadOnlySpan{System.Char})">
-            <summary>Search <paramref name="inputSpan"/> starting from base.runtextpos for the next location a match could possibly start.</summary>
-            <param name="inputSpan">The text being scanned by the regular expression.</param>
-            <returns>true if a possible match was found; false if no more matches are possible.</returns>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.MyRegex_0.RunnerFactory.Runner.TryMatchAtCurrentPosition(System.ReadOnlySpan{System.Char})">
-            <summary>Determine whether <paramref name="inputSpan"/> at base.runtextpos is a match for the regular expression.</summary>
-            <param name="inputSpan">The text being scanned by the regular expression.</param>
-            <returns>true if the regular expression matches at the current position; otherwise, false.</returns>
-        </member>
-        <member name="T:System.Text.RegularExpressions.Generated.Utilities">
-            <summary>Helper methods used by generated <see cref="T:System.Text.RegularExpressions.Regex"/>-derived implementations.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout">
-            <summary>Default timeout value set in <see cref="T:System.AppContext"/>, or <see cref="F:System.Text.RegularExpressions.Regex.InfiniteMatchTimeout"/> if none was set.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_hasTimeout">
-            <summary>Whether <see cref="F:System.Text.RegularExpressions.Generated.Utilities.s_defaultTimeout"/> is non-infinite.</summary>
-        </member>
-        <member name="M:System.Text.RegularExpressions.Generated.Utilities.IndexOfAnyWhiteSpace(System.ReadOnlySpan{System.Char})">
-            <summary>Finds the next index of any character that matches a whitespace character.</summary>
-        </member>
-        <member name="F:System.Text.RegularExpressions.Generated.Utilities.s_asciiExceptWhiteSpace">
-            <summary>Supports searching for characters in or not in "\0\u0001\u0002\u0003\u0004\u0005\u0006\a\b\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f!\"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007f".</summary>
         </member>
     </members>
 </doc>

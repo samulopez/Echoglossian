@@ -43,9 +43,9 @@ namespace Echoglossian.EFCoreSqlite
     public EchoglossianDbContext(string configDir)
     {
       this.DbPath = $"{configDir}Echoglossian.db";
-#if DEBUG
-      this.LogStream = new StreamWriter($"{configDir}DBContextLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            this.LogStream = new StreamWriter($"{configDir}DBContextLog.txt", append: true);
+      #endif*/
     }
 
     // The following configures EF to create a Sqlite database file in the
@@ -53,25 +53,25 @@ namespace Echoglossian.EFCoreSqlite
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       optionsBuilder.UseSqlite($"Data Source={this.DbPath}");
-#if DEBUG
-      optionsBuilder.LogTo(this.LogStream.WriteLine, LogLevel.Trace).EnableSensitiveDataLogging().EnableDetailedErrors();
-#endif
+      /*#if DEBUG
+            optionsBuilder.LogTo(this.LogStream.WriteLine, LogLevel.Trace).EnableSensitiveDataLogging().EnableDetailedErrors();
+      #endif*/
     }
 
     public override void Dispose()
     {
       base.Dispose();
-#if DEBUG
-      this.LogStream.Dispose();
-#endif
+      /*#if DEBUG
+            this.LogStream.Dispose();
+      #endif*/
     }
 
     public override async ValueTask DisposeAsync()
     {
       await base.DisposeAsync();
-#if DEBUG
-      await this.LogStream.DisposeAsync();
-#endif
+      /*#if DEBUG
+            await this.LogStream.DisposeAsync();
+      #endif*/
     }
   }
 }

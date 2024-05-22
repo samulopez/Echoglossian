@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Dalamud.Logging;
 using Echoglossian.EFCoreSqlite;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.EFCoreSqlite.Models.Journal;
@@ -19,9 +18,6 @@ namespace Echoglossian
 {
   public partial class Echoglossian
   {
-#if DEBUG
-
-#endif
     public TalkMessage FoundTalkMessage { get; set; }
 
     public ToastMessage FoundToastMessage { get; set; }
@@ -62,26 +58,19 @@ namespace Echoglossian
     public bool FindTalkMessage(TalkMessage talkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindTalkOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindTalkOperationsErrorLog.txt", append: true);
-#endif
       try
       {
-#if DEBUG
-        PluginLog.Verbose(this.configDir);
-        logStream.WriteLineAsync($"Before Talk Messages table query: {talkMessage}");
-#endif
-
         IQueryable<TalkMessage> existingTalkMessage =
           context.TalkMessage.Where(t =>
             t.SenderName == talkMessage.SenderName &&
             t.OriginalTalkMessage == talkMessage.OriginalTalkMessage &&
             t.TranslationLang == talkMessage.TranslationLang);
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingTalkMessage = existingTalkMessage.Where(t => t.TranslationEngine == talkMessage.TranslationEngine);
+        }
+
         TalkMessage localFoundTalkMessage = existingTalkMessage.FirstOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After Talk Messages table query: {localFoundTalkMessage}");
-#endif
         if (existingTalkMessage.FirstOrDefault() == null ||
             localFoundTalkMessage?.OriginalTalkMessage != talkMessage.OriginalTalkMessage)
         {
@@ -94,46 +83,40 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return false;
       }
     }
 
     public bool FindToastMessage(ToastMessage toastMessage)
     {
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindToastOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindToastOperationsErrorLog.txt", append: true);
-
-#endif
       try
       {
         List<ToastMessage> cache = this.OtherToastsCache;
-        if (cache.Count == 0 || cache == null)
+        if (cache == null || cache.Count == 0)
         {
           this.LoadAllOtherToasts();
           cache = this.OtherToastsCache;
 
-          if (cache.Count == 0 || cache == null)
+          if (cache == null || cache.Count == 0)
           {
             return false;
           }
         }
 
-#if DEBUG
-        logStream.WriteLineAsync($"Before Toast Messages table query: {toastMessage}");
-#endif
         IEnumerable<ToastMessage> existingToastMessage =
           cache.Where(t => t.OriginalToastMessage == toastMessage.OriginalToastMessage &&
                            t.TranslationLang == toastMessage.TranslationLang &&
                            t.ToastType == toastMessage.ToastType);
 
-        ToastMessage localFoundToastMessage = existingToastMessage.SingleOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After Toast Messages table query: {localFoundToastMessage}");
-#endif
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingToastMessage = existingToastMessage.Where(t => t.TranslationEngine == toastMessage.TranslationEngine);
+        }
+
+        ToastMessage localFoundToastMessage = existingToastMessage.FirstOrDefault();
+
+        PluginLog.Verbose($"localFoundToasMessage: {localFoundToastMessage}");
+
         if (localFoundToastMessage == null ||
             localFoundToastMessage.OriginalToastMessage != toastMessage.OriginalToastMessage)
         {
@@ -146,46 +129,39 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
+        PluginLog.Debug($"FindToastMessage exception {e}");
         return false;
       }
     }
 
     public bool FindErrorToastMessage(ToastMessage toastMessage)
     {
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindToastOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindToastOperationsErrorLog.txt", append: true);
-
-#endif
       try
       {
         List<ToastMessage> cache = this.ErrorToastsCache;
-        if (cache.Count == 0 || cache == null)
+        if (cache == null || cache.Count == 0)
         {
           this.LoadAllErrorToasts();
           cache = this.ErrorToastsCache;
 
-          if (cache.Count == 0 || cache == null)
+          if (cache == null || cache.Count == 0)
           {
             return false;
           }
         }
 
-#if DEBUG
-        logStream.WriteLineAsync($"Before Toast Messages table query: {toastMessage}");
-#endif
         IEnumerable<ToastMessage> existingToastMessage =
           cache.Where(t => t.OriginalToastMessage == toastMessage.OriginalToastMessage &&
                                           t.TranslationLang == toastMessage.TranslationLang &&
                                           t.ToastType == toastMessage.ToastType);
 
-        ToastMessage localFoundToastMessage = existingToastMessage.SingleOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After Toast Messages table query: {localFoundToastMessage}");
-#endif
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingToastMessage = existingToastMessage.Where(t => t.TranslationEngine == toastMessage.TranslationEngine);
+        }
+
+        ToastMessage localFoundToastMessage = existingToastMessage.FirstOrDefault();
+
         if (localFoundToastMessage == null ||
             localFoundToastMessage.OriginalToastMessage != toastMessage.OriginalToastMessage)
         {
@@ -198,9 +174,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
+        PluginLog.Debug($"FindErrorToastMessage exception {e}");
         return false;
       }
     }
@@ -208,26 +182,20 @@ namespace Echoglossian
     public bool FindBattleTalkMessage(BattleTalkMessage battleTalkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindBattleTalkOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindBattleTalkOperationsErrorLog.txt", append: true);
-#endif
       try
       {
-#if DEBUG
-        logStream.WriteLineAsync($"Before BattleTalk Messages table query: {battleTalkMessage}");
-#endif
-
         IQueryable<BattleTalkMessage> existingBattleTalkMessage =
           context.BattleTalkMessage.Where(t =>
             t.SenderName == battleTalkMessage.SenderName &&
             t.OriginalBattleTalkMessage == battleTalkMessage.OriginalBattleTalkMessage &&
             t.TranslationLang == battleTalkMessage.TranslationLang);
 
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingBattleTalkMessage = existingBattleTalkMessage.Where(t => t.TranslationEngine == battleTalkMessage.TranslationEngine);
+        }
+
         BattleTalkMessage localFoundBattleTalkMessage = existingBattleTalkMessage.FirstOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After BattleTalk Messages table query: {localFoundBattleTalkMessage}");
-#endif
         if (existingBattleTalkMessage.FirstOrDefault() == null ||
             localFoundBattleTalkMessage?.OriginalBattleTalkMessage != battleTalkMessage.OriginalBattleTalkMessage)
         {
@@ -240,9 +208,6 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return false;
       }
     }
@@ -250,26 +215,20 @@ namespace Echoglossian
     public QuestPlate FindQuestPlate(QuestPlate questPlate)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindQuestPlateOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindQuestPlateOperationsErrorLog.txt", append: true);
-#endif
       try
       {
-#if DEBUG
-        logStream.WriteLineAsync($"Before QuestPlate table query: {questPlate}");
-#endif
-
         IQueryable<QuestPlate> existingQuestPlate =
           context.QuestPlate.Where(t =>
             t.QuestName == questPlate.QuestName &&
             t.OriginalQuestMessage == questPlate.OriginalQuestMessage &&
             t.TranslationLang == questPlate.TranslationLang);
 
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingQuestPlate = existingQuestPlate.Where(t => t.TranslationEngine == questPlate.TranslationEngine);
+        }
+
         QuestPlate localFoundQuestPlate = existingQuestPlate.FirstOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After QuestPlate table query: {localFoundQuestPlate}");
-#endif
         if (localFoundQuestPlate == null || localFoundQuestPlate.OriginalQuestMessage != questPlate.OriginalQuestMessage)
         {
           return null;
@@ -280,9 +239,6 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return null;
       }
     }
@@ -290,25 +246,20 @@ namespace Echoglossian
     public QuestPlate FindQuestPlateByName(QuestPlate questPlate)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbFindQuestPlateByNameOperationsLog.txt", append: true);
-      using StreamWriter logStream2 = new($"{this.configDir}DbFindQuestPlateByNameOperationsErrorLog.txt", append: true);
-#endif
       try
       {
-#if DEBUG
-        logStream.WriteLineAsync($"Before QuestPlate table query: {questPlate}");
-#endif
-
         IQueryable<QuestPlate> existingQuestPlate =
           context.QuestPlate.Where(t =>
             t.QuestName == questPlate.QuestName &&
             t.TranslationLang == questPlate.TranslationLang);
 
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingQuestPlate = existingQuestPlate.Where(t => t.TranslationEngine == questPlate.TranslationEngine);
+        }
+
         QuestPlate localFoundQuestPlate = existingQuestPlate.FirstOrDefault();
-#if DEBUG
-        logStream.WriteLineAsync($"After QuestPlate table query: {localFoundQuestPlate}");
-#endif
+
         if (localFoundQuestPlate == null || localFoundQuestPlate.QuestName != questPlate.QuestName)
         {
           return null;
@@ -319,9 +270,6 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream2.WriteLineAsync($"Query operation error: {e}");
-#endif
         return null;
       }
     }
@@ -329,17 +277,17 @@ namespace Echoglossian
     public string InsertTalkData(TalkMessage talkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbInsertTalkOperationsLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new($"{this.configDir}DbInsertTalkOperationsLog.txt", append: true);
+      #endif*/
       try
       {
-#if DEBUG
-        if (!this.configuration.UseImGuiForTalk)
-        {
-          logStream.WriteLineAsync($"Before SaveChanges: {talkMessage}");
-        }
-#endif
+        /*#if DEBUG
+                if (!this.configuration.UseImGuiForTalk)
+                {
+                  logStream.WriteLineAsync($"Before SaveChanges: {talkMessage}");
+                }
+        #endif*/
         if (this.configuration.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(talkMessage.ToString());
@@ -347,12 +295,12 @@ namespace Echoglossian
 
         // 1. Attach an entity to context with Added EntityState
         context.TalkMessage.Attach(talkMessage);
-#if DEBUG
-        if (!this.configuration.UseImGuiForTalk)
-        {
-          logStream.WriteLineAsync($"Inside Context: {context.TalkMessage.Local}");
-        }
-#endif
+        /*#if DEBUG
+                if (!this.configuration.UseImGuiForTalk)
+                {
+                  logStream.WriteLineAsync($"Inside Context: {context.TalkMessage.Local}");
+                }
+        #endif*/
 
         // or the followings are also valid
         // context.Students.Add(std);
@@ -361,12 +309,12 @@ namespace Echoglossian
 
         // 2. Calling SaveChanges to insert a new record into table
         context.SaveChangesAsync();
-#if DEBUG
-        if (!this.configuration.UseImGuiForTalk)
-        {
-          logStream.WriteLineAsync($"After 'SaveChanges': {context.TalkMessage.Local}");
-        }
-#endif
+        /*#if DEBUG
+                if (!this.configuration.UseImGuiForTalk)
+                {
+                  logStream.WriteLineAsync($"After 'SaveChanges': {context.TalkMessage.Local}");
+                }
+        #endif*/
         return "Data inserted to TalkMessages table.";
       }
       catch (Exception e)
@@ -378,30 +326,30 @@ namespace Echoglossian
     public string InsertBattleTalkData(BattleTalkMessage battleTalkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbInsertBattleTalkOperationsLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new($"{this.configDir}DbInsertBattleTalkOperationsLog.txt", append: true);
+      #endif*/
       try
       {
         context.BattleTalkMessage.Attach(battleTalkMessage);
-#if DEBUG
-        if (!this.configuration.UseImGuiForBattleTalk)
-        {
-          logStream.WriteLineAsync($"Inside Context: {context.BattleTalkMessage.Local}");
-        }
-#endif
+        /*#if DEBUG
+                if (!this.configuration.UseImGuiForBattleTalk)
+                {
+                  logStream.WriteLineAsync($"Inside Context: {context.BattleTalkMessage.Local}");
+                }
+        #endif*/
         if (this.configuration.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(battleTalkMessage.ToString());
         }
 
         context.SaveChangesAsync();
-#if DEBUG
-        if (!this.configuration.UseImGuiForBattleTalk)
-        {
-          logStream.WriteLineAsync($"After 'SaveChanges': {context.BattleTalkMessage.Local}");
-        }
-#endif
+        /*#if DEBUG
+                if (!this.configuration.UseImGuiForBattleTalk)
+                {
+                  logStream.WriteLineAsync($"After 'SaveChanges': {context.BattleTalkMessage.Local}");
+                }
+        #endif*/
         return "Data inserted to BattleTalkMessages table.";
       }
       catch (Exception e)
@@ -413,13 +361,13 @@ namespace Echoglossian
     public string InsertErrorToastMessageData(ToastMessage toastMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbInsertToastOperationsLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new($"{this.configDir}DbInsertToastOperationsLog.txt", append: true);
+      #endif*/
       try
       {
         bool isInThere;
-        if (this.ErrorToastsCache.Count > 0 && this.ErrorToastsCache != null)
+        if (this.ErrorToastsCache != null && this.ErrorToastsCache.Count > 0)
         {
 #if DEBUG
           PluginLog.Verbose($"Total ErrorToasts in cache: {this.ErrorToastsCache.Count}");
@@ -428,8 +376,10 @@ namespace Echoglossian
              PluginLog.Verbose($"{this.ErrorToastsCache.GetEnumerator().Current} :{t}");
            }*/
 #endif
-          isInThere = this.ErrorToastsCache.Any(t => toastMessage.ToastType == t.ToastType && toastMessage.TranslationLang == t.TranslationLang &&
-                                                     toastMessage.OriginalToastMessage == t.OriginalToastMessage);
+          isInThere = this.ErrorToastsCache.Exists(t => toastMessage.ToastType == t.ToastType &&
+                                                        toastMessage.TranslationLang == t.TranslationLang &&
+                                                        toastMessage.OriginalToastMessage == t.OriginalToastMessage &&
+                                                        toastMessage.TranslationEngine == t.TranslationEngine);
         }
         else
         {
@@ -442,9 +392,9 @@ namespace Echoglossian
         }
 
         context.ToastMessage.Attach(toastMessage);
-#if DEBUG
-        logStream.WriteLineAsync($"Inside Context: {context.ToastMessage.Local}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"Inside Context: {context.ToastMessage.Local}");
+        #endif*/
 
         // or the followings are also valid
         // context.Students.Add(std);
@@ -453,9 +403,9 @@ namespace Echoglossian
 
         // 2. Calling SaveChanges to insert a new record into Students table
         context.SaveChangesAsync();
-#if DEBUG
-        logStream.WriteLineAsync($"After 'SaveChanges': {context.ToastMessage.Local}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"After 'SaveChanges': {context.ToastMessage.Local}");
+        #endif*/
 
         this.LoadAllErrorToasts();
 
@@ -470,13 +420,13 @@ namespace Echoglossian
     public string InsertOtherToastMessageData(ToastMessage toastMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbInsertToastOperationsLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new($"{this.configDir}DbInsertToastOperationsLog.txt", append: true);
+      #endif*/
       try
       {
         bool isInThere;
-        if (this.OtherToastsCache.Count > 0 && this.OtherToastsCache != null)
+        if (this.OtherToastsCache != null && this.OtherToastsCache.Count > 0)
         {
 #if DEBUG
           PluginLog.Verbose($"Total ErrorToasts in cache: {this.OtherToastsCache.Count}");
@@ -485,8 +435,10 @@ namespace Echoglossian
              PluginLog.Verbose($"{this.OtherToastsCache.GetEnumerator().Current} :{t}");
            }*/
 #endif
-          isInThere = this.OtherToastsCache.Any(t => toastMessage.ToastType == t.ToastType && toastMessage.TranslationLang == t.TranslationLang &&
-                                                     toastMessage.OriginalToastMessage == t.OriginalToastMessage);
+          isInThere = this.OtherToastsCache.Exists(t => toastMessage.ToastType == t.ToastType &&
+                                                        toastMessage.TranslationLang == t.TranslationLang &&
+                                                        toastMessage.OriginalToastMessage == t.OriginalToastMessage &&
+                                                        toastMessage.TranslationEngine == t.TranslationEngine);
         }
         else
         {
@@ -499,9 +451,9 @@ namespace Echoglossian
         }
 
         context.ToastMessage.Attach(toastMessage);
-#if DEBUG
-        logStream.WriteLineAsync($"Inside Context: {context.ToastMessage.Local}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"Inside Context: {context.ToastMessage.Local}");
+        #endif*/
 
         // or the followings are also valid
         // context.Students.Add(std);
@@ -510,9 +462,9 @@ namespace Echoglossian
 
         // 2. Calling SaveChanges to insert a new record into Students table
         context.SaveChangesAsync();
-#if DEBUG
-        logStream.WriteLineAsync($"After 'SaveChanges': {context.ToastMessage.Local}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"After 'SaveChanges': {context.ToastMessage.Local}");
+        #endif*/
 
         this.LoadAllOtherToasts();
 
@@ -527,25 +479,25 @@ namespace Echoglossian
     public string InsertQuestPlate(QuestPlate questPlate)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbInsertQuestPlateOperationsLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new($"{this.configDir}DbInsertQuestPlateOperationsLog.txt", append: true);
+      #endif*/
       try
       {
         questPlate.UpdateFieldsAsText();
         context.QuestPlate.Attach(questPlate);
-#if DEBUG
-        logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");
+        #endif*/
         if (this.configuration.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(questPlate.ToString());
         }
 
         context.SaveChangesAsync();
-#if DEBUG
-        logStream.WriteLineAsync($"After 'SaveChanges': {context.QuestPlate.Local}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"After 'SaveChanges': {context.QuestPlate.Local}");
+        #endif*/
         return "Data inserted to QuestPlate table.";
       }
       catch (Exception e)
@@ -557,25 +509,25 @@ namespace Echoglossian
     public string UpdateQuestPlate(QuestPlate questPlate)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbUpdateQuestPlateOperationsLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new($"{this.configDir}DbUpdateQuestPlateOperationsLog.txt", append: true);
+      #endif*/
       try
       {
         questPlate.UpdateFieldsAsText();
         context.QuestPlate.Update(questPlate);
-#if DEBUG
-        logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"Inside Context: {context.QuestPlate.Local}");
+        #endif*/
         if (this.configuration.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(questPlate.ToString());
         }
 
         context.SaveChangesAsync();
-#if DEBUG
-        logStream.WriteLineAsync($"After 'SaveChanges': {context.QuestPlate.Local}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"After 'SaveChanges': {context.QuestPlate.Local}");
+        #endif*/
         return "Data updated on QuestPlate table.";
       }
       catch (Exception e)
@@ -588,9 +540,9 @@ namespace Echoglossian
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
       this.ErrorToastsCache = new List<ToastMessage>();
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbErrorToastListQueryOperationsLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new($"{this.configDir}DbErrorToastListQueryOperationsLog.txt", append: true);
+      #endif*/
       try
       {
         IQueryable<ToastMessage> existingToastMessages =
@@ -601,15 +553,16 @@ namespace Echoglossian
         {
           this.ErrorToastsCache.Add(t);
         }
-#if DEBUG
-        logStream.WriteLineAsync($"After Toast Messages table query: {this.ErrorToastsCache.ToArray()}");
-#endif
+
+        /*#if DEBUG
+                logStream.WriteLineAsync($"After Toast Messages table query: {this.ErrorToastsCache.ToArray()}");
+        #endif*/
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream.WriteLineAsync($"Query operation error: {e}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"Query operation error: {e}");
+        #endif*/
         PluginLog.Warning("Could not find any Error Toasts in Database");
       }
     }
@@ -618,9 +571,9 @@ namespace Echoglossian
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
       this.OtherToastsCache = new List<ToastMessage>();
-#if DEBUG
-      using StreamWriter logStream = new($"{this.configDir}DbOtherToastListQueryOperationsLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new($"{this.configDir}DbOtherToastListQueryOperationsLog.txt", append: true);
+      #endif*/
       try
       {
         IQueryable<ToastMessage> existingToastMessages =
@@ -631,15 +584,16 @@ namespace Echoglossian
         {
           this.OtherToastsCache.Add(t);
         }
-#if DEBUG
-        logStream.WriteLineAsync($"After Toast Messages table query: {this.OtherToastsCache.ToArray()}");
-#endif
+
+        /*#if DEBUG
+                logStream.WriteLineAsync($"After Toast Messages table query: {this.OtherToastsCache.ToArray()}");
+        #endif*/
       }
       catch (Exception e)
       {
-#if DEBUG
-        logStream.WriteLineAsync($"Query operation error: {e}");
-#endif
+        /*#if DEBUG
+                logStream.WriteLineAsync($"Query operation error: {e}");
+        #endif*/
         PluginLog.Warning("Could not find any Other Toasts in Database");
       }
     }

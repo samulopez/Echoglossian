@@ -288,6 +288,33 @@ namespace Echoglossian.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use API Key (recommended).
+        /// </summary>
+        public static string DeepLTransAPIKey {
+            get {
+                return ResourceManager.GetString("DeepLTransAPIKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add your DeepL API Key.
+        /// </summary>
+        public static string DeeplTranslatorApiKey {
+            get {
+                return ResourceManager.GetString("DeeplTranslatorApiKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click here to create a DeepL API Key.
+        /// </summary>
+        public static string DeepLTranslatorAPIKeyLink {
+            get {
+                return ResourceManager.GetString("DeepLTranslatorAPIKeyLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This plugin is aimed at solving one of the biggest issues for audiences that do not speak either English, German, French or Japanese: Understanding dialogues and other elements of the Game UI..
         /// </summary>
         public static string DisclaimerText1 {
@@ -715,6 +742,15 @@ namespace Echoglossian.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Optional settings for DeepL:.
+        /// </summary>
+        public static string SettingsForDeepLTransText {
+            get {
+                return ResourceManager.GetString("SettingsForDeepLTransText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings for Google Translate:.
         /// </summary>
         public static string SettingsForGTransText {
@@ -850,6 +886,15 @@ namespace Echoglossian.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Translate again stored translated texts with the selected translation engine.
+        /// </summary>
+        public static string TranslateTextsAgain {
+            get {
+                return ResourceManager.GetString("TranslateTextsAgain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Translate in-game Toast Messages.
         /// </summary>
         public static string TranslateToastToggleText {
@@ -873,6 +918,15 @@ namespace Echoglossian.Properties {
         public static string TranslationEnabled {
             get {
                 return ResourceManager.GetString("TranslationEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose the translation engine.
+        /// </summary>
+        public static string TranslationEngineChoose {
+            get {
+                return ResourceManager.GetString("TranslationEngineChoose", resourceCulture);
             }
         }
         

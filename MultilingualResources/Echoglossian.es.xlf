@@ -399,6 +399,30 @@
           <source>Translate quest name, description and objectives (WIP)</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">Traducir el nombre, la descripción y los objetivos de la misión (WIP)</target>
         </trans-unit>
+        <trans-unit id="DeeplTranslatorApiKey" translate="yes" xml:space="preserve">
+          <source>Add your DeepL API Key</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Agregue su clave API de DeepL</target>
+        </trans-unit>
+        <trans-unit id="SettingsForDeepLTransText" translate="yes" xml:space="preserve">
+          <source>Optional settings for DeepL:</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Ajustes opcionales para DeepL:</target>
+        </trans-unit>
+        <trans-unit id="DeepLTranslatorAPIKeyLink" translate="yes" xml:space="preserve">
+          <source>Click here to create a DeepL API Key</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Haga clic aquí para crear una clave API de DeepL</target>
+        </trans-unit>
+        <trans-unit id="TranslationEngineChoose" translate="yes" xml:space="preserve">
+          <source>Choose the translation engine</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Elija el motor de traducción</target>
+        </trans-unit>
+        <trans-unit id="DeepLTransAPIKey" translate="yes" xml:space="preserve">
+          <source>Use API Key (recommended)</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Utilizar clave API (recomendado)</target>
+        </trans-unit>
+        <trans-unit id="TranslateTextsAgain" translate="yes" xml:space="preserve">
+          <source>Translate again stored translated texts with the selected translation engine</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Volver a traducir los textos traducidos almacenados con el motor de traducción seleccionado</target>
+        </trans-unit>
       </group>
     </body>
   </file>

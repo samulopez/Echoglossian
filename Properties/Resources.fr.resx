@@ -303,4 +303,22 @@
   <data name="TranslateJournalToggle" xml:space="preserve">
     <value>Traduire le nom, la description et les objectifs de la quête (WIP)</value>
   </data>
+  <data name="DeeplTranslatorApiKey" xml:space="preserve">
+    <value>Ajoutez votre clé API DeepL</value>
+  </data>
+  <data name="SettingsForDeepLTransText" xml:space="preserve">
+    <value>Paramètres optionnels pour DeepL:</value>
+  </data>
+  <data name="DeepLTranslatorAPIKeyLink" xml:space="preserve">
+    <value>Cliquez ici pour créer une clé API DeepL</value>
+  </data>
+  <data name="TranslationEngineChoose" xml:space="preserve">
+    <value>Choisissez le moteur de traduction</value>
+  </data>
+  <data name="DeepLTransAPIKey" xml:space="preserve">
+    <value>Utiliser une clé API (recommandé)</value>
+  </data>
+  <data name="TranslateTextsAgain" xml:space="preserve">
+    <value>Traduire à nouveau les textes traduits enregistrés avec le moteur de traduction sélectionné</value>
+  </data>
 </root>

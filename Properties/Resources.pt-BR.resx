@@ -276,4 +276,22 @@
   <data name="TranslateJournalToggle" xml:space="preserve">
     <value>Traduzir nome, descrição e objetivos da missão (WIP)</value>
   </data>
+  <data name="DeeplTranslatorApiKey" xml:space="preserve">
+    <value>Adicione sua chave API DeepL</value>
+  </data>
+  <data name="SettingsForDeepLTransText" xml:space="preserve">
+    <value>Configurações opcionais para DeepL:</value>
+  </data>
+  <data name="DeepLTranslatorAPIKeyLink" xml:space="preserve">
+    <value>Clique aqui para criar uma chave API DeepL</value>
+  </data>
+  <data name="TranslationEngineChoose" xml:space="preserve">
+    <value>Escolha o mecanismo de tradução</value>
+  </data>
+  <data name="DeepLTransAPIKey" xml:space="preserve">
+    <value>Usar chave de API (recomendado)</value>
+  </data>
+  <data name="TranslateTextsAgain" xml:space="preserve">
+    <value>Traduzir novamente os textos traduzidos armazenados com o mecanismo de tradução selecionado</value>
+  </data>
 </root>
