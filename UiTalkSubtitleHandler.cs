@@ -29,7 +29,7 @@ namespace Echoglossian
           PluginLog.Information($"Addon Details----------------: {addonDetails->NodeText} -> {addonDetails->NodeText.BufUsed}");
 
           var originalText = Marshal.PtrToStringUTF8(new IntPtr(setupAtkValues[0].String));
-          var translatedText = Translate(originalText);
+          var translatedText = this.Translate(originalText);
           this.translations[originalText] = translatedText;
           PluginLog.Information($"AddonSetup-----------: {originalText} -> {translatedText}");
 

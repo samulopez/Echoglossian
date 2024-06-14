@@ -69,7 +69,7 @@
     <value>¡Envíame un PIX!</value>
   </data>
   <data name="WhatToTranslateText" xml:space="preserve">
-    <value>Seleccione qué tipo de texto desea traducir</value>
+    <value>¡Seleccione qué tipo de texto desea traducir en la pestaña correspondiente a continuación!</value>
   </data>
   <data name="PixText" xml:space="preserve">
     <value>Escanea el código QR para enviarme un PIX - solo válido en Brasil</value>
@@ -90,7 +90,7 @@
     <value>El idioma no pudo ser identificado con un grado aceptable de certeza</value>
   </data>
   <data name="ConfigTab2Name" xml:space="preserve">
-    <value>Configuraciones de mensajes de sistema</value>
+    <value>Configuración de Charla de batalla</value>
   </data>
   <data name="ToastOverlayWidthMultiplierOrientations" xml:space="preserve">
     <value>Ajustar el ancho de la superposición de traducción de mensajes sistema</value>
@@ -126,7 +126,7 @@
     <value>Elija el idioma para la ventana de configuración del plugin</value>
   </data>
   <data name="PluginInterfaceLanguageSelectorText" xml:space="preserve">
-    <value>Idioma de la ventana de configuración:</value>
+    <value>LanguageInfo de la ventana de configuración:</value>
   </data>
   <data name="SwapTranslationTextToggle" xml:space="preserve">
     <value>Mostrar texto de diálogo original en Superposición y traducido en el cuadro de diálogo de la IU del juego</value>
@@ -144,44 +144,44 @@
     <value>¡Escriba la ruta y guárdela para que el complemento pueda funcionar correctamente!</value>
   </data>
   <data name="LanguageNotSupportedText" xml:space="preserve">
-    <value>El idioma seleccionado no es compatible con el backend de traducción actualmente disponible</value>
+    <value>El idioma seleccionado no es compatible con el backend de traducción disponible actualmente</value>
   </data>
   <data name="LanguageOnlySupportedUsingOverlay" xml:space="preserve">
-    <value>El idioma seleccionado solo se admite con las superposiciones del complemento debido a las limitaciones de la fuente nativa del juego</value>
+    <value>El idioma seleccionado solo es compatible con las superposiciones de complementos debido a las limitaciones de la fuente nativa del juego</value>
   </data>
   <data name="OverlayHeightScrollLabel" xml:space="preserve">
-    <value>Multiplicador de altura de superposición de diálogo</value>
+    <value>Multiplicador de altura de superposición de traslación</value>
   </data>
   <data name="OverlayName" xml:space="preserve">
-    <value>Traducción de battle talk (líneas de diálogo de Enenies)</value>
+    <value>Traducción de Battle Talk (líneas de diálogo de Enenies)</value>
     <comment>Translation overlay window name</comment>
   </data>
   <data name="ConfigTab0Name" xml:space="preserve">
-    <value>Principal</value>
+    <value>Qué, cuándo y cómo</value>
   </data>
   <data name="ConfigTab3Name" xml:space="preserve">
-    <value>Configuración de la notificación del sistema</value>
+    <value>Configuración del sistema</value>
   </data>
   <data name="ConfigTab4Name" xml:space="preserve">
     <value>Configuración del diario</value>
   </data>
   <data name="ConfigTab5Name" xml:space="preserve">
-    <value>Configuración de información sobre herramientas</value>
+    <value>Configuración de Tooltips</value>
   </data>
   <data name="ConfigTab6Name" xml:space="preserve">
-    <value>Otra configuración</value>
+    <value>Otros ajustes</value>
   </data>
   <data name="ConfigTabAbout" xml:space="preserve">
     <value>Acerca de Echoglossian</value>
   </data>
   <data name="TranslationsEnabled" xml:space="preserve">
-    <value>¡Traducciones habilitadas!</value>
+    <value>¡Las traducciones están habilitadas!</value>
   </data>
   <data name="ConfigTab7Name" xml:space="preserve">
     <value>Configuración del motor de traducción</value>
   </data>
   <data name="EnableTranslation" xml:space="preserve">
-    <value>Activar la traducción de texto del juego en tiempo real</value>
+    <value>Activar la traducción del texto del juego en tiempo real</value>
   </data>
   <data name="ImguiAdjustmentsLabel" xml:space="preserve">
     <value>Ajuste las opciones relacionadas con la superposición de traducción:</value>
@@ -193,22 +193,22 @@
     <value>Configuración de Google Translate:</value>
   </data>
   <data name="TodoUrl" xml:space="preserve">
-    <value>Lista de TODOs en Github</value>
+    <value>Lista de tareas pendientes en Github</value>
   </data>
   <data name="ContribText" xml:space="preserve">
-    <value>Por favor, apóyenos ya sea contribuyendo al desarrollo del proyecto, enviando problemas o ayudándonos con un café.</value>
+    <value>Por favor, apóyanos ya sea contribuyendo al desarrollo del proyecto, enviando problemas o ayudándonos con un café.</value>
   </data>
   <data name="DisclaimerText1" xml:space="preserve">
-    <value>Este plugin tiene como objetivo resolver uno de los mayores problemas para las audiencias que no hablan inglés, alemán, francés o japonés: comprender los diálogos y otros elementos de la interfaz de usuario del juego.</value>
+    <value>Este plugin tiene como objetivo resolver uno de los mayores problemas para el público que no habla inglés, alemán, francés o japonés: la comprensión de los diálogos y otros elementos de la interfaz de usuario del juego.</value>
   </data>
   <data name="DisclaimerText2" xml:space="preserve">
-    <value>Por ahora solo hacemos traducciones automáticas a través de la API de Google Translate, pero en el futuro tenemos la intención de admitir otros sistemas de traducción de ML. Incluso tenemos ideas dirigidas a traducciones de crowdsourcing, curadas por la comunidad.</value>
+    <value>Por ahora solo hacemos traducciones automáticas a través de la API de Google Translate, pero en el futuro tenemos la intención de admitir otros sistemas de traducción de ML. Incluso tenemos ideas dirigidas a traducciones colaborativas, seleccionadas por la comunidad.</value>
   </data>
   <data name="DisclaimerTitle" xml:space="preserve">
     <value>Acerca de Echoglossian:</value>
   </data>
   <data name="NEListText" xml:space="preserve">
-    <value>La lista no exhaustiva de temas y TODOs está disponible en el siguiente enlace:</value>
+    <value>La lista no exhaustiva de problemas y tareas pendientes está disponible en el siguiente enlace:</value>
   </data>
   <data name="TranslationDisabled" xml:space="preserve">
     <value>¡Las traducciones están deshabilitadas!</value>
@@ -217,34 +217,34 @@
     <value>¡Las traducciones están habilitadas!</value>
   </data>
   <data name="UseImGuiForToastsToggle" xml:space="preserve">
-    <value>Usar superposición para mostrar las traducciones de Toasts</value>
+    <value>Usar la superposición para mostrar las traducciones de notificaciones del sistema (WIP)</value>
   </data>
   <data name="ResetConfigsButton" xml:space="preserve">
     <value>Restablecer configuración</value>
   </data>
   <data name="SettingsReset" xml:space="preserve">
-    <value>¡La configuración de Echoglossian se restablece a los valores predeterminados correctamente!</value>
+    <value>¡La configuración de Echoglossian se restablece a los valores predeterminados con éxito!</value>
   </data>
   <data name="WhichToastsToTranslate" xml:space="preserve">
-    <value>Selecciona qué tipo de notificaciones de mensajes del juego traducir</value>
+    <value>Seleccionar qué tipo de notificaciones del sistema de mensajes del juego se van a traducir</value>
   </data>
   <data name="AssetsCheckingPopupMsg" xml:space="preserve">
-    <value>¡Comprobando los activos del plugin!</value>
+    <value>¡Comprobación de los activos del plugin!</value>
   </data>
   <data name="AssetsDownloadComplete" xml:space="preserve">
-    <value>¡Descarga de activos de plugin completa!</value>
+    <value>¡Descarga de activos de plugin completada!</value>
   </data>
   <data name="AssetsDownloadError1stPart" xml:space="preserve">
-    <value>Error al descargar los activos del plugin:</value>
+    <value>Error al descargar recursos de complementos:</value>
   </data>
   <data name="AssetsDownloadError2ndPart" xml:space="preserve">
-    <value>. Vuelva a intentarlo más tarde. Si el problema persiste, póngase en contacto con el desarrollador del plugin.</value>
+    <value>. Vuelva a intentarlo más tarde. Si el problema persiste, póngase en contacto con el desarrollador del complemento.</value>
   </data>
   <data name="AssetsPresentPopupMsg" xml:space="preserve">
-    <value>¡Todos los activos del plugin presentes!</value>
+    <value>¡Todos los activos del plugin están presentes!</value>
   </data>
   <data name="DownloadingAssetsPopupMsg" xml:space="preserve">
-    <value>Descarga de activos de plugins adicionales en segundo plano. ¡Espere a que finalice la descarga antes de abrir la configuración!</value>
+    <value>Descarga de activos de complementos adicionales en segundo plano. ¡Espere a que finalice la descarga antes de abrir la configuración!</value>
   </data>
   <data name="ConfigTab8Name" xml:space="preserve">
     <value>Solución de problemas</value>
@@ -277,21 +277,21 @@
     <value>Traducir el nombre, la descripción y los objetivos de la misión (WIP)</value>
   </data>
   <data name="DeeplTranslatorApiKey" xml:space="preserve">
-    <value>Agregue su clave API de DeepL</value>
+    <value>Añade tu clave de API de DeepL</value>
   </data>
   <data name="SettingsForDeepLTransText" xml:space="preserve">
     <value>Ajustes opcionales para DeepL:</value>
   </data>
   <data name="DeepLTranslatorAPIKeyLink" xml:space="preserve">
-    <value>Haga clic aquí para crear una clave API de DeepL</value>
+    <value>Haz clic aquí para crear una clave de API de DeepL</value>
   </data>
   <data name="TranslationEngineChoose" xml:space="preserve">
-    <value>Elija el motor de traducción</value>
+    <value>Elegir el motor de traducción</value>
   </data>
   <data name="DeepLTransAPIKey" xml:space="preserve">
-    <value>Utilizar clave API (recomendado)</value>
+    <value>Usar clave de API (recomendado)</value>
   </data>
   <data name="TranslateTextsAgain" xml:space="preserve">
-    <value>Volver a traducir los textos traducidos almacenados con el motor de traducción seleccionado</value>
+    <value>Vuelva a traducir textos traducidos almacenados con el motor de traducción seleccionado</value>
   </data>
 </root>

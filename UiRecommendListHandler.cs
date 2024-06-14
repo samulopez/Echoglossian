@@ -141,7 +141,7 @@ namespace Echoglossian
             continue;
           }
 
-          var translatedNameText = Translate(questNameText);
+          var translatedNameText = this.Translate(questNameText);
           PluginLog.Debug($"Name translated: {questNameText} -> {translatedNameText}");
           QuestPlate translatedQuestPlate = new(
             questNameText,

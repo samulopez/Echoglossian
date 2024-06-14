@@ -53,8 +53,8 @@ namespace Echoglossian
         // If the quest is not saved
         if (foundQuestPlate == null)
         {
-          translatedQuestName = Translate(questName);
-          translatedQuestMessage = Translate(questMessage);
+          translatedQuestName = this.Translate(questName);
+          translatedQuestMessage = this.Translate(questMessage);
 
           PluginLog.Debug($"Translated quest name: {translatedQuestName}");
           PluginLog.Debug($"Translated quest message: {translatedQuestMessage}");

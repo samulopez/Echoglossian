@@ -749,14 +749,14 @@
             <param name="fontLoaded"></param>
             <param name="translationSemaphore"></param>
         </member>
-        <member name="M:Echoglossian.UIAddonHandler.#ctor(Echoglossian.Config,ImGuiNET.ImFontPtr,System.Boolean,System.String)">
+        <member name="M:Echoglossian.UIAddonHandler.#ctor(Echoglossian.Config,ImGuiNET.ImFontPtr,System.Boolean,System.Collections.Generic.Dictionary{System.Int32,Echoglossian.Echoglossian.LanguageInfo})">
             <summary>
             Initializes a new instance of the <see cref="T:Echoglossian.UIAddonHandler"/> class.
             </summary>
             <param name="configuration"></param>
             <param name="uiFont"></param>
             <param name="fontLoaded"></param>
-            <param name="addonName"></param>
+            <param name="langDict"></param>
         </member>
     </members>
 </doc>

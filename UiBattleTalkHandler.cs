@@ -80,8 +80,8 @@ namespace Echoglossian
         {
           if (!this.configuration.UseImGuiForBattleTalk)
           {
-            string translatedBattleTalkMessage = Translate(battleTextToTranslate);
-            string senderTranslation = Translate(senderToTranslate);
+            string translatedBattleTalkMessage = this.Translate(battleTextToTranslate);
+            string senderTranslation = this.Translate(senderToTranslate);
 #if DEBUG
             PluginLog.Warning(translatedBattleTalkMessage);
 #endif
@@ -129,7 +129,7 @@ namespace Echoglossian
               Task.Run(() =>
               {
                 int nameId = this.currentSenderTranslationId;
-                string senderTranslation = Translate(senderToTranslate);
+                string senderTranslation = this.Translate(senderToTranslate);
                 this.senderTranslationSemaphore.Wait();
                 if (nameId == this.currentSenderTranslationId)
                 {
@@ -145,7 +145,7 @@ namespace Echoglossian
             Task.Run(() =>
             {
               int id = this.currentBattleTalkTranslationId;
-              string translation = Translate(battleTextToTranslate);
+              string translation = this.Translate(battleTextToTranslate);
               this.battleTalkTranslationSemaphore.Wait();
               if (id == this.currentBattleTalkTranslationId)
               {

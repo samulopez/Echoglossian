@@ -132,7 +132,7 @@ namespace Echoglossian
                 this.classChangeToastTranslationSemaphore.Wait();
                 if (messageId == this.currentClassChangeToastTranslationId)
                 {
-                  string messageTranslation = Translate(messageToTranslate);
+                  string messageTranslation = this.Translate(messageToTranslate);
 #if DEBUG
                   PluginLog.Verbose("Not Using Imgui - Translate ClassChange toast - 4");
 #endif
@@ -157,7 +157,7 @@ namespace Echoglossian
               Task.Run(() =>
               {
                 int messageId = this.currentToastTranslationId;
-                string messageTranslation = Translate(textNode->NodeText.ToString());
+                string messageTranslation = this.Translate(textNode->NodeText.ToString());
                 this.classChangeToastTranslationSemaphore.Wait();
                 if (messageId == this.currentClassChangeToastTranslationId)
                 {
@@ -315,7 +315,7 @@ namespace Echoglossian
 
         if (!this.configuration.UseImGuiForToasts && this.configuration.TranslateQuestToast && this.configuration.TranslateWideTextToast)
         {
-          string messageTranslatedText = Translate(messageTextToTranslate);
+          string messageTranslatedText = this.Translate(messageTextToTranslate);
 
           message = messageTranslatedText;
         }
@@ -326,7 +326,7 @@ namespace Echoglossian
           Task.Run(() =>
           {
             int messageId = this.currentQuestToastTranslationId;
-            string messageTranslation = Translate(messageTextToTranslate);
+            string messageTranslation = this.Translate(messageTextToTranslate);
             this.questToastTranslationSemaphore.Wait();
             if (messageId == this.currentQuestToastTranslationId)
             {
@@ -378,7 +378,7 @@ namespace Echoglossian
 #if DEBUG
             PluginLog.Verbose("if not found and if not using imgui");
 #endif
-            string translatedToastMessage = Translate(message.TextValue);
+            string translatedToastMessage = this.Translate(message.TextValue);
             message = translatedToastMessage;
 
             ToastMessage translatedToastData = new ToastMessage("Error", messageTextToTranslate, LangIdentify(messageTextToTranslate),
@@ -402,7 +402,7 @@ namespace Echoglossian
             Task.Run(() =>
             {
               int messageId = this.currentErrorToastTranslationId;
-              string messageTranslation = Translate(messageTextToTranslate);
+              string messageTranslation = this.Translate(messageTextToTranslate);
               this.errorToastTranslationSemaphore.Wait();
               if (messageId == this.currentErrorToastTranslationId)
               {
@@ -510,7 +510,7 @@ namespace Echoglossian
 #if DEBUG
             PluginLog.Verbose("if not found and if not using imgui");
 #endif
-            string translatedToastMessage = Translate(message.TextValue);
+            string translatedToastMessage = this.Translate(message.TextValue);
             message = translatedToastMessage;
 
             ToastMessage translatedToastData = new ToastMessage("NonError", messageTextToTranslate, LangIdentify(messageTextToTranslate),
@@ -534,7 +534,7 @@ namespace Echoglossian
             Task.Run(() =>
             {
               int messageId = this.currentToastTranslationId;
-              string messageTranslation = Translate(messageTextToTranslate);
+              string messageTranslation = this.Translate(messageTextToTranslate);
               this.toastTranslationSemaphore.Wait();
               if (messageId == this.currentToastTranslationId)
               {

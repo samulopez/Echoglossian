@@ -375,7 +375,7 @@
         </trans-unit>
         <trans-unit id="ConfigTab9Name" translate="yes" xml:space="preserve">
           <source>Misc. Settings</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Configurações diversas</target>
+          <target state="translated" state-qualifier="mt-suggestion">Configurações diversas</target>
         </trans-unit>
         <trans-unit id="ConfigTab9Text" translate="yes" xml:space="preserve">
           <source>Miscellaneous Plugin Options and Settings</source>
@@ -383,11 +383,11 @@
         </trans-unit>
         <trans-unit id="ConfigTab9CheckboxClipboardText" translate="yes" xml:space="preserve">
           <source>Automatically copy the last translation to the Plugin Clipboard</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Copie automaticamente a última tradução para a Área de Transferência do Plugin</target>
+          <target state="translated" state-qualifier="mt-suggestion">Copie automaticamente a última tradução para a Área de Transferência do Plugin</target>
         </trans-unit>
         <trans-unit id="ConfigTab9CheckboxClipboardTooltipText" translate="yes" xml:space="preserve">
           <source>This setting copies the last translation and source text to the clipboard (Works with Talk and BattleTalk)</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Esta configuração copia a última tradução e o texto de origem para a área de transferência (Funciona com Talk e BattleTalk)</target>
+          <target state="translated" state-qualifier="mt-suggestion">Esta configuração copia a última tradução e o texto de origem para a área de transferência (Funciona com Talk e BattleTalk)</target>
         </trans-unit>
         <trans-unit id="TranslateJournalToggle" translate="yes" xml:space="preserve">
           <source>Translate quest name, description and objectives (WIP)</source>
@@ -395,27 +395,27 @@
         </trans-unit>
         <trans-unit id="DeeplTranslatorApiKey" translate="yes" xml:space="preserve">
           <source>Add your DeepL API Key</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Adicione sua chave API DeepL</target>
+          <target state="translated" state-qualifier="mt-suggestion">Adicione sua chave API DeepL</target>
         </trans-unit>
         <trans-unit id="SettingsForDeepLTransText" translate="yes" xml:space="preserve">
           <source>Optional settings for DeepL:</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Configurações opcionais para DeepL:</target>
+          <target state="translated" state-qualifier="mt-suggestion">Configurações opcionais para DeepL:</target>
         </trans-unit>
         <trans-unit id="DeepLTranslatorAPIKeyLink" translate="yes" xml:space="preserve">
           <source>Click here to create a DeepL API Key</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Clique aqui para criar uma chave API DeepL</target>
+          <target state="translated" state-qualifier="mt-suggestion">Clique aqui para criar uma chave API DeepL</target>
         </trans-unit>
         <trans-unit id="TranslationEngineChoose" translate="yes" xml:space="preserve">
           <source>Choose the translation engine</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Escolha o mecanismo de tradução</target>
+          <target state="translated" state-qualifier="mt-suggestion">Escolha o mecanismo de tradução</target>
         </trans-unit>
         <trans-unit id="DeepLTransAPIKey" translate="yes" xml:space="preserve">
           <source>Use API Key (recommended)</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Usar chave de API (recomendado)</target>
+          <target state="translated" state-qualifier="mt-suggestion">Usar chave de API (recomendado)</target>
         </trans-unit>
         <trans-unit id="TranslateTextsAgain" translate="yes" xml:space="preserve">
           <source>Translate again stored translated texts with the selected translation engine</source>
-          <target state="needs-review-translation" state-qualifier="mt-suggestion">Traduzir novamente os textos traduzidos armazenados com o mecanismo de tradução selecionado</target>
+          <target state="translated" state-qualifier="mt-suggestion">Traduzir novamente os textos traduzidos armazenados com o mecanismo de tradução selecionado</target>
         </trans-unit>
       </group>
     </body>

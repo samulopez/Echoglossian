@@ -221,9 +221,11 @@ namespace Echoglossian
 
       this.EgloAddonHandler();
 
-      this.UIAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, "_BattleTalk");
+      this.UIAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LanguagesDictionary);
 
-      this.UIAddonHandler.EgloAddonHandler("_BattleTalk", new[] { "PreSetup", "PreRefresh", "PostRefresh", "PreRequestedUpdate", "PostRequestedUpdate" });
+      this.UIAddonHandler.EgloAddonHandler("_BattleTalk", ["PreSetup", "PostSetup", "PreRefresh", "PostRefresh", "PreRequestedUpdate", "PostRequestedUpdate", /* "PreDraw", "PostDraw",*/"PreFinalize", "PostFinalize"]);
+
+      this.UIAddonHandler.EgloAddonHandler("CutsceneSelectString", ["PreSetup", "PostSetup", "PreRefresh", "PostRefresh", "PreRequestedUpdate", "PostRequestedUpdate", /* "PreDraw", "PostDraw",*/"PreFinalize", "PostFinalize"]);
 
       PluginInterface.UiBuilder.Draw += this.BuildUi;
 

@@ -63,7 +63,7 @@ namespace Echoglossian
           continue;
         }
 
-        var translatedText = Translate(originalText);
+        var translatedText = this.Translate(originalText);
         summaries.Add(new(originalText, translatedText, summaryTextNode, true));
       }
 
@@ -101,7 +101,7 @@ namespace Echoglossian
         }
         else
         {
-          translatedQuestObjective = Translate(objectiveText);
+          translatedQuestObjective = this.Translate(objectiveText);
           foundQuestPlate.Objectives.Add(objectiveText, translatedQuestObjective);
           shouldUpdateQuest = true;
         }
@@ -114,7 +114,7 @@ namespace Echoglossian
           }
           else
           {
-            translatedQuestSummary = Translate(summaryText);
+            translatedQuestSummary = this.Translate(summaryText);
             foundQuestPlate.Summaries.Add(summaryText, translatedQuestSummary);
             shouldUpdateQuest = true;
           }
@@ -140,9 +140,9 @@ namespace Echoglossian
       }
       else
       {
-        translatedQuestName = Translate(questName);
-        translatedQuestMessage = Translate(questMessage);
-        translatedQuestObjective = Translate(objectiveText);
+        translatedQuestName = this.Translate(questName);
+        translatedQuestMessage = this.Translate(questMessage);
+        translatedQuestObjective = this.Translate(objectiveText);
 
         QuestPlate translatedQuestPlate = new(
           questName,
@@ -158,7 +158,7 @@ namespace Echoglossian
 
         if (summaryText != string.Empty)
         {
-          translatedQuestSummary = Translate(summaryText);
+          translatedQuestSummary = this.Translate(summaryText);
           translatedQuestPlate.Summaries.Add(summaryText, translatedQuestSummary);
         }
 
@@ -295,8 +295,8 @@ namespace Echoglossian
         }
         else
         {
-          translatedQuestName = Translate(questName);
-          translatedQuestMessage = Translate(questMessage);
+          translatedQuestName = this.Translate(questName);
+          translatedQuestMessage = this.Translate(questMessage);
 
           PluginLog.Debug($"Translated quest name: {translatedQuestName}");
           PluginLog.Debug($"Translated quest message: {translatedQuestMessage}");
@@ -408,7 +408,7 @@ namespace Echoglossian
             continue;
           }
 
-          var translatedNameText = Translate(questNameText);
+          var translatedNameText = this.Translate(questNameText);
           PluginLog.Debug($"Name translated: {questNameText} -> {translatedNameText}");
           QuestPlate translatedQuestPlate = new(
             questNameText,

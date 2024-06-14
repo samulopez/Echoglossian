@@ -45,11 +45,11 @@ namespace Echoglossian
           string messageTranslation;
           if (this.configuration.TranslateNpcNames)
           {
-            nameTranslation = Translate(dialogue?.SenderName);
+            nameTranslation = this.Translate(dialogue?.SenderName);
             PluginLog.Warning($"Name translation async: {nameTranslation}");
           }
 
-          messageTranslation = Translate(dialogue?.OriginalTalkMessage);
+          messageTranslation = this.Translate(dialogue?.OriginalTalkMessage);
           PluginLog.Warning($"Message translation async: {messageTranslation}");
         }
       }
@@ -144,8 +144,8 @@ namespace Echoglossian
         {
           if (!this.configuration.UseImGuiForTalk)
           {
-            string translatedText = Translate(textToTranslate);
-            string nameTranslation = nameToTranslate.IsNullOrEmpty() ? string.Empty : Translate(nameToTranslate);
+            string translatedText = this.Translate(textToTranslate);
+            string nameTranslation = nameToTranslate.IsNullOrEmpty() ? string.Empty : this.Translate(nameToTranslate);
 #if DEBUG
             PluginLog.Warning(translatedText);
 #endif
@@ -209,7 +209,7 @@ namespace Echoglossian
                 Task.Run(() =>
                 {
                   int nameId = this.currentNameTranslationId;
-                  string nameTranslation = Translate(nameToTranslate);
+                  string nameTranslation = this.Translate(nameToTranslate);
                   this.nameTranslationSemaphore.Wait();
                   if (nameId == this.currentNameTranslationId)
                   {
@@ -230,7 +230,7 @@ namespace Echoglossian
               Task.Run(() =>
               {
                 int id = this.currentTalkTranslationId;
-                string translation = Translate(textToTranslate);
+                string translation = this.Translate(textToTranslate);
                 this.talkTranslationSemaphore.Wait();
                 if (id == this.currentTalkTranslationId)
                 {
@@ -282,8 +282,8 @@ namespace Echoglossian
 #if DEBUG
               PluginLog.Warning("Using Swap text for translation");
 #endif
-              string translatedText = Translate(textToTranslate);
-              string nameTranslation = nameToTranslate.IsNullOrEmpty() ? string.Empty : Translate(nameToTranslate);
+              string translatedText = this.Translate(textToTranslate);
+              string nameTranslation = nameToTranslate.IsNullOrEmpty() ? string.Empty : this.Translate(nameToTranslate);
               if (this.configuration.TranslateNpcNames)
               {
                 name = nameTranslation == string.Empty ? name : nameTranslation;

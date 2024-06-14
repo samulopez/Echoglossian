@@ -9,6 +9,10 @@ using Dalamud.Logging;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using static Echoglossian.Echoglossian;
+using Dalamud.Memory;
+using Humanizer;
 
 namespace Echoglossian
 {
@@ -23,6 +27,11 @@ namespace Echoglossian
     private ImFontPtr uiFont;
     private bool fontLoaded;
 
+    private TranslationService translationService;
+
+    private Dictionary<int, LanguageInfo> langDict;
+
+
     private string addonName = string.Empty;
 
     /// <summary>
@@ -31,18 +40,20 @@ namespace Echoglossian
     /// <param name="configuration"></param>
     /// <param name="uiFont"></param>
     /// <param name="fontLoaded"></param>
-    /// <param name="addonName"></param>
+    /// <param name="langDict"></param>
+
     public UIAddonHandler(
         Config configuration = default,
         ImFontPtr uiFont = default,
         bool fontLoaded = default,
-        string addonName = null
+        Dictionary<int, LanguageInfo> langDict = default
         )
     {
       this.configuration = configuration;
       this.uiFont = uiFont;
       this.fontLoaded = fontLoaded;
-      this.addonName = addonName;
+      this.langDict = langDict;
+
     }
 
     public void EgloAddonHandler(string addonName, string[] eventsToWatch)
@@ -107,7 +118,7 @@ namespace Echoglossian
       {
         case AddonArgsType.Setup:
           var setupArgs = args;
-          this.Handleargs((AddonSetupArgs)setupArgs);
+          this.HandleSetupArgs((AddonSetupArgs)setupArgs);
           break;
         case AddonArgsType.Update:
           var updateArgs = args;
@@ -135,17 +146,19 @@ namespace Echoglossian
       }
     }
 
-    private unsafe void Handleargs(AddonSetupArgs args)
+    private unsafe void HandleSetupArgs(AddonSetupArgs args)
     {
       if (args == null)
       {
-        Echoglossian.PluginLog.Error("AddonSetupArgs is null");
+        // Echoglossian.PluginLog.Error("AddonSetupArgs is null");
         return;
       }
 
 
-      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleArgs: {args.AddonName}");
-      Echoglossian.PluginLog.Information($"Addonargs.AtkValues in HandleArgs: {args.AtkValues}");
+      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleSetupArgs: {args.AddonName}");
+      Echoglossian.PluginLog.Information($"Addonargs.AtkValues in HandleSetupArgs: {args.AtkValues}");
+      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleSetupArgs: {args.Addon}");
+      Echoglossian.PluginLog.Information($"Addonargs.StringArrayData in HandleSetupArgs: {args.AtkValueSpan.ToString()}");
 
       this.translationSemaphore = new SemaphoreSlim(1, 1);
 
@@ -197,65 +210,147 @@ namespace Echoglossian
 
     private void HandleUpdateArgs(AddonUpdateArgs args)
     {
-      Echoglossian.PluginLog.Information($"AddonUpdateArgs: {args.AddonName}");
-      // throw new NotImplementedException();
+      if (args == null)
+      {
+        // Echoglossian.PluginLog.Error("AddonUpdateArgs is null");
+        return;
+      }
+
+
+      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleUpdateArgs: {args.AddonName}");
+      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleUpdateArgs: {args.Addon}");
+      Echoglossian.PluginLog.Information($"Addonargs in HandleUpdateArgs: {args.ToString}");
+
     }
 
     private void HandleDrawArgs(AddonDrawArgs args)
     {
-      Echoglossian.PluginLog.Information($"AddonDrawArgs: {args.AddonName}");
-      // throw new NotImplementedException();
+      if (args == null)
+      {
+        // Echoglossian.PluginLog.Error("AddonDrawArgs is null");
+        return;
+      }
+
+      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleDrawArgs: {args.AddonName}");
+      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleDrawArgs: {args.Addon}");
+      Echoglossian.PluginLog.Information($"Addonargs in HandleDrawArgs: {args.ToString}");
+
+
     }
 
     private void HandleFinalizeArgs(AddonFinalizeArgs args)
     {
-      Echoglossian.PluginLog.Information($"AddonFinalizeArgs: {args.AddonName}");
-      // throw new NotImplementedException();
+      if (args == null)
+      {
+        // Echoglossian.PluginLog.Error("AddonFinalizeArgs is null");
+        return;
+      }
+
+      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleFinalizeArgs: {args.AddonName}");
+      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleFinalizeArgs: {args.Addon}");
+      Echoglossian.PluginLog.Information($"Addonargs in HandleFinalizeArgs: {args.ToString}");
+
     }
 
     private void HandleRequestedUpdateArgs(AddonRequestedUpdateArgs args)
     {
-      Echoglossian.PluginLog.Information($"AddonRequestedUpdateArgs: {args.StringArrayData.ToString()}");
-      // throw new NotImplementedException();
+      if (args == null)
+      {
+        // Echoglossian.PluginLog.Error("AddonRequestedUpdateArgs is null");
+        return;
+      }
+
+      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleRequestedUpdateArgs: {args.AddonName}");
+      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleRequestedUpdateArgs: {args.Addon}");
+      Echoglossian.PluginLog.Information($"Addonargs in HandleRequestedUpdateArgs: {args.ToString}");
+      Echoglossian.PluginLog.Information($"Addonargs StringArrayData in HandleRequestedUpdateArgs: {args.StringArrayData.ToString()}");
+      Echoglossian.PluginLog.Information($"Addonargs NumberArrayData in HandleRequestedUpdateArgs: {args.NumberArrayData.ToString()}");
     }
 
     private unsafe void HandleRefreshArgs(AddonRefreshArgs args)
     {
-      Echoglossian.PluginLog.Information($"AddonRefreshArgs ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨: {args.AtkValues.ToString()}");
+      if (args == null)
+      {
+        // Echoglossian.PluginLog.Error("AddonRefreshArgs is null");
+        return;
+      }
+
+      Echoglossian.PluginLog.Information($"AddonRefreshArgs in HandleRefreshArgs: {args.AddonName}");
+      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleRefreshArgs: {args.Addon}");
+      Echoglossian.PluginLog.Information($"Addonargs in HandleRefreshArgs: {args.ToString}");
+      Echoglossian.PluginLog.Information($"Addonargs.AtkValues in HandleRefreshArgs: {args.AtkValues}");
+      Echoglossian.PluginLog.Information($"Addonargs AtkValueSpan in HandleRefreshArgs: {args.AtkValueSpan.ToString()}");
+      Echoglossian.PluginLog.Information($"Addonargs AtkValueCount in HandleRefreshArgs: {args.AtkValueCount}");
+
       this.translationSemaphore = new SemaphoreSlim(1, 1);
 
       var refreshAtkvalues = (AtkValue*)args.AtkValues;
 
       var aargs = args.AddonName;
 
-      Echoglossian.PluginLog.Information($"AddonRefreshArgs --------------: {aargs}");
 
-
-
-      if (aargs != string.Empty)
+      /*if (aargs != string.Empty)
       {
-        Echoglossian.PluginLog.Information($"AddonRefreshArgs: {aargs.ToString()}");
+        Echoglossian.PluginLog.Information($"AddonRefreshArgs: {aargs}");
         // TODO: Figure out how to get the original text from the addon
         // var originalText = Marshal.PtrToStringUTF8(new IntPtr(refreshAtkvalues[0].String));
       }
       else
+      {*/
+
+      var addonInfo = (AtkUnitBase*)args.Addon;
+
+      Echoglossian.PluginLog.Information($"Addon Info: {addonInfo->ToString}");
+
+      var nodesQuantity = addonInfo->UldManager.NodeListCount;
+      Echoglossian.PluginLog.Information($"Addon Nodes Quantity: {nodesQuantity}");
+
+      for (var i = 0; i < nodesQuantity; i++)
       {
 
-        var addonInfo = (AtkUnitBase*)args.Addon;
+        Echoglossian.PluginLog.Information($"Addon Node ID: {i}");
+        var node = addonInfo->GetNodeById((uint)i);
 
-        Echoglossian.PluginLog.Information($"Addon Info: {addonInfo->ToString}");
+        if (node == null)
+        {
+          Echoglossian.PluginLog.Warning("Node Empty");
+          continue;
+        }
 
+        if (node->Type != NodeType.Text)
+        {
+          Echoglossian.PluginLog.Warning("Node is not Text");
+          continue;
+        }
 
+        var nodeAsTextNode = node->GetAsAtkTextNode();
 
-        var addonName = addonInfo->GetTextNodeById(4);
+        Echoglossian.PluginLog.Information($"Addon Text Node: {nodeAsTextNode->NodeText}");
 
-        var addonText = addonInfo->GetTextNodeById(6);
-        Echoglossian.PluginLog.Information($"Addon Details----------------: {addonName->NodeText} -> {addonText->NodeText}");
+        var translation = string.Empty;
+        if (nodeAsTextNode != null)
+        {
+          var textFromNode = MemoryHelper.ReadSeStringAsString(out _, (nint)nodeAsTextNode->NodeText.StringPtr);
 
-        var originalName = addonName->NodeText.ToString();
-        var originalAddonText = addonText->NodeText.ToString();
-        Echoglossian.PluginLog.Information($"AddonSetup-----------: {originalName} -> {originalAddonText}");
+          Echoglossian.PluginLog.Information($"Text from Node: {textFromNode}");
+
+          // translation = this.translationService.Translate(textFromNode, ClientState.ClientLanguage.Humanize(), this.langDict[this.configuration.Lang].Code);
+
+          Echoglossian.PluginLog.Information($"Translation: {translation}");
+        }
       }
+
+
+
+      var addonName = addonInfo->GetTextNodeById(4);
+
+      var addonText = addonInfo->GetTextNodeById(6);
+      Echoglossian.PluginLog.Information($"Addon Details in HandleRefreshArgs: {addonName->NodeText} -> {addonText->NodeText}");
+
+      var originalName = addonName->NodeText.ToString();
+      var originalAddonText = addonText->NodeText.ToString();
+      Echoglossian.PluginLog.Information($"Addon Original Text in HandleRefreshArgs: {originalName} -> {originalAddonText}");
+      /*}*/
 
       // throw new NotImplementedException();
     }
