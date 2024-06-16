@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 using Dalamud.Game.Gui;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Dalamud.Logging;
 using XivCommon.Functions.Tooltips;
 
 namespace Echoglossian

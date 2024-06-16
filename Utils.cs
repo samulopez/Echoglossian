@@ -11,7 +11,6 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Dalamud.Interface.Internal.Notifications;
-using Dalamud.Logging;
 using Echoglossian.Properties;
 
 namespace Echoglossian

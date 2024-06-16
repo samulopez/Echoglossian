@@ -4,7 +4,6 @@
 // </copyright>
 
 using System;
-using System.Runtime.InteropServices;
 
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
@@ -40,9 +39,11 @@ namespace Echoglossian
         string questName = MemoryHelper.ReadSeStringAsString(out _, (nint)setupAtkValues[5].String);
         string questMessage = MemoryHelper.ReadSeStringAsString(out _, (nint)setupAtkValues[12].String);
 
+#if DEBUG
         PluginLog.Debug($"Language: {ClientState.ClientLanguage.Humanize()}");
         PluginLog.Debug($"Quest name: {questName}");
         PluginLog.Debug($"Quest message: {questMessage}");
+#endif
 
         QuestPlate questPlate = this.FormatQuestPlate(questName, questMessage);
         QuestPlate foundQuestPlate = this.FindQuestPlate(questPlate);
@@ -56,9 +57,10 @@ namespace Echoglossian
           translatedQuestName = this.Translate(questName);
           translatedQuestMessage = this.Translate(questMessage);
 
+#if DEBUG
           PluginLog.Debug($"Translated quest name: {translatedQuestName}");
           PluginLog.Debug($"Translated quest message: {translatedQuestMessage}");
-
+#endif
           QuestPlate translatedQuestPlate = new(
             questName,
             questMessage,
@@ -72,22 +74,27 @@ namespace Echoglossian
             DateTime.Now);
 
           string result = this.InsertQuestPlate(translatedQuestPlate);
+#if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+#endif
         }
         else
         { // if the data is already in the DB
           translatedQuestName = foundQuestPlate.TranslatedQuestName;
           translatedQuestMessage = foundQuestPlate.TranslatedQuestMessage;
+#if DEBUG
           PluginLog.Debug($"From database - Name: {translatedQuestName}, Message: {translatedQuestMessage}");
+#endif
         }
-
+#if DEBUG
         PluginLog.Debug($"Using QuestPlate Replace - {translatedQuestName}: {translatedQuestMessage}");
+#endif
         setupAtkValues[5].SetString(translatedQuestName);
         setupAtkValues[12].SetString(translatedQuestMessage);
       }
       catch (Exception e)
       {
-        PluginLog.Warning("Exception: " + e.StackTrace);
+        PluginLog.Error("Exception: " + e.StackTrace);
       }
     }
   }

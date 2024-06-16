@@ -7,7 +7,6 @@ using System;
 using System.Numerics;
 
 using Dalamud.Interface.Utility;
-using Dalamud.Logging;
 using Dalamud.Utility;
 using Echoglossian.Properties;
 using ImGuiNET;

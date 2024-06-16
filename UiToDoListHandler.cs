@@ -169,7 +169,9 @@ namespace Echoglossian
           QuestPlate foundQuestPlate = this.FindQuestPlateByName(questPlate);
           if (foundQuestPlate != null)
           {
+#if DEBUG
             PluginLog.Debug($"Name from database: {quest.Text} -> {foundQuestPlate.TranslatedQuestName}");
+#endif
             todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(foundQuestPlate.TranslatedQuestName);
             this.translatedQuestNames.TryAdd(foundQuestPlate.TranslatedQuestName, true);
 
@@ -183,7 +185,9 @@ namespace Echoglossian
 
               if (foundQuestPlate.Objectives.TryGetValue(objective.Text, out var storedObjectiveText))
               {
+#if DEBUG
                 PluginLog.Debug($"Objective from database: {objective.Text} {storedObjectiveText}");
+#endif
                 todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(storedObjectiveText);
                 continue;
               }
@@ -191,7 +195,9 @@ namespace Echoglossian
               var translatedQuestObjective = this.Translate(objective.Text);
               foundQuestPlate.Objectives.TryAdd(objective.Text, translatedQuestObjective);
               string resultUpdate = this.UpdateQuestPlate(foundQuestPlate);
+#if DEBUG
               PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {resultUpdate}");
+#endif
               todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedQuestObjective);
             }
 
@@ -199,7 +205,9 @@ namespace Echoglossian
           }
 
           var translatedNameText = this.Translate(quest.Text);
+#if DEBUG
           PluginLog.Debug($"Name translated: {quest.Text} -> {translatedNameText}");
+#endif
           QuestPlate translatedQuestPlate = new(
             quest.Text,
             string.Empty,
@@ -222,26 +230,31 @@ namespace Echoglossian
             }
 
             var translatedObjectiveText = this.Translate(objective.Text);
+#if DEBUG
             PluginLog.Debug($"Objective translated: {translatedObjectiveText}");
+#endif
             translatedQuestPlate.Objectives.TryAdd(objective.Text, translatedObjectiveText);
             todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedObjectiveText);
           }
 
           string result = this.InsertQuestPlate(translatedQuestPlate);
+#if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
-
+#endif
           this.translatedQuestNames.TryAdd(translatedNameText, true);
         }
       }
       catch (Exception e)
       {
-        PluginLog.Warning(e, "Error translating todo items");
+        PluginLog.Error("Error translating todo items:", e);
       }
     }
 
     private unsafe void UiToDoListHandler(AddonEvent type, AddonArgs args)
     {
+#if DEBUG
       PluginLog.Debug($"UiToDoListHandler AddonEvent: {type} {args.AddonName}");
+#endif
       this.TranslateToDoList();
     }
   }

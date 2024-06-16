@@ -71,7 +71,9 @@ namespace Echoglossian
           QuestPlate foundQuestPlate = this.FindQuestPlateByName(questPlate);
           if (foundQuestPlate != null)
           {
+#if DEBUG
             PluginLog.Debug($"Name from database: {questNameText} -> {foundQuestPlate.TranslatedQuestName}");
+#endif
             // because we are translating names, it's safer to use SetString instead of SetText
             questName->NodeText.SetString(foundQuestPlate.TranslatedQuestName);
             this.translatedQuestNames.TryAdd(foundQuestPlate.TranslatedQuestName, true);
@@ -80,7 +82,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning($"Error: {e}");
+        PluginLog.Error($"Error: {e}");
       }
     }
 
@@ -142,7 +144,9 @@ namespace Echoglossian
           }
 
           var translatedNameText = this.Translate(questNameText);
+#if DEBUG
           PluginLog.Debug($"Name translated: {questNameText} -> {translatedNameText}");
+#endif
           QuestPlate translatedQuestPlate = new(
             questNameText,
             string.Empty,
@@ -156,7 +160,9 @@ namespace Echoglossian
             DateTime.Now);
 
           string result = this.InsertQuestPlate(translatedQuestPlate);
+#if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+#endif
         }
 
         // Then we replace the text in the nodes
@@ -164,13 +170,15 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning($"Error: {e}");
+        PluginLog.Error($"Error in UIRecommendListHandler: {e}");
       }
     }
 
     private unsafe void UiRecommendListHandler(AddonEvent type, AddonArgs args)
     {
+#if DEBUG
       PluginLog.Debug($"UiRecommendListHandler AddonEvent: {type} {args.AddonName}");
+#endif
       if (!this.configuration.TranslateJournal)
       {
         return;
@@ -181,7 +189,9 @@ namespace Echoglossian
 
     private unsafe void UiRecommendListHandlerAsync(AddonEvent type, AddonArgs args)
     {
+#if DEBUG
       PluginLog.Debug($"UiRecommendListHandlerAsync AddonEvent: {type} {args.AddonName}");
+#endif
       if (!this.configuration.TranslateJournal)
       {
         return;

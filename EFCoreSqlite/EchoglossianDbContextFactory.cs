@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+﻿using Microsoft.EntityFrameworkCore.Design;
 using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace Echoglossian.EFCoreSqlite

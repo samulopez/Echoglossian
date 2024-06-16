@@ -8,7 +8,6 @@ using System.IO;
 using System.Threading.Tasks;
 
 using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Logging;
 using Dalamud.Utility;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;

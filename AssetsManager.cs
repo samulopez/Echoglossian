@@ -11,7 +11,6 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Dalamud.Interface.Internal.Notifications;
-using Dalamud.Logging;
 using Echoglossian.Properties;
 
 namespace Echoglossian
@@ -22,7 +21,7 @@ namespace Echoglossian
 
     public List<string> MissingAssetFiles = new();
 
-    private string AssetsPath;
+    private string assetsPath;
 
     private void PluginAssetsChecker()
     {
@@ -37,7 +36,7 @@ namespace Echoglossian
 #if DEBUG
         PluginLog.Information($"Asset file:{f}");
 #endif
-        if (!File.Exists($"{this.AssetsPath}{f}"))
+        if (!File.Exists($"{this.assetsPath}{f}"))
         {
 #if DEBUG
           PluginLog.Information($"missing file:{f}");
@@ -51,7 +50,7 @@ namespace Echoglossian
 
       if (this.MissingAssetFiles?.Any() != true)
       {
-        this.PluginAssetsState = true;
+        this.pluginAssetsState = true;
         this.configuration.PluginAssetsDownloaded = true;
         PluginInterface.UiBuilder.AddNotification(Resources.AssetsPresentPopupMsg, Resources.Name,
           NotificationType.Success);
@@ -76,7 +75,7 @@ namespace Echoglossian
         this.MissingAssetFiles.RemoveAt(missingAssetIndex);
         if (this.MissingAssetFiles?.Any() != true)
         {
-          this.PluginAssetsState = true;
+          this.pluginAssetsState = true;
           this.configuration.PluginAssetsDownloaded = true;
           this.SaveConfig();
           PluginInterface.UiBuilder.AddNotification(Resources.AssetsPresentPopupMsg, Resources.Name,
@@ -93,7 +92,7 @@ namespace Echoglossian
 #pragma warning restore SYSLIB0014
       try
       {
-        string path = this.AssetsPath;
+        string path = this.assetsPath;
 
         Uri uri;
         switch (index)
@@ -163,7 +162,7 @@ namespace Echoglossian
 
       if (this.MissingAssetFiles?.Any() != true)
       {
-        this.PluginAssetsState = true;
+        this.pluginAssetsState = true;
         this.configuration.PluginAssetsDownloaded = true;
         PluginInterface.UiBuilder.AddNotification(Resources.AssetsPresentPopupMsg, Resources.Name,
           NotificationType.Success);

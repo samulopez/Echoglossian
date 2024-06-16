@@ -9,7 +9,6 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Command;
@@ -67,8 +66,9 @@ namespace Echoglossian
     private static int fontSize = 24;
     private static int chosenTransEngine;
     private static string transEngineName;
+    public string LangToTranslateTo = "";
 
-    private bool PluginAssetsState;
+    private bool pluginAssetsState;
     private static Dictionary<int, LanguageInfo> langDict;
     private bool config;
 
@@ -95,7 +95,8 @@ namespace Echoglossian
 
     private static Sanitizer sanitizer;
 
-    private UIAddonHandler UIAddonHandler;
+    private UIAddonHandler uiBattleTalkAddonHandler;
+    private UIAddonHandler uiTalkAddonHandler;
 
     private TranslationService translationService;
 
@@ -121,8 +122,10 @@ namespace Echoglossian
       // Resolver.Initialize();
       // Resolver.GetInstance.SetupSearchSpace();
       // Resolver.GetInstance.Resolve();
-      langDict = this.LanguagesDictionary;
+      langDict = this.languagesDictionary;
       identifier = Factory.Load($"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Wiki82.profile.xml");
+
+
 
       Common = new XivCommonBase(PluginInterface, Hooks.Talk | Hooks.BattleTalk);
 
@@ -140,7 +143,7 @@ namespace Echoglossian
       }
 
       this.cultureInfo = new CultureInfo(this.configuration.DefaultPluginCulture);
-      this.AssetsPath = $"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}";
+      this.assetsPath = $"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}";
 
       this.AssetFiles.Add("NotoSansCJKhk-Regular.otf");
       this.AssetFiles.Add("NotoSansCJKjp-Regular.otf");
@@ -157,12 +160,12 @@ namespace Echoglossian
         this.FixConfig();
       }
 
-      this.PluginAssetsState = this.configuration.PluginAssetsDownloaded;
+      this.pluginAssetsState = this.configuration.PluginAssetsDownloaded;
 #if DEBUG
       PluginLog.Warning($"Assets state config: {this.configuration.PluginAssetsDownloaded}");
-      PluginLog.Warning($"Assets state var: {this.PluginAssetsState}");
+      PluginLog.Warning($"Assets state var: {this.pluginAssetsState}");
 #endif
-      if (!this.PluginAssetsState)
+      if (!this.pluginAssetsState)
       {
         this.PluginAssetsChecker();
       }
@@ -186,6 +189,8 @@ namespace Echoglossian
       fontSize = this.configuration.FontSize;
 
       chosenTransEngine = this.configuration.ChosenTransEngine;
+
+      this.LangToTranslateTo = langDict[languageInt].Code;
 
       TransEngines t = (TransEngines)chosenTransEngine;
       transEngineName = t.ToString();
@@ -216,16 +221,13 @@ namespace Echoglossian
 
       // Common.Functions.ChatBubbles.OnChatBubble += this.ChatBubblesOnChatBubble;
       // Common.Functions.Tooltips.OnActionTooltip += this.TooltipsOnActionTooltip;
-      Common.Functions.Talk.OnTalk += this.GetTalk;
-      Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;
+      // Common.Functions.Talk.OnTalk += this.GetTalk;
+      // Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;
 
       this.EgloAddonHandler();
 
-      this.UIAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LanguagesDictionary);
-
-      this.UIAddonHandler.EgloAddonHandler("_BattleTalk", ["PreSetup", "PostSetup", "PreRefresh", "PostRefresh", "PreRequestedUpdate", "PostRequestedUpdate", /* "PreDraw", "PostDraw",*/"PreFinalize", "PostFinalize"]);
-
-      this.UIAddonHandler.EgloAddonHandler("CutsceneSelectString", ["PreSetup", "PostSetup", "PreRefresh", "PostRefresh", "PreRequestedUpdate", "PostRequestedUpdate", /* "PreDraw", "PostDraw",*/"PreFinalize", "PostFinalize"]);
+      this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
+      this.uiBattleTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
 
       PluginInterface.UiBuilder.Draw += this.BuildUi;
 
@@ -245,8 +247,8 @@ namespace Echoglossian
 
     protected virtual void Dispose(bool disposing)
     {
-      Common.Functions.Talk.OnTalk -= this.GetTalk;
-      Common.Functions.BattleTalk.OnBattleTalk -= this.GetBattleTalk;
+      /*Common.Functions.Talk.OnTalk -= this.GetTalk;
+      Common.Functions.BattleTalk.OnBattleTalk -= this.GetBattleTalk;*/
       // Common.Functions.ChatBubbles.OnChatBubble -= this.ChatBubblesOnChatBubble;
       // Common.Functions.Tooltips.OnActionTooltip -= this.TooltipsOnActionTooltip;
       Common.Functions.Talk.Dispose();
@@ -315,9 +317,12 @@ namespace Echoglossian
             {
               case true:
 
-                this.TalkHandler("Talk", 1);
+                this.uiTalkAddonHandler.EgloAddonHandler("Talk");
+                this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");
 
-                this.BattleTalkHandler("_BattleTalk", 1);
+                // this.TalkHandler("Talk", 1);  tentative fix for stuttering
+
+                // this.BattleTalkHandler("_BattleTalk", 1); tentative fix for stuttering
 
                 this.TextErrorToastHandler("_TextError", 1);
 
@@ -452,8 +457,8 @@ namespace Echoglossian
       AddonLifecycle.RegisterListener(AddonEvent.PreRequestedUpdate, "JournalDetail", this.UiJournalDetailHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
-      AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "TalkSubtitle", this.UpdateUI);
-      AddonLifecycle.RegisterListener(AddonEvent.PostSetup, "TalkSubtitle", this.UpdateUI);
+      /*      AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "TalkSubtitle", this.UpdateUI);
+            AddonLifecycle.RegisterListener(AddonEvent.PostSetup, "TalkSubtitle", this.UpdateUI);*/
     }
   }
 }

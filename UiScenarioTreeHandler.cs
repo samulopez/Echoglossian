@@ -33,13 +33,17 @@ namespace Echoglossian
       QuestPlate foundQuestPlate = this.FindQuestPlateByName(questPlate);
       if (foundQuestPlate != null)
       {
+#if DEBUG
         PluginLog.Debug($"Name from database: {questNameText} -> {foundQuestPlate.TranslatedQuestName}");
+#endif
         setupAtkValues[valueIndex].SetString(foundQuestPlate.TranslatedQuestName);
       }
       else
       {
         var translatedNameText = this.Translate(questNameText);
+#if DEBUG
         PluginLog.Debug($"Name translated: {questNameText} -> {translatedNameText}");
+#endif
         QuestPlate translatedQuestPlate = new(
           questNameText,
           string.Empty,
@@ -53,14 +57,16 @@ namespace Echoglossian
           DateTime.Now);
 
         string result = this.InsertQuestPlate(translatedQuestPlate);
+#if DEBUG
         PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+#endif
         setupAtkValues[valueIndex].SetString(translatedNameText);
       }
     }
 
     private unsafe void UiScenarioTreeHandler(AddonEvent type, AddonArgs args)
     {
-      PluginLog.Debug($"UiScenarioTreeHandler AddonEvent: {type} {args.AddonName}");
+      // PluginLog.Debug($"UiScenarioTreeHandler AddonEvent: {type} {args.AddonName}");
       if (!this.configuration.TranslateJournal)
       {
         return;
@@ -88,7 +94,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning("Exception at UiScenarioTreeHandler: " + e.StackTrace);
+        PluginLog.Error("Exception at UiScenarioTreeHandler: " + e.StackTrace);
       }
     }
   }

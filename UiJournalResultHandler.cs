@@ -51,13 +51,17 @@ namespace Echoglossian
         QuestPlate foundQuestPlate = this.FindQuestPlateByName(questPlate);
         if (foundQuestPlate != null)
         {
+#if DEBUG
           PluginLog.Debug($"Name from database: {questNameText} -> {foundQuestPlate.TranslatedQuestName}");
+#endif
           setupAtkValues[1].SetString(foundQuestPlate.TranslatedQuestName);
         }
         else
         {
           var translatedNameText = this.Translate(questNameText);
+#if DEBUG
           PluginLog.Debug($"Name translated: {questNameText} -> {translatedNameText}");
+#endif
           QuestPlate translatedQuestPlate = new(
             questNameText,
             string.Empty,
@@ -71,13 +75,15 @@ namespace Echoglossian
             DateTime.Now);
 
           string result = this.InsertQuestPlate(translatedQuestPlate);
+#if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+#endif
           setupAtkValues[1].SetString(translatedNameText);
         }
       }
       catch (Exception e)
       {
-        PluginLog.Warning("UiJournalResultHandler Exception: " + e.StackTrace);
+        PluginLog.Error("UiJournalResultHandler Exception: " + e.StackTrace);
       }
     }
   }

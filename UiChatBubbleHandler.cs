@@ -5,7 +5,6 @@
 
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Logging;
 
 namespace Echoglossian
 {

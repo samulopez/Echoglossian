@@ -16,7 +16,7 @@ namespace Echoglossian;
 public partial class Echoglossian
 {
   // public string[] FontSizes = Array.ConvertAll(Enumerable.Range(4, 72).ToArray(), x => x.ToString());
-  private List<string> LanguageList;
+  private List<string> languageList;
 
   private List<string> enginesList = new()
   {
@@ -27,11 +27,11 @@ public partial class Echoglossian
   private void EchoglossianConfigUi()
   {
     var saveConfig = false;
-    this.LanguageList = new List<string>();
+    this.languageList = new List<string>();
 
-    foreach (var l in this.LanguagesDictionary)
+    foreach (var l in this.languagesDictionary)
     {
-      this.LanguageList.Add(l.Value.LanguageName);
+      this.languageList.Add(l.Value.LanguageName);
     }
 
     ImGui.SetNextWindowSizeConstraints(new Vector2(800, 700), new Vector2(1920, 1080));
@@ -44,7 +44,7 @@ public partial class Echoglossian
       ImGui.PushFont(this.ConfigUiFont);
     }
 
-    if (ImGui.Combo(Resources.LanguageSelectLabelText, ref languageInt, this.LanguageList.ToArray(), this.LanguageList.ToArray().Length))
+    if (ImGui.Combo(Resources.LanguageSelectLabelText, ref languageInt, this.languageList.ToArray(), this.languageList.ToArray().Length))
     {
       saveConfig = true;
       this.configuration.Lang = languageInt;

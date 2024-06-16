@@ -133,10 +133,13 @@ namespace Echoglossian
         if (shouldUpdateQuest)
         {
           string result = this.UpdateQuestPlate(foundQuestPlate);
+#if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {result}");
+#endif
         }
-
+#if DEBUG
         PluginLog.Debug($"From database - Name: {foundQuestPlate.TranslatedQuestName}, Message: {foundQuestPlate.TranslatedQuestMessage}");
+#endif
       }
       else
       {
@@ -170,12 +173,13 @@ namespace Echoglossian
 
         translatedQuestPlate.Objectives.Add(objectiveText, translatedQuestObjective);
         string result = this.InsertQuestPlate(translatedQuestPlate);
-
+#if DEBUG
         PluginLog.Debug($"Translated quest name: {translatedQuestName}");
         PluginLog.Debug($"Translated quest message: {translatedQuestMessage}");
         PluginLog.Debug($"Translated quest objective: {translatedQuestObjective}");
         PluginLog.Debug($"Translated quest summary: {translatedQuestSummary}");
         PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+#endif
       }
 
       questNameNode->SetText(translatedQuestName);
@@ -241,15 +245,17 @@ namespace Echoglossian
         QuestPlate questPlate = this.FormatQuestPlate(questName, questMessage);
         QuestPlate foundQuestPlate = this.FindQuestPlate(questPlate);
 
+#if DEBUG
         PluginLog.Debug($"Quest name: {questName}");
         PluginLog.Debug($"Quest message: {questMessage}");
         PluginLog.Debug($"Objective text: {objectiveText}");
         PluginLog.Debug($"Summary text: {summaryText}");
+#endif
         this.TranslateQuestOnJournalBox(journalBox, foundQuestPlate, questName, questMessage, objectiveText, summaryText, questNameNode, descriptionNode, objectiveNode, summaryNode);
       }
       catch (Exception e)
       {
-        PluginLog.Warning($"Error: {e}");
+        PluginLog.Error($"Error in UIJournalHandler: {e}");
       }
 
       return true;
@@ -281,8 +287,10 @@ namespace Echoglossian
         var questMessage = MemoryHelper.ReadSeStringAsString(out _, (nint)descriptionNode->NodeText.StringPtr);
         QuestPlate questPlate = this.FormatQuestPlate(questName, questMessage);
         QuestPlate foundQuestPlate = this.FindQuestPlate(questPlate);
+#if DEBUG
         PluginLog.Debug($"Quest name: {questName}");
         PluginLog.Debug($"Quest message: {questMessage}");
+#endif
 
         string translatedQuestName;
         string translatedQuestMessage;
@@ -291,15 +299,19 @@ namespace Echoglossian
         {
           translatedQuestName = foundQuestPlate.TranslatedQuestName;
           translatedQuestMessage = foundQuestPlate.TranslatedQuestMessage;
+#if DEBUG
           PluginLog.Debug($"From database - Name: {foundQuestPlate.TranslatedQuestName}, Message: {foundQuestPlate.TranslatedQuestMessage}");
+#endif
         }
         else
         {
           translatedQuestName = this.Translate(questName);
           translatedQuestMessage = this.Translate(questMessage);
 
+#if DEBUG
           PluginLog.Debug($"Translated quest name: {translatedQuestName}");
           PluginLog.Debug($"Translated quest message: {translatedQuestMessage}");
+#endif
 
           QuestPlate translatedQuestPlate = new(
             questName,
@@ -313,7 +325,9 @@ namespace Echoglossian
             DateTime.Now,
             DateTime.Now);
           string result = this.InsertQuestPlate(translatedQuestPlate);
+#if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+#endif
         }
 
         questNameNode->SetText(translatedQuestName);
@@ -321,7 +335,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning($"Error: {e}");
+        PluginLog.Error($"Error in UiJournalHandler: {e}");
       }
     }
 
@@ -338,9 +352,10 @@ namespace Echoglossian
       {
         return;
       }
-
+#if DEBUG
       PluginLog.Debug($"Language: {ClientState.ClientLanguage.Humanize()}");
       PluginLog.Debug($"Translate JournalDetail");
+#endif
 
       if (!this.TranslateJournalBox(journalDetail))
       {
@@ -362,8 +377,10 @@ namespace Echoglossian
         return;
       }
 
+#if DEBUG
       PluginLog.Debug($"Language: {ClientState.ClientLanguage.Humanize()}");
       PluginLog.Debug($"Translate JournalQuests");
+#endif
       try
       {
         var questListNode = journal->GetNodeById(25)->GetAsAtkComponentNode()->Component;
@@ -402,14 +419,18 @@ namespace Echoglossian
           QuestPlate foundQuestPlate = this.FindQuestPlateByName(questPlate);
           if (foundQuestPlate != null)
           {
+#if DEBUG
             PluginLog.Debug($"Name from database: {questName->NodeText} -> {foundQuestPlate.TranslatedQuestName}");
             questName->SetText(foundQuestPlate.TranslatedQuestName);
+#endif
             this.translatedQuestNames.TryAdd(foundQuestPlate.TranslatedQuestName, true);
             continue;
           }
 
           var translatedNameText = this.Translate(questNameText);
+#if DEBUG
           PluginLog.Debug($"Name translated: {questNameText} -> {translatedNameText}");
+#endif
           QuestPlate translatedQuestPlate = new(
             questNameText,
             string.Empty,
@@ -423,26 +444,32 @@ namespace Echoglossian
             DateTime.Now);
 
           string result = this.InsertQuestPlate(translatedQuestPlate);
+#if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+#endif
           questName->SetText(translatedNameText);
           this.translatedQuestNames.TryAdd(translatedNameText, true);
         }
       }
       catch (Exception e)
       {
-        PluginLog.Warning($"Error: {e}");
+        PluginLog.Error($"Error: {e}");
       }
     }
 
     private unsafe void UiJournalDetailHandler(AddonEvent type, AddonArgs args)
     {
+#if DEBUG
       PluginLog.Debug($"UiJournalDetailHandler AddonEvent: {type} {args.AddonName}");
+#endif
       this.TranslateJournalDetail();
     }
 
     private unsafe void UiJournalQuestHandler(AddonEvent type, AddonArgs args)
     {
+#if DEBUG
       PluginLog.Debug($"UiJournalQuestHandler AddonEvent: {type} {args.AddonName}");
+#endif
       this.TranslateJournalQuests();
     }
   }

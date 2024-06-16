@@ -16,25 +16,25 @@ namespace Echoglossian
     public TalkMessage FormatTalkMessage(string sender, string text)
     {
       return new TalkMessage(sender, text, ClientState.ClientLanguage.Humanize(), LangIdentify(sender), string.Empty, string.Empty,
-        this.LanguagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
+        this.languagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
     }
 
     public BattleTalkMessage FormatBattleTalkMessage(string sender, string text)
     {
       return new BattleTalkMessage(sender, text, ClientState.ClientLanguage.Humanize(), LangIdentify(sender), string.Empty, string.Empty,
-        this.LanguagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
+        this.languagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
     }
 
     public ToastMessage FormatToastMessage(string type, string text)
     {
       return new ToastMessage(type, text, ClientState.ClientLanguage.Humanize(), string.Empty,
-        this.LanguagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
+        this.languagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
     }
 
     public QuestPlate FormatQuestPlate(string questName, string questMessage)
     {
       return new QuestPlate(questName, questMessage, ClientState.ClientLanguage.Humanize(), string.Empty, string.Empty, string.Empty,
-        this.LanguagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
+        this.languagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
     }
   }
 }

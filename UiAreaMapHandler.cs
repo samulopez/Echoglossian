@@ -18,7 +18,9 @@ namespace Echoglossian
   {
     private unsafe void UiAreaMapHandler(AddonEvent type, AddonArgs args)
     {
+#if DEBUG
       PluginLog.Debug($"UiAreaMapHandler AddonEvent: {type} {args.AddonName}");
+#endif
       if (!this.configuration.TranslateJournal)
       {
         return;
@@ -52,13 +54,17 @@ namespace Echoglossian
         QuestPlate foundQuestPlate = this.FindQuestPlateByName(questPlate);
         if (foundQuestPlate != null)
         {
+#if DEBUG
           PluginLog.Debug($"Name from database: {questNameText} -> {foundQuestPlate.TranslatedQuestName}");
+#endif
           setupAtkValues[142].SetString(foundQuestPlate.TranslatedQuestName);
         }
         else
         {
           var translatedNameText = this.Translate(questNameText);
+#if DEBUG
           PluginLog.Debug($"Name translated: {questNameText} -> {translatedNameText}");
+#endif
           QuestPlate translatedQuestPlate = new(
             questNameText,
             string.Empty,
@@ -72,13 +78,15 @@ namespace Echoglossian
             DateTime.Now);
 
           string result = this.InsertQuestPlate(translatedQuestPlate);
+#if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
+#endif
           setupAtkValues[142].SetString(translatedNameText);
         }
       }
       catch (Exception e)
       {
-        PluginLog.Warning("Exception: " + e.StackTrace);
+        PluginLog.Error("Exception at UiAreaMapHandler: " + e);
       }
     }
   }

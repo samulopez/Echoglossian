@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-
-using Dalamud.Logging;
 using ImGuiNET;
 
 namespace Echoglossian;
@@ -37,7 +35,7 @@ public partial class Echoglossian
     PluginLog.Debug("Inside AdjustLanguageForFontBuild method");
 #endif
 
-    var lang = this.LanguagesDictionary[this.configuration.Lang];
+    var lang = this.languagesDictionary[this.configuration.Lang];
     this.specialFontFileName = lang.FontName;
     this.scriptCharList = lang.ExclusiveCharsToAdd;
   }
@@ -235,7 +233,7 @@ public partial class Echoglossian
         ImGui.GetIO().Fonts
           .AddFontFromFileTTF(fontFile, this.configuration.FontSize, fontConfig);
 
-        foreach (var fileName in this.LanguagesDictionary.Values
+        foreach (var fileName in this.languagesDictionary.Values
                    .Select(x => x.FontName).ToHashSet())
           ImGui.GetIO().Fonts.AddFontFromFileTTF(fontDir + fileName,
             this.configuration.FontSize, fontConfig);
