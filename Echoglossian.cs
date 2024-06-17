@@ -56,7 +56,10 @@ namespace Echoglossian
     [PluginService]
     public static IPluginLog PluginLog { get; private set; } = null!;
 
-    private static XivCommonBase Common { get; set; }
+    [PluginService]
+    public static INotificationManager NotificationManager { get; private set; } = null!;
+
+    //  private static XivCommonBase Common { get; set; }
 
     public string Name => Resources.Name;
 
@@ -66,7 +69,7 @@ namespace Echoglossian
     private static int fontSize = 24;
     private static int chosenTransEngine;
     private static string transEngineName;
-    public string LangToTranslateTo = "";
+    public string LangToTranslateTo = string.Empty;
 
     private bool pluginAssetsState;
     private static Dictionary<int, LanguageInfo> langDict;
@@ -125,10 +128,7 @@ namespace Echoglossian
       langDict = this.languagesDictionary;
       identifier = Factory.Load($"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Wiki82.profile.xml");
 
-
-
-      Common = new XivCommonBase(PluginInterface, Hooks.Talk | Hooks.BattleTalk);
-
+      // Common = new XivCommonBase(PluginInterface, Hooks.Talk | Hooks.BattleTalk);
       try
       {
         this.CreateOrUseDb();
@@ -223,7 +223,6 @@ namespace Echoglossian
       // Common.Functions.Tooltips.OnActionTooltip += this.TooltipsOnActionTooltip;
       // Common.Functions.Talk.OnTalk += this.GetTalk;
       // Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;
-
       this.EgloAddonHandler();
 
       this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
@@ -251,14 +250,14 @@ namespace Echoglossian
       Common.Functions.BattleTalk.OnBattleTalk -= this.GetBattleTalk;*/
       // Common.Functions.ChatBubbles.OnChatBubble -= this.ChatBubblesOnChatBubble;
       // Common.Functions.Tooltips.OnActionTooltip -= this.TooltipsOnActionTooltip;
-      Common.Functions.Talk.Dispose();
-      Common.Functions.BattleTalk.Dispose();
+      /* Common.Functions.Talk.Dispose();
+       Common.Functions.BattleTalk.Dispose();*/
 
       // Common.Functions.ChatBubbles.Dispose();
       // Common.Functions.Tooltips.Dispose();
-      Common.Functions.Dispose();
+      /*Common.Functions.Dispose();
 
-      Common?.Dispose();
+      Common?.Dispose();*/
 
       ToastGui.Toast -= this.OnToast;
       ToastGui.ErrorToast -= this.OnErrorToast;
@@ -323,7 +322,6 @@ namespace Echoglossian
                 // this.TalkHandler("Talk", 1);  tentative fix for stuttering
 
                 // this.BattleTalkHandler("_BattleTalk", 1); tentative fix for stuttering
-
                 this.TextErrorToastHandler("_TextError", 1);
 
                 this.ToastHandler("_WideText", 1);

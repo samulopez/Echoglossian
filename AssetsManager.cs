@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-
+using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Internal.Notifications;
 using Echoglossian.Properties;
 
@@ -28,8 +28,14 @@ namespace Echoglossian
 #if DEBUG
       PluginLog.Information("Checking Plugin assets!");
 #endif
-      PluginInterface.UiBuilder.AddNotification(Resources.AssetsCheckingPopupMsg, Resources.Name,
-        NotificationType.Warning);
+
+      var notification = new Notification
+      {
+        Content = Resources.AssetsCheckingPopupMsg,
+        Title = Resources.Name,
+        Icon = NotificationUtilities.ToNotificationIcon(Dalamud.Interface.FontAwesomeIcon.Vault),
+      };
+      NotificationManager.AddNotification(notification);
 
       foreach (string f in this.AssetFiles)
       {

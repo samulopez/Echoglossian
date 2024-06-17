@@ -15,9 +15,10 @@ using Dalamud.Game.Text.Sanitizer;
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
+
 using Echoglossian.EFCoreSqlite.Models;
-using Microsoft.EntityFrameworkCore.Scaffolding.Internal;
+
+using System.IO;
 
 namespace Echoglossian
 {
@@ -38,6 +39,7 @@ namespace Echoglossian
     private bool isAddonVisible = false;
     private Dictionary<int, TextFlags> addonNodesFlags;
     private AddonCharacteristicsInfo addonCharacteristicsInfo;
+    private string configDir;
 
     public UIAddonHandler(
         Config configuration = default,
@@ -52,6 +54,7 @@ namespace Echoglossian
       this.clientLanguage = ClientState.ClientLanguage;
       this.translationService = new TranslationService(configuration, Echoglossian.PluginLog, new Sanitizer(this.clientLanguage));
       this.translations = new ConcurrentDictionary<int, TranslationEntry>();
+      this.configDir = Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar;
 
       this.cts = new CancellationTokenSource();
       this.translationTask = Task.Run(async () => await this.ProcessTranslations(this.cts.Token));
@@ -76,7 +79,6 @@ namespace Echoglossian
 
     private void DetermineAddonCharacteristics()
     {
-
       switch (this.addonName)
       {
         case "Talk":
@@ -117,7 +119,6 @@ namespace Echoglossian
         default:
           break;
       }
-
     }
 
     private unsafe void ExploreAddon()
@@ -168,7 +169,7 @@ namespace Echoglossian
 
         if (this.addonCharacteristicsInfo.NameNodeId == i)
         {
-          Echoglossian.PluginLog.Information($"Text from Node in ExploreAddon: {textFromNode}");
+          Echoglossian.PluginLog.Information($"Text from Node in ExploreAddon NameNode: {textFromNode}");
 
           if (this.addonName == "Talk")
           {
@@ -198,13 +199,11 @@ namespace Echoglossian
               createdDate: DateTime.Now,
               updatedDate: DateTime.Now);
           }
-
-          continue;
         }
 
         if (this.addonCharacteristicsInfo.MessageNodeId == i)
         {
-          Echoglossian.PluginLog.Information($"Text from Node in ExploreAddon: {textFromNode}");
+          Echoglossian.PluginLog.Information($"Text from Node in ExploreAddon messageNode: {textFromNode}");
 
           if (this.addonName == "Talk")
           {
@@ -214,8 +213,6 @@ namespace Echoglossian
           {
             this.addonCharacteristicsInfo.BattleTalkMessage.OriginalBattleTalkMessage = textFromNode;
           }
-
-          continue;
         }
 
 #if DEBUG
@@ -230,13 +227,31 @@ namespace Echoglossian
           {
             Echoglossian.PluginLog.Warning($"Adding translation entry: {i} - {textFromNode}");
             this.translations[i] = entry;
-            this.FireAndForgetTranslation(i, textFromNode);
+
+            // Move database check and translation outside of the unsafe context
+            this.CheckAndTranslateAsync(i, textFromNode, entry);
           }
         }
         catch (Exception e)
         {
           Echoglossian.PluginLog.Error($"Error in translation: {e}");
         }
+      }
+    }
+
+    private async Task CheckAndTranslateAsync(int id, string textFromNode, TranslationEntry entry)
+    {
+      var dbTranslation = await Task.Run(() => this.CheckDatabaseForTranslation(textFromNode));
+
+      if (dbTranslation != null)
+      {
+        entry.TranslatedText = dbTranslation;
+        entry.IsTranslated = true;
+        Echoglossian.PluginLog.Information($"Using cached translation for: {textFromNode}");
+      }
+      else
+      {
+        this.FireAndForgetTranslation(id, textFromNode);
       }
     }
 
@@ -251,6 +266,49 @@ namespace Echoglossian
       this.SetTranslationToAddon();
     }
 
+    private string CheckDatabaseForTranslation(string originalText)
+    {
+      if (this.addonName == "Talk")
+      {
+        if (this.addonCharacteristicsInfo.TalkMessage == null || this.addonCharacteristicsInfo.TalkMessage.SenderName == string.Empty)
+        {
+          return null;
+        }
+
+        var talkMessage = new TalkMessage(
+          senderName: this.addonCharacteristicsInfo.TalkMessage.SenderName,
+          originalTalkMessage: originalText,
+          originalTalkMessageLang: this.clientLanguage.Humanize(),
+          originalSenderNameLang: this.clientLanguage.Humanize(),
+          translatedSenderName: string.Empty,
+          translatedTalkMessage: string.Empty,
+          translationLang: this.langToTranslateTo,
+          translationEngine: this.configuration.ChosenTransEngine,
+          createdDate: DateTime.Now,
+          updatedDate: DateTime.Now);
+
+        return Echoglossian.FindTalkMessage(talkMessage) ? Echoglossian.FoundTalkMessage.TranslatedTalkMessage : null;
+      }
+      else if (this.addonName == "_BattleTalk")
+      {
+        var battleTalkMessage = new BattleTalkMessage(
+          senderName: this.addonCharacteristicsInfo.BattleTalkMessage.SenderName,
+          originalBattleTalkMessage: originalText,
+          originalBattleTalkMessageLang: this.clientLanguage.Humanize(),
+          originalSenderNameLang: this.clientLanguage.Humanize(),
+          translatedSenderName: string.Empty,
+          translatedBattleTalkMessage: string.Empty,
+          translationLang: this.langToTranslateTo,
+          translationEngine: this.configuration.ChosenTransEngine,
+          createdDate: DateTime.Now,
+          updatedDate: DateTime.Now);
+
+        return Echoglossian.FindBattleTalkMessage(battleTalkMessage) ? Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage : null;
+      }
+
+      return null;
+    }
+
     private async Task TranslateText(int id, string text)
     {
       try
@@ -260,11 +318,56 @@ namespace Echoglossian
         {
           entry.TranslatedText = translation;
           entry.IsTranslated = true;
+
+          await Task.Run(() => this.SaveTranslationToDatabase(text, translation));
         }
       }
       catch (Exception e)
       {
         Echoglossian.PluginLog.Error($"Error in TranslateText method: {e}");
+      }
+    }
+
+    private void SaveTranslationToDatabase(string originalText, string translatedText)
+    {
+      /*      Echoglossian.PluginLog.Information($"Saving translation to database: {originalText} - {translatedText}");*/
+      if (this.addonName == "Talk")
+      {
+        var talkMessage = this.addonCharacteristicsInfo.TalkMessage;
+
+        Echoglossian.PluginLog.Information($"TalkMessage in SaveTranslationToDatabase: {talkMessage}");
+
+        talkMessage.OriginalTalkMessage = originalText;
+        talkMessage.TranslatedTalkMessage = translatedText;
+
+        Echoglossian.PluginLog.Information($"Saving translation to database: {talkMessage.OriginalTalkMessage} - {talkMessage.TranslatedTalkMessage}");
+        try
+        {
+          Echoglossian.InsertTalkData(talkMessage);
+        }
+        catch (Exception e)
+        {
+          Echoglossian.PluginLog.Error($"Error in InsertTalkData: {e}");
+        }
+      }
+      else if (this.addonName == "_BattleTalk")
+      {
+        var battleTalkMessage = this.addonCharacteristicsInfo.BattleTalkMessage;
+
+        Echoglossian.PluginLog.Information($"BattleTalkMessage in SaveTranslationToDatabase: {battleTalkMessage}");
+
+        battleTalkMessage.OriginalBattleTalkMessage = originalText;
+        battleTalkMessage.TranslatedBattleTalkMessage = translatedText;
+
+        Echoglossian.PluginLog.Information($"Saving translation to database: {battleTalkMessage.OriginalBattleTalkMessage} - {battleTalkMessage.TranslatedBattleTalkMessage}");
+        try
+        {
+          Echoglossian.InsertBattleTalkData(battleTalkMessage);
+        }
+        catch (Exception e)
+        {
+          Echoglossian.PluginLog.Error($"Error in InsertBattleTalkData: {e}");
+        }
       }
     }
 
@@ -285,11 +388,11 @@ namespace Echoglossian
 
     private unsafe void SetTranslationToAddon()
     {
-      // Echoglossian.PluginLog.Information($"Setting translation to addon: {this.addonName}");
+      Echoglossian.PluginLog.Information($"Setting translation to addon: {this.addonName}");
 
       Framework.RunOnTick(() =>
       {
-        Echoglossian.PluginLog.Information($"AddonName in SetTranslationToAddon: {addonName}");
+        Echoglossian.PluginLog.Information($"AddonName in SetTranslationToAddon: {this.addonName}");
         var addon = GameGui.GetAddonByName(this.addonName, 1);
         var foundAddon = (AtkUnitBase*)addon;
 
@@ -354,8 +457,6 @@ namespace Echoglossian
                 nodeAsTextNode->SetText(sanitizedText);
                 nodeAsTextNode->ResizeNodeForCurrentText();
 
-
-
                 // Echoglossian.PluginLog.Information($"Text set in SetTranslationToAddon!");
 
                 this.translations.TryRemove(i, out _);
@@ -416,7 +517,6 @@ namespace Echoglossian
       public BattleTalkMessage BattleTalkMessage { get; set; }
 
       public TalkSubtitleMessage TalkSubtitleMessage { get; set; }
-
     }
   }
 }

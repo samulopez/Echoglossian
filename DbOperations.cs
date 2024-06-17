@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 using Echoglossian.EFCoreSqlite;
@@ -17,16 +18,17 @@ namespace Echoglossian
 {
   public partial class Echoglossian
   {
-    public TalkMessage FoundTalkMessage { get; set; }
+    public static TalkMessage FoundTalkMessage { get; set; }
 
     public ToastMessage FoundToastMessage { get; set; }
 
-    public BattleTalkMessage FoundBattleTalkMessage { get; set; }
+    public static BattleTalkMessage FoundBattleTalkMessage { get; set; }
 
     public async void CreateOrUseDb()
     {
       using (EchoglossianDbContext context = new EchoglossianDbContext(this.configDir))
       {
+        Echoglossian.PluginLog.Verbose($"Config dir path: {this.configDir}");
         try
         {
           PluginLog.Verbose($"Config dir path: {this.configDir}");
@@ -54,9 +56,14 @@ namespace Echoglossian
       }
     }
 
-    public bool FindTalkMessage(TalkMessage talkMessage)
+    public static bool FindTalkMessage(TalkMessage talkMessage)
     {
-      using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
+      using EchoglossianDbContext context = new EchoglossianDbContext(Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+
+      Echoglossian.PluginLog.Verbose($"TalkMessage to be found in DB: {talkMessage}");
+
+      var pluginConfig = Echoglossian.PluginInterface.GetPluginConfig() as Config;
+
       try
       {
         IQueryable<TalkMessage> existingTalkMessage =
@@ -64,7 +71,7 @@ namespace Echoglossian
             t.SenderName == talkMessage.SenderName &&
             t.OriginalTalkMessage == talkMessage.OriginalTalkMessage &&
             t.TranslationLang == talkMessage.TranslationLang);
-        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        if (pluginConfig.TranslateAlreadyTranslatedTexts)
         {
           existingTalkMessage = existingTalkMessage.Where(t => t.TranslationEngine == talkMessage.TranslationEngine);
         }
@@ -73,11 +80,14 @@ namespace Echoglossian
         if (existingTalkMessage.FirstOrDefault() == null ||
             localFoundTalkMessage?.OriginalTalkMessage != talkMessage.OriginalTalkMessage)
         {
-          this.FoundTalkMessage = talkMessage;
+          FoundTalkMessage = talkMessage;
           return false;
         }
 
-        this.FoundTalkMessage = localFoundTalkMessage;
+        FoundTalkMessage = localFoundTalkMessage;
+
+        Echoglossian.PluginLog.Verbose($"FoundTalkMessage in DB: {FoundTalkMessage}");
+
         return true;
       }
       catch (Exception e)
@@ -178,9 +188,14 @@ namespace Echoglossian
       }
     }
 
-    public bool FindBattleTalkMessage(BattleTalkMessage battleTalkMessage)
+    public static bool FindBattleTalkMessage(BattleTalkMessage battleTalkMessage)
     {
-      using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
+      using EchoglossianDbContext context = new EchoglossianDbContext(Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+
+      Echoglossian.PluginLog.Verbose($"BattleTalkMessage to be found in DB: {battleTalkMessage}");
+
+      var pluginConfig = PluginInterface.GetPluginConfig() as Config;
+
       try
       {
         IQueryable<BattleTalkMessage> existingBattleTalkMessage =
@@ -189,7 +204,7 @@ namespace Echoglossian
             t.OriginalBattleTalkMessage == battleTalkMessage.OriginalBattleTalkMessage &&
             t.TranslationLang == battleTalkMessage.TranslationLang);
 
-        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        if (pluginConfig.TranslateAlreadyTranslatedTexts)
         {
           existingBattleTalkMessage = existingBattleTalkMessage.Where(t => t.TranslationEngine == battleTalkMessage.TranslationEngine);
         }
@@ -198,11 +213,13 @@ namespace Echoglossian
         if (existingBattleTalkMessage.FirstOrDefault() == null ||
             localFoundBattleTalkMessage?.OriginalBattleTalkMessage != battleTalkMessage.OriginalBattleTalkMessage)
         {
-          this.FoundBattleTalkMessage = battleTalkMessage;
+          FoundBattleTalkMessage = battleTalkMessage;
           return false;
         }
 
-        this.FoundBattleTalkMessage = localFoundBattleTalkMessage;
+        FoundBattleTalkMessage = localFoundBattleTalkMessage;
+
+        Echoglossian.PluginLog.Verbose($"FoundBattleTalkMessage in DB: {FoundBattleTalkMessage}");
         return true;
       }
       catch (Exception e)
@@ -273,12 +290,16 @@ namespace Echoglossian
       }
     }
 
-    public string InsertTalkData(TalkMessage talkMessage)
+    public static string InsertTalkData(TalkMessage talkMessage)
     {
-      using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
-      /*#if DEBUG
-            using StreamWriter logStream = new($"{this.configDir}DbInsertTalkOperationsLog.txt", append: true);
-      #endif*/
+      using EchoglossianDbContext context = new EchoglossianDbContext(Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+#if DEBUG
+      // using StreamWriter logStream = new($"{this.configDir}DbInsertTalkOperationsLog.txt", append: true);
+      Echoglossian.PluginLog.Verbose($"TalkMessage to be saved in DB: {talkMessage}");
+#endif
+
+      var pluginConfig = Echoglossian.PluginInterface.GetPluginConfig() as Config;
+
       try
       {
         /*#if DEBUG
@@ -287,7 +308,7 @@ namespace Echoglossian
                   logStream.WriteLineAsync($"Before SaveChanges: {talkMessage}");
                 }
         #endif*/
-        if (this.configuration.CopyTranslationToClipboard)
+        if (pluginConfig.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(talkMessage.ToString());
         }
@@ -322,12 +343,15 @@ namespace Echoglossian
       }
     }
 
-    public string InsertBattleTalkData(BattleTalkMessage battleTalkMessage)
+    public static string InsertBattleTalkData(BattleTalkMessage battleTalkMessage)
     {
-      using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
+      using EchoglossianDbContext context = new EchoglossianDbContext(Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
       /*#if DEBUG
             using StreamWriter logStream = new($"{this.configDir}DbInsertBattleTalkOperationsLog.txt", append: true);
       #endif*/
+
+      var pluginConfig = Echoglossian.PluginInterface.GetPluginConfig() as Config;
+
       try
       {
         context.BattleTalkMessage.Attach(battleTalkMessage);
@@ -337,7 +361,7 @@ namespace Echoglossian
                   logStream.WriteLineAsync($"Inside Context: {context.BattleTalkMessage.Local}");
                 }
         #endif*/
-        if (this.configuration.CopyTranslationToClipboard)
+        if (pluginConfig.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(battleTalkMessage.ToString());
         }

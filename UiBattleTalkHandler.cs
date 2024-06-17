@@ -68,7 +68,7 @@ namespace Echoglossian
 #if DEBUG
         PluginLog.Fatal($"Before DB Query attempt: {battleTalkMessage}");
 #endif
-        bool findings = this.FindBattleTalkMessage(battleTalkMessage);
+        bool findings = Echoglossian.FindBattleTalkMessage(battleTalkMessage);
 #if DEBUG
         PluginLog.Fatal(
           $"After DB Query attempt: {(findings ? "Message found in Db." : "Message not found in Db")}");
@@ -96,7 +96,7 @@ namespace Echoglossian
 #if DEBUG
               logStream.WriteLineAsync($"Before Talk Messages table data insertion:  {translatedBattleTalkData}");
 #endif
-              string result = this.InsertBattleTalkData(translatedBattleTalkData);
+              string result = Echoglossian.InsertBattleTalkData(translatedBattleTalkData);
 #if DEBUG
               PluginLog.Verbose($"BattleTalk Message DB Insert operation result: {result}");
 #endif
@@ -110,7 +110,7 @@ namespace Echoglossian
                 LangIdentify(senderToTranslate), string.Empty, translatedBattleTalkMessage, langDict[languageInt].Code,
                 this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
 
-              string result = this.InsertBattleTalkData(translatedBattleTalkData);
+              string result = Echoglossian.InsertBattleTalkData(translatedBattleTalkData);
 #if DEBUG
               PluginLog.Verbose($"Using BattleTalk Overlay - BattleTalk Message DB Insert operation result: {result}");
 #endif
@@ -163,7 +163,7 @@ namespace Echoglossian
                   this.configuration.TranslateNpcNames ? this.currentSenderTranslation : string.Empty,
                   this.currentBattleTalkTranslation, langDict[languageInt].Code,
                   this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
-                string result = this.InsertBattleTalkData(translatedBattleTalkData);
+                string result = Echoglossian.InsertBattleTalkData(translatedBattleTalkData);
 #if DEBUG
                 PluginLog.Verbose($"BattleTalk Message DB Insert operation result: {result}");
 #endif
@@ -175,8 +175,8 @@ namespace Echoglossian
         { // if the data is already in the DB
           if (!this.configuration.UseImGuiForBattleTalk)
           {
-            string translatedBattleMessage = this.FoundBattleTalkMessage.TranslatedBattleTalkMessage;
-            string senderTranslation = this.FoundBattleTalkMessage.TranslatedSenderName;
+            string translatedBattleMessage = Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage;
+            string senderTranslation = Echoglossian.FoundBattleTalkMessage.TranslatedSenderName;
 #if DEBUG
             PluginLog.Warning($"From database - Name: {senderTranslation}, Message: {translatedBattleMessage}");
 #endif
@@ -202,7 +202,7 @@ namespace Echoglossian
               Task.Run(() =>
               {
                 int nameId = this.currentSenderTranslationId;
-                string senderTranslation = this.FoundBattleTalkMessage.TranslatedSenderName;
+                string senderTranslation = Echoglossian.FoundBattleTalkMessage.TranslatedSenderName;
                 this.senderTranslationSemaphore.Wait();
                 if (nameId == this.currentSenderTranslationId)
                 {
@@ -221,7 +221,7 @@ namespace Echoglossian
             Task.Run(() =>
             {
               int id = this.currentBattleTalkTranslationId;
-              string translatedBattleTalkMessage = this.FoundBattleTalkMessage.TranslatedBattleTalkMessage;
+              string translatedBattleTalkMessage = Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage;
               this.battleTalkTranslationSemaphore.Wait();
               if (id == this.currentBattleTalkTranslationId)
               {

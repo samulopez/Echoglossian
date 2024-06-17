@@ -42,9 +42,10 @@ namespace Echoglossian.EFCoreSqlite
     public EchoglossianDbContext(string configDir)
     {
       this.DbPath = $"{configDir}Echoglossian.db";
-      /*#if DEBUG
-            this.LogStream = new StreamWriter($"{configDir}DBContextLog.txt", append: true);
-      #endif*/
+#if DEBUG
+      // this.LogStream = new StreamWriter($"{configDir}DBContextLog.txt", append: true);
+      Echoglossian.PluginLog.Verbose($"DBPath {this.DbPath}");
+#endif
     }
 
     // The following configures EF to create a Sqlite database file in the

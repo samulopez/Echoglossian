@@ -132,7 +132,7 @@ namespace Echoglossian
 #if DEBUG
         PluginLog.Fatal($"Before DB Query attempt: {talkMessage}");
 #endif
-        bool findings = this.FindTalkMessage(talkMessage);
+        bool findings = Echoglossian.FindTalkMessage(talkMessage);
 #if DEBUG
         PluginLog.Fatal(
           $"After DB Query attempt: {(findings ? "Message found in Db." : "Message not found in Db")}");
@@ -167,7 +167,7 @@ namespace Echoglossian
 #if DEBUG
               logStream.WriteLineAsync($"Before Talk Messages table data insertion:  {translatedTalkData}");
 #endif
-              string result = this.InsertTalkData(translatedTalkData);
+              string result = Echoglossian.InsertTalkData(translatedTalkData);
 #if DEBUG
               PluginLog.Verbose($"Talk Message DB Insert operation result: {result}");
 #endif
@@ -188,7 +188,7 @@ namespace Echoglossian
                 DateTime.Now,
                 DateTime.Now);
 
-              string result = this.InsertTalkData(translatedTalkData);
+              string result = Echoglossian.InsertTalkData(translatedTalkData);
 #if DEBUG
               PluginLog.Verbose(result);
 #endif
@@ -269,7 +269,7 @@ namespace Echoglossian
                     this.configuration.ChosenTransEngine,
                     DateTime.Now,
                     DateTime.Now);
-                  string result = this.InsertTalkData(translatedTalkData);
+                  string result = Echoglossian.InsertTalkData(translatedTalkData);
 #if DEBUG
                   PluginLog.Verbose($"Talk Message DB Insert operation result: {result}");
 #endif
@@ -330,7 +330,7 @@ namespace Echoglossian
 #if DEBUG
                 logStream.WriteLineAsync($"Before Talk Messages table data insertion:  {translatedTalkData}");
 #endif
-                string result = this.InsertTalkData(translatedTalkData);
+                string result = Echoglossian.InsertTalkData(translatedTalkData);
 #if DEBUG
                 PluginLog.Verbose($"Talk Message DB Insert operation result: {result}");
 #endif
@@ -382,7 +382,7 @@ namespace Echoglossian
                   DateTime.Now,
                   DateTime.Now);
 
-                string result = this.InsertTalkData(translatedTalkData);
+                string result = Echoglossian.InsertTalkData(translatedTalkData);
 #if DEBUG
                 PluginLog.Verbose(result);
 #endif
@@ -394,8 +394,8 @@ namespace Echoglossian
         {
           if (!this.configuration.UseImGuiForTalk)
           {
-            string translatedText = this.FoundTalkMessage.TranslatedTalkMessage;
-            string nameTranslation = this.FoundTalkMessage.TranslatedSenderName;
+            string translatedText = FoundTalkMessage.TranslatedTalkMessage;
+            string nameTranslation = FoundTalkMessage.TranslatedSenderName;
 #if DEBUG
             PluginLog.Warning($"From database - Name: {nameTranslation}, Message: {translatedText}");
 #endif
@@ -423,7 +423,7 @@ namespace Echoglossian
                 Task.Run(() =>
                 {
                   int nameId = this.currentNameTranslationId;
-                  string nameTranslation = this.FoundTalkMessage.TranslatedSenderName;
+                  string nameTranslation = FoundTalkMessage.TranslatedSenderName;
                   this.nameTranslationSemaphore.Wait();
                   if (nameId == this.currentNameTranslationId)
                   {
@@ -442,7 +442,7 @@ namespace Echoglossian
               Task.Run(() =>
               {
                 int id = this.currentTalkTranslationId;
-                string translatedTalkMessage = this.FoundTalkMessage.TranslatedTalkMessage;
+                string translatedTalkMessage = FoundTalkMessage.TranslatedTalkMessage;
                 this.talkTranslationSemaphore.Wait();
                 if (id == this.currentTalkTranslationId)
                 {
@@ -464,7 +464,7 @@ namespace Echoglossian
                 Task.Run(() =>
                 {
                   int nameId = this.currentNameTranslationId;
-                  string nameTranslation = this.FoundTalkMessage.SenderName;
+                  string nameTranslation = FoundTalkMessage.SenderName;
                   this.nameTranslationSemaphore.Wait();
                   if (nameId == this.currentNameTranslationId)
                   {
@@ -483,7 +483,7 @@ namespace Echoglossian
               Task.Run(() =>
               {
                 int id = this.currentTalkTranslationId;
-                string translatedTalkMessage = this.FoundTalkMessage.OriginalTalkMessage;
+                string translatedTalkMessage = FoundTalkMessage.OriginalTalkMessage;
                 this.talkTranslationSemaphore.Wait();
                 if (id == this.currentTalkTranslationId)
                 {
@@ -495,8 +495,8 @@ namespace Echoglossian
 
                 this.talkTranslationSemaphore.Release();
               });
-              name = this.FoundTalkMessage.TranslatedSenderName;
-              text = this.FoundTalkMessage.TranslatedTalkMessage;
+              name = FoundTalkMessage.TranslatedSenderName;
+              text = FoundTalkMessage.TranslatedTalkMessage;
             }
           }
         }
