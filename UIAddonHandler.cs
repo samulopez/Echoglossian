@@ -40,6 +40,7 @@ namespace Echoglossian
     private Dictionary<int, TextFlags> addonNodesFlags;
     private AddonCharacteristicsInfo addonCharacteristicsInfo;
     private string configDir;
+    private HashSet<string> translatedTexts = new HashSet<string>();
 
     public UIAddonHandler(
         Config configuration = default,
@@ -167,6 +168,12 @@ namespace Echoglossian
           continue;
         }
 
+        if (this.translatedTexts.Contains(textFromNode))
+        {
+          Echoglossian.PluginLog.Information($"Skipping already translated text: {textFromNode}");
+          continue;
+        }
+
         if (this.addonCharacteristicsInfo.NameNodeId == i)
         {
           Echoglossian.PluginLog.Information($"Text from Node in ExploreAddon NameNode: {textFromNode}");
@@ -247,7 +254,9 @@ namespace Echoglossian
       {
         entry.TranslatedText = dbTranslation;
         entry.IsTranslated = true;
+        this.translatedTexts.Add(dbTranslation);
         Echoglossian.PluginLog.Information($"Using cached translation for: {textFromNode}");
+        this.SetTranslationToAddon();
       }
       else
       {
@@ -318,6 +327,7 @@ namespace Echoglossian
         {
           entry.TranslatedText = translation;
           entry.IsTranslated = true;
+          this.translatedTexts.Add(translation);
 
           await Task.Run(() => this.SaveTranslationToDatabase(text, translation));
         }
@@ -330,43 +340,48 @@ namespace Echoglossian
 
     private void SaveTranslationToDatabase(string originalText, string translatedText)
     {
-      /*      Echoglossian.PluginLog.Information($"Saving translation to database: {originalText} - {translatedText}");*/
       if (this.addonName == "Talk")
       {
         var talkMessage = this.addonCharacteristicsInfo.TalkMessage;
 
-        Echoglossian.PluginLog.Information($"TalkMessage in SaveTranslationToDatabase: {talkMessage}");
-
-        talkMessage.OriginalTalkMessage = originalText;
-        talkMessage.TranslatedTalkMessage = translatedText;
-
-        Echoglossian.PluginLog.Information($"Saving translation to database: {talkMessage.OriginalTalkMessage} - {talkMessage.TranslatedTalkMessage}");
-        try
+        if (talkMessage.TranslatedTalkMessage != translatedText)
         {
-          Echoglossian.InsertTalkData(talkMessage);
-        }
-        catch (Exception e)
-        {
-          Echoglossian.PluginLog.Error($"Error in InsertTalkData: {e}");
+          Echoglossian.PluginLog.Information($"TalkMessage in SaveTranslationToDatabase: {talkMessage}");
+
+          talkMessage.OriginalTalkMessage = originalText;
+          talkMessage.TranslatedTalkMessage = translatedText;
+
+          Echoglossian.PluginLog.Information($"Saving translation to database: {talkMessage.OriginalTalkMessage} - {talkMessage.TranslatedTalkMessage}");
+          try
+          {
+            Echoglossian.InsertTalkData(talkMessage);
+          }
+          catch (Exception e)
+          {
+            Echoglossian.PluginLog.Error($"Error in InsertTalkData: {e}");
+          }
         }
       }
       else if (this.addonName == "_BattleTalk")
       {
         var battleTalkMessage = this.addonCharacteristicsInfo.BattleTalkMessage;
 
-        Echoglossian.PluginLog.Information($"BattleTalkMessage in SaveTranslationToDatabase: {battleTalkMessage}");
-
-        battleTalkMessage.OriginalBattleTalkMessage = originalText;
-        battleTalkMessage.TranslatedBattleTalkMessage = translatedText;
-
-        Echoglossian.PluginLog.Information($"Saving translation to database: {battleTalkMessage.OriginalBattleTalkMessage} - {battleTalkMessage.TranslatedBattleTalkMessage}");
-        try
+        if (battleTalkMessage.TranslatedBattleTalkMessage != translatedText)
         {
-          Echoglossian.InsertBattleTalkData(battleTalkMessage);
-        }
-        catch (Exception e)
-        {
-          Echoglossian.PluginLog.Error($"Error in InsertBattleTalkData: {e}");
+          Echoglossian.PluginLog.Information($"BattleTalkMessage in SaveTranslationToDatabase: {battleTalkMessage}");
+
+          battleTalkMessage.OriginalBattleTalkMessage = originalText;
+          battleTalkMessage.TranslatedBattleTalkMessage = translatedText;
+
+          Echoglossian.PluginLog.Information($"Saving translation to database: {battleTalkMessage.OriginalBattleTalkMessage} - {battleTalkMessage.TranslatedBattleTalkMessage}");
+          try
+          {
+            Echoglossian.InsertBattleTalkData(battleTalkMessage);
+          }
+          catch (Exception e)
+          {
+            Echoglossian.PluginLog.Error($"Error in InsertBattleTalkData: {e}");
+          }
         }
       }
     }
