@@ -247,5 +247,21 @@ namespace Echoglossian
 
       return false;
     }
+
+    public static string CleanString(string input)
+    {
+      if (string.IsNullOrEmpty(input))
+      {
+        return input;
+      }
+
+      // Remove double spaces
+      string result = Regex.Replace(input, @"\s{2,}", " ");
+
+      // Remove line breaks and carriage returns
+      result = result.Replace("\r", "").Replace("\n", "");
+
+      return result;
+    }
   }
 }
