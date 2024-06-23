@@ -1,4 +1,7 @@
-﻿// Saving this for backup purposes. This is the original file that was used to handle the UI Addon events.
+﻿// <copyright file="UiAddonEventsHandler.cs" company="lokinmodar">
+// Copyright (c) lokinmodar. All rights reserved.
+// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
+// </copyright>
 
 using ImGuiNET;
 
@@ -18,7 +21,6 @@ using Dalamud;
 using Dalamud.Game.Text.Sanitizer;
 
 using System.Collections.Concurrent;
-
 
 namespace Echoglossian
 {
@@ -346,8 +348,6 @@ namespace Echoglossian
 
         var foundAddon = (AtkUnitBase*)addon;
 
-
-
         if (foundAddon == null)
         {
           return;
@@ -363,7 +363,6 @@ namespace Echoglossian
         var nodesQuantity = foundAddon->UldManager.NodeListCount;
 
         Echoglossian.PluginLog.Information($"Nodes Quantity in SetTranslationToAddon: {nodesQuantity}");
-
 
         for (var i = 0; i < nodesQuantity; i++)
         {
@@ -386,8 +385,6 @@ namespace Echoglossian
             continue;
           }
 
-
-
           if (nodeAsTextNode != null)
           {
             var textFromNode = MemoryHelper.ReadSeStringAsString(out _, (nint)nodeAsTextNode->NodeText.StringPtr);
@@ -398,11 +395,9 @@ namespace Echoglossian
             {
               Echoglossian.PluginLog.Information($"Entry in SetTranslationToAddon: {entry.OriginalText}");
 
-
               if (entry.IsTranslated)
               {
                 Echoglossian.PluginLog.Information($"Entry is translated in SetTranslationToAddon: {entry.TranslatedText}");
-
 
                 if (entry.OriginalText == textFromNode)
                 {
@@ -413,7 +408,6 @@ namespace Echoglossian
                   Echoglossian.PluginLog.Information($"Sanitized text in SetTranslationToAddon: {sanitizedText}");
                   nodeAsTextNode->SetText(sanitizedText);
                   nodeAsTextNode->ResizeNodeForCurrentText();
-
                 }
               }
             }
@@ -421,7 +415,6 @@ namespace Echoglossian
         }
       });
     }
-
 
     protected virtual void Dispose(bool disposing)
     {
@@ -455,9 +448,6 @@ namespace Echoglossian
         this.disposedValue = true;
       }
     }
-
-
-
 
     public void Dispose()
     {

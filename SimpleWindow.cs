@@ -1,4 +1,9 @@
-﻿using System;
+﻿// <copyright file="SimpleWindow.cs" company="lokinmodar">
+// Copyright (c) lokinmodar. All rights reserved.
+// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
+// </copyright>
+
+using System;
 using System.Numerics;
 using System.Threading;
 
@@ -14,7 +19,6 @@ namespace Echoglossian
   {
     // TODO: add window position calculations based on the current addon
     // TODO: add window sizing calculations based on the current translation
-
     private bool disposedValue;
     private bool displayTranslation;
     private readonly SemaphoreSlim translationSemaphore;
@@ -165,7 +169,6 @@ namespace Echoglossian
         if (disposing)
         {
           this.translationSemaphore.Dispose();
-
         }
         this.disposedValue = true;
       }

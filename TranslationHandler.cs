@@ -1,4 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿// <copyright file="TranslationHandler.cs" company="lokinmodar">
+// Copyright (c) lokinmodar. All rights reserved.
+// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
+// </copyright>
+
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,7 +59,7 @@ public class TranslationHandler
     // string translatedText = await YourTranslationAPICall(text);
 
     // Return the translated text
-    return "a"; // translatedText;
+    return $"a {text.ToString()}"; // translatedText;
   }
 
   private void ShowTranslating(string text)

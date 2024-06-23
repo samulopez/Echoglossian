@@ -51,7 +51,6 @@ namespace Echoglossian.EFCoreSqlite.Models
     /// <param name="updatedDate"></param>
     public TalkSubtitleMessage(string originalTalkSubtitleMessage, string originalTalkSubtitleMessageLang, string translatedTalkSubtitleMessage, string translationLang, int translationEngine, DateTime createdDate, DateTime? updatedDate)
     {
-
       this.OriginalTalkSubtitleMessage = originalTalkSubtitleMessage;
       this.OriginalTalkSubtitleMessageLang = originalTalkSubtitleMessageLang;
       this.TranslatedTalkSubtitleMessage = translatedTalkSubtitleMessage;

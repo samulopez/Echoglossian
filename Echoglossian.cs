@@ -59,8 +59,7 @@ namespace Echoglossian
     [PluginService]
     public static INotificationManager NotificationManager { get; private set; } = null!;
 
-    //  private static XivCommonBase Common { get; set; }
-
+    // private static XivCommonBase Common { get; set; }
     public string Name => Resources.Name;
 
     private const string SlashCommand = "/eglo";
@@ -234,7 +233,6 @@ namespace Echoglossian
        {
          this.ParseUi();
        }*/
-
     }
 
     /// <inheritdoc />

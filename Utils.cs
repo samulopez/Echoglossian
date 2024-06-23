@@ -10,6 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+
 using Dalamud.Interface.Internal.Notifications;
 using Echoglossian.Properties;
 
@@ -259,7 +260,7 @@ namespace Echoglossian
       string result = Regex.Replace(input, @"\s{2,}", " ");
 
       // Remove line breaks and carriage returns
-      result = result.Replace("\r", "").Replace("\n", "");
+      result = result.Replace("\r", string.Empty).Replace("\n", string.Empty);
 
       return result;
     }

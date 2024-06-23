@@ -139,7 +139,6 @@ public partial class Echoglossian
 
           if (this.configuration.TranslateTalk)
           {
-
             if (this.configuration.OverlayOnlyLanguage)
             {
               saveConfig |=

@@ -216,26 +216,26 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Translate" Version="3.7.300.95" />
+    <PackageReference Include="AWSSDK.Translate" Version="3.7.300.108" />
     <PackageReference Include="DalamudPackager" Version="2.1.12" />
     <PackageReference Include="DeepL.net" Version="1.9.0" />
-    <PackageReference Include="GTranslate" Version="2.1.6" />
+    <PackageReference Include="GTranslate" Version="2.2.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
     <PackageReference Include="Lumina.Excel" Version="6.5.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.5" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.5">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6">
       <PrivateAssets>all</PrivateAssets>
       <!--<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>-->
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NTextCat" Version="0.3.65" />
-    <PackageReference Include="RestSharp" Version="111.0.0" />
+    <PackageReference Include="RestSharp" Version="111.3.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
       <PrivateAssets>all</PrivateAssets>
       <!--<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>-->
     </PackageReference>
-    <PackageReference Include="System.Drawing.Common" Version="8.0.5" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.6" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     <PackageReference Include="XivCommon" Version="9.0.0" />
   </ItemGroup>

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Internal.Notifications;
 using Echoglossian.Properties;

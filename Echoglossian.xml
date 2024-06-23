@@ -749,5 +749,114 @@
             <param name="fontLoaded"></param>
             <param name="translationSemaphore"></param>
         </member>
+        <member name="T:Echoglossian.UIAddonHandler">
+            <summary>
+            Handles the UI Addons for translation purposes.
+            </summary>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.#ctor(Echoglossian.Config,ImGuiNET.ImFontPtr,System.Boolean,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Echoglossian.UIAddonHandler"/> class.
+            </summary>
+            <param name="configuration">The configuration.</param>
+            <param name="uiFont">The UI font.</param>
+            <param name="fontLoaded">Indicates whether the font is loaded.</param>
+            <param name="langToTranslateTo">The language to translate to.</param>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.EgloAddonHandler(System.String)">
+            <summary>
+            Handles the addon for translation purposes.
+            </summary>
+            <param name="addonName">Name of the addon.</param>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.DetermineAddonCharacteristics">
+            <summary>
+            Determines the characteristics of the addon.
+            </summary>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.AdjustAddonNodesFlags">
+            <summary>
+            Adjusts the addon nodes flags.
+            </summary>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.ExploreAddon">
+            <summary>
+            Explores the addon to extract text nodes and manage translations.
+            </summary>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.TranslateSenderName(System.String,System.Int32,System.String)">
+            <summary>
+            Translates the sender name if the configuration allows it.
+            </summary>
+            <param name="senderName">The sender name to be translated.</param>
+            <param name="nodeId">The node ID.</param>
+            <param name="addonType">The type of addon.</param>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.CheckDatabaseForTranslation">
+            <summary>
+            Checks the database for existing translations.
+            </summary>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.TranslateTexts(System.String,System.String)">
+            <summary>
+            Translates the texts.
+            </summary>
+            <param name="originalText">The original text to translate.</param>
+            <param name="addonType">The type of addon.</param>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.SaveTranslationToDatabase(System.String,System.String,System.String)">
+            <summary>
+            Saves the translation to the database.
+            </summary>
+            <param name="originalText">The original text.</param>
+            <param name="translatedText">The translated text.</param>
+            <param name="addonType">The type of addon.</param>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.ProcessTranslations(System.Threading.CancellationToken)">
+            <summary>
+            Processes the translations asynchronously.
+            </summary>
+            <param name="token">The cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.TranslateText(System.Int32,System.String)">
+            <summary>
+            Translates the text for a specific node.
+            </summary>
+            <param name="id">The node ID.</param>
+            <param name="text">The text to translate.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.SetTranslationToAddon">
+            <summary>
+            Sets the translations to the addon text nodes.
+            </summary>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and optionally managed resources.
+            </summary>
+            <param name="disposing">If set to <c>true</c> release managed resources.</param>
+        </member>
+        <member name="M:Echoglossian.UIAddonHandler.Dispose">
+            <summary>
+            Disposes the instance and suppresses finalization.
+            </summary>
+        </member>
+        <member name="T:Echoglossian.UIAddonHandler.TranslationEntry">
+            <summary>
+            Represents a translation entry.
+            </summary>
+        </member>
+        <member name="T:Echoglossian.UIAddonHandler.AddonCharacteristicsInfo">
+            <summary>
+            Represents the characteristics of an addon.
+            </summary>
+        </member>
+        <member name="T:Echoglossian.UIAddonHandler.NodeState">
+            <summary>
+            Represents the state of a node.
+            </summary>
+        </member>
     </members>
 </doc>

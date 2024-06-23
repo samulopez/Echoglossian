@@ -4,25 +4,25 @@
 
 namespace Echoglossian.EFCoreSqlite.Migrations
 {
+  /// <inheritdoc />
+  public partial class AddSummaryToQuestPlate : Migration
+  {
     /// <inheritdoc />
-    public partial class AddSummaryToQuestPlate : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<string>(
-                name: "SummariesAsText",
-                table: "questplates",
-                type: "TEXT",
-                nullable: true);
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "SummariesAsText",
-                table: "questplates");
-        }
+      migrationBuilder.AddColumn<string>(
+          name: "SummariesAsText",
+          table: "questplates",
+          type: "TEXT",
+          nullable: true);
     }
+
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+      migrationBuilder.DropColumn(
+          name: "SummariesAsText",
+          table: "questplates");
+    }
+  }
 }

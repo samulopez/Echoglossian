@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+
 using ImGuiNET;
 
 namespace Echoglossian;
@@ -70,13 +71,26 @@ public partial class Echoglossian
         builder.AddText(this.CharsToAddToAll);
         builder.AddText(this.scriptCharList);
 
-        foreach (var c in this.CharsToAddToAll) builder.AddChar(c);
+        foreach (var c in this.CharsToAddToAll)
+        {
+          builder.AddChar(c);
+        }
 
-        foreach (var c in this.scriptCharList) builder.AddChar(c);
+        foreach (var c in this.scriptCharList)
+        {
+          builder.AddChar(c);
+        }
 
-        foreach (var c in this.PuaCharCodes) builder.AddChar(c);
+        foreach (var c in this.PuaCharCodes)
+        {
+          builder.AddChar(c);
+        }
 
-        foreach (var c in this.PuaChars) builder.AddChar(c);
+        foreach (var c in this.PuaChars)
+        {
+          builder.AddChar(c);
+        }
+
         builder.BuildRanges(out var ranges);
 
         this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesDefault());
@@ -84,28 +98,38 @@ public partial class Echoglossian
         this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesCyrillic());
         if (this.configuration.Lang is 16 or 22)
         {
-          this.AddCharsFromIntPtr(chars,
+          this.AddCharsFromIntPtr(
+            chars,
             (ushort*)io.Fonts.GetGlyphRangesChineseFull());
-          this.AddCharsFromIntPtr(chars,
+          this.AddCharsFromIntPtr(
+            chars,
             (ushort*)io.Fonts.GetGlyphRangesChineseSimplifiedCommon());
         }
 
         if (this.configuration.Lang is 21)
         {
-          this.AddCharsFromIntPtr(chars,
+          this.AddCharsFromIntPtr(
+            chars,
             (ushort*)io.Fonts.GetGlyphRangesChineseSimplifiedCommon());
-          this.AddCharsFromIntPtr(chars,
+          this.AddCharsFromIntPtr(
+            chars,
             (ushort*)io.Fonts.GetGlyphRangesChineseFull());
         }
 
         if (this.configuration.Lang is 56)
+        {
           this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesKorean());
+        }
 
         if (this.configuration.Lang is 50)
+        {
           this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesJapanese());
+        }
 
         if (this.configuration.Lang is 103)
+        {
           this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesThai());
+        }
 
         this.AddCharsFromIntPtr(chars, (ushort*)ranges.Data);
 
@@ -124,17 +148,23 @@ public partial class Echoglossian
           GCHandle.Alloc(chars.ToArray(), GCHandleType.Pinned);
         fontConfig.GlyphRanges = this.glyphRangeMainText.Value.AddrOfPinnedObject();
 
-        this.UiFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(dummyFontFilePath,
+        this.UiFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(
+          dummyFontFilePath,
           this.configuration.FontSize, fontConfig);
 
         fontConfig.MergeMode = true;
-        ImGui.GetIO().Fonts.AddFontFromFileTTF(symbolsFontFilePath,
+        ImGui.GetIO().Fonts.AddFontFromFileTTF(
+          symbolsFontFilePath,
           this.configuration.FontSize, fontConfig);
-        ImGui.GetIO().Fonts.AddFontFromFileTTF(fontFilePath,
+        ImGui.GetIO().Fonts.AddFontFromFileTTF(
+          fontFilePath,
           this.configuration.FontSize, fontConfig);
         if (specialFontFilePath != string.Empty)
-          ImGui.GetIO().Fonts.AddFontFromFileTTF(specialFontFilePath,
+        {
+          ImGui.GetIO().Fonts.AddFontFromFileTTF(
+            specialFontFilePath,
             this.configuration.FontSize, fontConfig);
+        }
 
 #if DEBUG
         PluginLog.Debug($"UiFont Data size: {ImGui.GetIO().Fonts.Fonts.Size}");
@@ -152,7 +182,10 @@ public partial class Echoglossian
       }
       finally
       {
-        if (fontConfig.NativePtr != null) fontConfig.Destroy();
+        if (fontConfig.NativePtr != null)
+        {
+          fontConfig.Destroy();
+        }
       }
     }
     else
@@ -200,9 +233,15 @@ public partial class Echoglossian
         builder.AddText(this.LangComboItems);
         builder.AddText(this.scriptCharList);
 
-        foreach (var c in this.PuaChars) builder.AddChar(c);
+        foreach (var c in this.PuaChars)
+        {
+          builder.AddChar(c);
+        }
 
-        foreach (var c in this.PuaCharCodes) builder.AddChar(c);
+        foreach (var c in this.PuaCharCodes)
+        {
+          builder.AddChar(c);
+        }
 
         builder.BuildRanges(out var ranges);
 
@@ -224,19 +263,24 @@ public partial class Echoglossian
         fontConfig.GlyphRanges =
           this.glyphRangeConfigText.Value.AddrOfPinnedObject();
 
-        this.ConfigUiFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(dummyFontFilePath,
+        this.ConfigUiFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(
+          dummyFontFilePath,
           this.configuration.FontSize, fontConfig);
 
         fontConfig.MergeMode = true;
-        ImGui.GetIO().Fonts.AddFontFromFileTTF(symbolsFontFilePath,
+        ImGui.GetIO().Fonts.AddFontFromFileTTF(
+          symbolsFontFilePath,
           this.configuration.FontSize, fontConfig);
         ImGui.GetIO().Fonts
           .AddFontFromFileTTF(fontFile, this.configuration.FontSize, fontConfig);
 
         foreach (var fileName in this.languagesDictionary.Values
                    .Select(x => x.FontName).ToHashSet())
-          ImGui.GetIO().Fonts.AddFontFromFileTTF(fontDir + fileName,
+        {
+          ImGui.GetIO().Fonts.AddFontFromFileTTF(
+            fontDir + fileName,
             this.configuration.FontSize, fontConfig);
+        }
 
 #if DEBUG
         PluginLog.Debug(
