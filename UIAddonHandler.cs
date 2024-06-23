@@ -17,6 +17,9 @@ using static Echoglossian.Echoglossian;
 
 namespace Echoglossian
 {
+  /// <summary>
+  /// Handles the UI Addons for translation purposes.
+  /// </summary>
   internal class UIAddonHandler : IDisposable
   {
     private bool disposedValue;
@@ -37,7 +40,16 @@ namespace Echoglossian
     private string configDir;
     private HashSet<string> translatedTexts = new HashSet<string>();
     private Dictionary<int, NodeState> nodeStates;
+    private bool databaseChecked = false;
+    private bool isInitialized = false;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UIAddonHandler"/> class.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="uiFont">The UI font.</param>
+    /// <param name="fontLoaded">Indicates whether the font is loaded.</param>
+    /// <param name="langToTranslateTo">The language to translate to.</param>
     public UIAddonHandler(
         Config configuration = default,
         ImFontPtr uiFont = default,
@@ -58,21 +70,33 @@ namespace Echoglossian
       this.translationTask = Task.Run(async () => await this.ProcessTranslations(this.cts.Token));
     }
 
+    /// <summary>
+    /// Handles the addon for translation purposes.
+    /// </summary>
+    /// <param name="addonName">Name of the addon.</param>
     public void EgloAddonHandler(string addonName)
     {
-      this.addonName = addonName;
-
-      if (string.IsNullOrEmpty(this.addonName))
+      // Ensure initialization logic runs only once
+      if (!this.isInitialized)
       {
-        return;
-      }
+        this.addonName = addonName;
 
-      this.DetermineAddonCharacteristics();
-      this.AdjustAddonNodesFlags();
+        if (string.IsNullOrEmpty(this.addonName))
+        {
+          return;
+        }
+
+        this.DetermineAddonCharacteristics();
+        this.AdjustAddonNodesFlags();
+        this.isInitialized = true;
+      }
 
       this.ExploreAddon();
     }
 
+    /// <summary>
+    /// Determines the characteristics of the addon.
+    /// </summary>
     private void DetermineAddonCharacteristics()
     {
       switch (this.addonName)
@@ -85,16 +109,16 @@ namespace Echoglossian
             NameNodeId = 2,
             MessageNodeId = 3,
             TalkMessage = new TalkMessage(
-                  senderName: string.Empty,
-                  originalTalkMessage: string.Empty,
-                  originalSenderNameLang: this.clientLanguage.Humanize(),
-                  translatedTalkMessage: string.Empty,
-                  originalTalkMessageLang: this.clientLanguage.Humanize(),
-                  translationLang: this.langToTranslateTo,
-                  translationEngine: this.configuration.ChosenTransEngine,
-                  translatedSenderName: string.Empty,
-                  createdDate: DateTime.Now,
-                  updatedDate: DateTime.Now),
+                    senderName: string.Empty,
+                    originalTalkMessage: string.Empty,
+                    originalSenderNameLang: this.clientLanguage.Humanize(),
+                    translatedTalkMessage: string.Empty,
+                    originalTalkMessageLang: this.clientLanguage.Humanize(),
+                    translationLang: this.langToTranslateTo,
+                    translationEngine: this.configuration.ChosenTransEngine,
+                    translatedSenderName: string.Empty,
+                    createdDate: DateTime.Now,
+                    updatedDate: DateTime.Now),
           };
           break;
         case "_BattleTalk":
@@ -105,16 +129,16 @@ namespace Echoglossian
             NameNodeId = 4,
             MessageNodeId = 6,
             BattleTalkMessage = new BattleTalkMessage(
-                  senderName: string.Empty,
-                  originalBattleTalkMessage: string.Empty,
-                  originalSenderNameLang: this.clientLanguage.Humanize(),
-                  translatedBattleTalkMessage: string.Empty,
-                  originalBattleTalkMessageLang: this.clientLanguage.Humanize(),
-                  translationLang: this.langToTranslateTo,
-                  translationEngine: this.configuration.ChosenTransEngine,
-                  translatedSenderName: string.Empty,
-                  createdDate: DateTime.Now,
-                  updatedDate: DateTime.Now),
+                    senderName: string.Empty,
+                    originalBattleTalkMessage: string.Empty,
+                    originalSenderNameLang: this.clientLanguage.Humanize(),
+                    translatedBattleTalkMessage: string.Empty,
+                    originalBattleTalkMessageLang: this.clientLanguage.Humanize(),
+                    translationLang: this.langToTranslateTo,
+                    translationEngine: this.configuration.ChosenTransEngine,
+                    translatedSenderName: string.Empty,
+                    createdDate: DateTime.Now,
+                    updatedDate: DateTime.Now),
           };
           break;
         default:
@@ -122,6 +146,9 @@ namespace Echoglossian
       }
     }
 
+    /// <summary>
+    /// Adjusts the addon nodes flags.
+    /// </summary>
     private void AdjustAddonNodesFlags()
     {
       this.addonNodesFlags = new Dictionary<int, TextFlags>();
@@ -139,6 +166,9 @@ namespace Echoglossian
       }
     }
 
+    /// <summary>
+    /// Explores the addon to extract text nodes and manage translations.
+    /// </summary>
     private unsafe void ExploreAddon()
     {
       var addon = GameGui.GetAddonByName(this.addonName, 1);
@@ -157,6 +187,7 @@ namespace Echoglossian
       }
 
       this.translations.Clear();
+      this.databaseChecked = false;
 
       var nodesQuantity = foundAddon->UldManager.NodeListCount;
 
@@ -248,6 +279,12 @@ namespace Echoglossian
       this.CheckDatabaseForTranslation();
     }
 
+    /// <summary>
+    /// Translates the sender name if the configuration allows it.
+    /// </summary>
+    /// <param name="senderName">The sender name to be translated.</param>
+    /// <param name="nodeId">The node ID.</param>
+    /// <param name="addonType">The type of addon.</param>
     private void TranslateSenderName(string senderName, int nodeId, string addonType)
     {
       Task.Run(async () =>
@@ -267,8 +304,16 @@ namespace Echoglossian
       });
     }
 
+    /// <summary>
+    /// Checks the database for existing translations.
+    /// </summary>
     private void CheckDatabaseForTranslation()
     {
+      if (this.databaseChecked)
+      {
+        return;
+      }
+
       if (this.addonName == "Talk")
       {
         var talkMessage = this.addonCharacteristicsInfo.TalkMessage;
@@ -327,8 +372,15 @@ namespace Echoglossian
           }
         }
       }
+
+      this.databaseChecked = true;
     }
 
+    /// <summary>
+    /// Translates the texts.
+    /// </summary>
+    /// <param name="originalText">The original text to translate.</param>
+    /// <param name="addonType">The type of addon.</param>
     private void TranslateTexts(string originalText, string addonType)
     {
       Task.Run(async () =>
@@ -348,6 +400,12 @@ namespace Echoglossian
       });
     }
 
+    /// <summary>
+    /// Saves the translation to the database.
+    /// </summary>
+    /// <param name="originalText">The original text.</param>
+    /// <param name="translatedText">The translated text.</param>
+    /// <param name="addonType">The type of addon.</param>
     private void SaveTranslationToDatabase(string originalText, string translatedText, string addonType)
     {
       if (addonType == "Talk")
@@ -382,6 +440,11 @@ namespace Echoglossian
       }
     }
 
+    /// <summary>
+    /// Processes the translations asynchronously.
+    /// </summary>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task ProcessTranslations(CancellationToken token)
     {
       while (!token.IsCancellationRequested)
@@ -398,6 +461,12 @@ namespace Echoglossian
       }
     }
 
+    /// <summary>
+    /// Translates the text for a specific node.
+    /// </summary>
+    /// <param name="id">The node ID.</param>
+    /// <param name="text">The text to translate.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task TranslateText(int id, string text)
     {
       try
@@ -418,6 +487,9 @@ namespace Echoglossian
       }
     }
 
+    /// <summary>
+    /// Sets the translations to the addon text nodes.
+    /// </summary>
     private unsafe void SetTranslationToAddon()
     {
       Echoglossian.PluginLog.Information($"Setting translation to addon: {this.addonName}");
@@ -450,7 +522,6 @@ namespace Echoglossian
           }
 
           var textFromNode = Echoglossian.CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nodeAsTextNode->NodeText.StringPtr));
-
 
           if (string.IsNullOrEmpty(textFromNode))
           {
@@ -517,7 +588,7 @@ namespace Echoglossian
           {
             if (this.configuration.TranslateNpcNames && Echoglossian.FoundBattleTalkMessage.TranslatedSenderName != string.Empty)
             {
-              Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundTalkMessage.TranslatedSenderName}");
+              Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundBattleTalkMessage.TranslatedSenderName}");
               nodeAsTextNode->SetText(Echoglossian.FoundBattleTalkMessage.TranslatedSenderName);
               nodeAsTextNode->ResizeNodeForCurrentText();
             }
@@ -599,6 +670,10 @@ namespace Echoglossian
       });
     }
 
+    /// <summary>
+    /// Releases unmanaged and optionally managed resources.
+    /// </summary>
+    /// <param name="disposing">If set to <c>true</c> release managed resources.</param>
     protected virtual void Dispose(bool disposing)
     {
       if (!this.disposedValue)
@@ -615,12 +690,18 @@ namespace Echoglossian
       }
     }
 
+    /// <summary>
+    /// Disposes the instance and suppresses finalization.
+    /// </summary>
     public void Dispose()
     {
       this.Dispose(disposing: true);
       GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Represents a translation entry.
+    /// </summary>
     private class TranslationEntry
     {
       public string OriginalText { get; set; }
@@ -635,6 +716,9 @@ namespace Echoglossian
       }
     }
 
+    /// <summary>
+    /// Represents the characteristics of an addon.
+    /// </summary>
     private class AddonCharacteristicsInfo
     {
       public string AddonName { get; set; }
@@ -659,6 +743,9 @@ namespace Echoglossian
       }
     }
 
+    /// <summary>
+    /// Represents the state of a node.
+    /// </summary>
     private class NodeState
     {
       public bool OriginalTextExtracted { get; set; } = false;
