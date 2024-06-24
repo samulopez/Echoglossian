@@ -1,9 +1,4 @@
-﻿// <copyright file="UIAddonHandler.cs" company="lokinmodar">
-// Copyright (c) lokinmodar. All rights reserved.
-// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
-// </copyright>
-
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -499,180 +494,180 @@ namespace Echoglossian
     {
       Echoglossian.PluginLog.Information($"Setting translation to addon: {this.addonName}");
 
-      Framework.RunOnTick(() =>
-      {
-        var addon = GameGui.GetAddonByName(this.addonName, 1);
-        var foundAddon = (AtkUnitBase*)addon;
+      /*Framework.RunOnTick(() =>*/
+      /*{*/
+      var addon = GameGui.GetAddonByName(this.addonName, 1);
+      var foundAddon = (AtkUnitBase*)addon;
 
-        if (foundAddon == null || !foundAddon->IsVisible)
+      if (foundAddon == null || !foundAddon->IsVisible)
+      {
+        return;
+      }
+
+      var nodesQuantity = foundAddon->UldManager.NodeListCount;
+
+      for (var i = 0; i < nodesQuantity; i++)
+      {
+        var node = foundAddon->GetNodeById((uint)i);
+
+        if (node == null || node->Type != NodeType.Text)
         {
-          return;
+          continue;
         }
 
-        var nodesQuantity = foundAddon->UldManager.NodeListCount;
-
-        for (var i = 0; i < nodesQuantity; i++)
+        var nodeAsTextNode = node->GetAsAtkTextNode();
+        if (nodeAsTextNode == null)
         {
-          var node = foundAddon->GetNodeById((uint)i);
+          continue;
+        }
 
-          if (node == null || node->Type != NodeType.Text)
+        var textFromNode = Echoglossian.CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nodeAsTextNode->NodeText.StringPtr));
+
+        if (string.IsNullOrEmpty(textFromNode))
+        {
+          continue;
+        }
+
+        if (!this.nodeStates.ContainsKey(i))
+        {
+          continue;
+        }
+
+        var nodeState = this.nodeStates[i];
+
+        if (nodeState.TranslationSet)
+        {
+          continue;
+        }
+
+        if (Echoglossian.FoundTalkMessage != null && Echoglossian.FoundTalkMessage.TranslatedTalkMessage == textFromNode)
+        {
+          nodeState.TranslationSet = true;
+          continue;
+        }
+
+        if (this.addonCharacteristicsInfo.NameNodeId == i)
+        {
+          if (this.configuration.TranslateNpcNames && Echoglossian.FoundTalkMessage.TranslatedSenderName != string.Empty)
           {
-            continue;
+            Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundTalkMessage.TranslatedSenderName}");
+            nodeAsTextNode->SetText(Echoglossian.FoundTalkMessage.TranslatedSenderName);
+            nodeAsTextNode->ResizeNodeForCurrentText();
+          }
+          else if (!this.configuration.TranslateNpcNames)
+          {
+            this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = this.addonCharacteristicsInfo.TalkMessage.SenderName;
           }
 
-          var nodeAsTextNode = node->GetAsAtkTextNode();
-          if (nodeAsTextNode == null)
+          nodeState.TranslationSet = true;
+          continue;
+        }
+
+        if (this.addonCharacteristicsInfo.MessageNodeId == i)
+        {
+          if (textFromNode != string.Empty && textFromNode != Echoglossian.FoundTalkMessage.TranslatedTalkMessage && Echoglossian.FoundTalkMessage.TranslatedTalkMessage != string.Empty)
           {
-            continue;
+            Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundTalkMessage.TranslatedTalkMessage}");
+
+            nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[i];
+            nodeAsTextNode->SetText(Echoglossian.FoundTalkMessage.TranslatedTalkMessage);
+            nodeAsTextNode->ResizeNodeForCurrentText();
           }
 
-          var textFromNode = Echoglossian.CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nodeAsTextNode->NodeText.StringPtr));
+          nodeState.TranslationSet = true;
+          continue;
+        }
 
-          if (string.IsNullOrEmpty(textFromNode))
+        if (Echoglossian.FoundBattleTalkMessage != null && Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage == textFromNode)
+        {
+          nodeState.TranslationSet = true;
+          continue;
+        }
+
+        if (this.addonCharacteristicsInfo.NameNodeId == i)
+        {
+          if (this.configuration.TranslateNpcNames && Echoglossian.FoundBattleTalkMessage.TranslatedSenderName != string.Empty)
           {
-            continue;
+            Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundBattleTalkMessage.TranslatedSenderName}");
+            nodeAsTextNode->SetText(Echoglossian.FoundBattleTalkMessage.TranslatedSenderName);
+            nodeAsTextNode->ResizeNodeForCurrentText();
+          }
+          else if (!this.configuration.TranslateNpcNames)
+          {
+            this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = this.addonCharacteristicsInfo.BattleTalkMessage.SenderName;
           }
 
-          if (!this.nodeStates.ContainsKey(i))
+          nodeState.TranslationSet = true;
+          continue;
+        }
+
+        if (this.addonCharacteristicsInfo.MessageNodeId == i)
+        {
+          if (textFromNode != string.Empty && textFromNode != Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage && Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage != string.Empty)
           {
-            continue;
+            Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage}");
+
+            nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[i];
+            nodeAsTextNode->SetText(Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage);
+            nodeAsTextNode->ResizeNodeForCurrentText();
           }
 
-          var nodeState = this.nodeStates[i];
+          nodeState.TranslationSet = true;
+          continue;
+        }
 
-          if (nodeState.TranslationSet)
-          {
-            continue;
-          }
-
-          if (Echoglossian.FoundTalkMessage != null && Echoglossian.FoundTalkMessage.TranslatedTalkMessage == textFromNode)
+        if (this.translations.TryGetValue(i, out var entry) && entry.IsTranslated)
+        {
+          if (entry.TranslatedText == textFromNode)
           {
             nodeState.TranslationSet = true;
             continue;
           }
 
-          if (this.addonCharacteristicsInfo.NameNodeId == i)
+          if (entry.OriginalText == textFromNode)
           {
-            if (this.configuration.TranslateNpcNames && Echoglossian.FoundTalkMessage.TranslatedSenderName != string.Empty)
+            var sanitizedText = Echoglossian.CleanString(entry.TranslatedText);
+
+            Echoglossian.PluginLog.Error($"this.addonCharacteristicsInfo.Talkmessage if translating: {this.addonCharacteristicsInfo.TalkMessage}");
+            Echoglossian.PluginLog.Warning($"this.addonCharacteristicsInfo.BattleTalkMessage if translating: {this.addonCharacteristicsInfo.BattleTalkMessage}");
+
+            if (this.addonCharacteristicsInfo.NameNodeId == i)
             {
-              Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundTalkMessage.TranslatedSenderName}");
-              nodeAsTextNode->SetText(Echoglossian.FoundTalkMessage.TranslatedSenderName);
-              nodeAsTextNode->ResizeNodeForCurrentText();
-            }
-            else if (!this.configuration.TranslateNpcNames)
-            {
-              this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = this.addonCharacteristicsInfo.TalkMessage.SenderName;
-            }
+              if (textFromNode != string.Empty && textFromNode != sanitizedText)
+              {
+                Echoglossian.PluginLog.Information($"Setting translation to addon NameNode if translating: {sanitizedText}");
+                nodeAsTextNode->SetText(sanitizedText);
+                nodeAsTextNode->ResizeNodeForCurrentText();
+              }
 
-            nodeState.TranslationSet = true;
-            continue;
-          }
-
-          if (this.addonCharacteristicsInfo.MessageNodeId == i)
-          {
-            if (textFromNode != string.Empty && textFromNode != Echoglossian.FoundTalkMessage.TranslatedTalkMessage && Echoglossian.FoundTalkMessage.TranslatedTalkMessage != string.Empty)
-            {
-              Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundTalkMessage.TranslatedTalkMessage}");
-
-              nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[i];
-              nodeAsTextNode->SetText(Echoglossian.FoundTalkMessage.TranslatedTalkMessage);
-              nodeAsTextNode->ResizeNodeForCurrentText();
-            }
-
-            nodeState.TranslationSet = true;
-            continue;
-          }
-
-          if (Echoglossian.FoundBattleTalkMessage != null && Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage == textFromNode)
-          {
-            nodeState.TranslationSet = true;
-            continue;
-          }
-
-          if (this.addonCharacteristicsInfo.NameNodeId == i)
-          {
-            if (this.configuration.TranslateNpcNames && Echoglossian.FoundBattleTalkMessage.TranslatedSenderName != string.Empty)
-            {
-              Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundBattleTalkMessage.TranslatedSenderName}");
-              nodeAsTextNode->SetText(Echoglossian.FoundBattleTalkMessage.TranslatedSenderName);
-              nodeAsTextNode->ResizeNodeForCurrentText();
-            }
-            else if (!this.configuration.TranslateNpcNames)
-            {
-              this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = this.addonCharacteristicsInfo.BattleTalkMessage.SenderName;
-            }
-
-            nodeState.TranslationSet = true;
-            continue;
-          }
-
-          if (this.addonCharacteristicsInfo.MessageNodeId == i)
-          {
-            if (textFromNode != string.Empty && textFromNode != Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage && Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage != string.Empty)
-            {
-              Echoglossian.PluginLog.Warning($"Text from NodeID {i} in SetTranslationToAddon: {textFromNode}, translation: {Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage}");
-
-              nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[i];
-              nodeAsTextNode->SetText(Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage);
-              nodeAsTextNode->ResizeNodeForCurrentText();
-            }
-
-            nodeState.TranslationSet = true;
-            continue;
-          }
-
-          if (this.translations.TryGetValue(i, out var entry) && entry.IsTranslated)
-          {
-            if (entry.TranslatedText == textFromNode)
-            {
               nodeState.TranslationSet = true;
               continue;
             }
 
-            if (entry.OriginalText == textFromNode)
+            if (this.addonCharacteristicsInfo.MessageNodeId == i)
             {
-              var sanitizedText = Echoglossian.CleanString(entry.TranslatedText);
-
-              Echoglossian.PluginLog.Error($"this.addonCharacteristicsInfo.Talkmessage if translating: {this.addonCharacteristicsInfo.TalkMessage}");
-              Echoglossian.PluginLog.Warning($"this.addonCharacteristicsInfo.BattleTalkMessage if translating: {this.addonCharacteristicsInfo.BattleTalkMessage}");
-
-              if (this.addonCharacteristicsInfo.NameNodeId == i)
+              if (textFromNode != string.Empty && textFromNode != sanitizedText)
               {
-                if (textFromNode != string.Empty && textFromNode != sanitizedText)
-                {
-                  Echoglossian.PluginLog.Information($"Setting translation to addon NameNode if translating: {sanitizedText}");
-                  nodeAsTextNode->SetText(sanitizedText);
-                  nodeAsTextNode->ResizeNodeForCurrentText();
-                }
-
-                nodeState.TranslationSet = true;
-                continue;
+                Echoglossian.PluginLog.Information($"Setting translation to addon MessageNode if translating: {sanitizedText}");
+                nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[i];
+                nodeAsTextNode->SetText(sanitizedText);
+                nodeAsTextNode->ResizeNodeForCurrentText();
               }
 
-              if (this.addonCharacteristicsInfo.MessageNodeId == i)
-              {
-                if (textFromNode != string.Empty && textFromNode != sanitizedText)
-                {
-                  Echoglossian.PluginLog.Information($"Setting translation to addon MessageNode if translating: {sanitizedText}");
-                  nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[i];
-                  nodeAsTextNode->SetText(sanitizedText);
-                  nodeAsTextNode->ResizeNodeForCurrentText();
-                }
-
-                nodeState.TranslationSet = true;
-                continue;
-              }
-
-              nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[i];
-              nodeAsTextNode->SetText(sanitizedText);
-              nodeAsTextNode->ResizeNodeForCurrentText();
-
-              this.translations.TryRemove(i, out _);
               nodeState.TranslationSet = true;
+              continue;
             }
+
+            nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[i];
+            nodeAsTextNode->SetText(sanitizedText);
+            nodeAsTextNode->ResizeNodeForCurrentText();
+
+            this.translations.TryRemove(i, out _);
+            nodeState.TranslationSet = true;
           }
         }
-      });
+      }
+      /*});*/
     }
 
     /// <summary>

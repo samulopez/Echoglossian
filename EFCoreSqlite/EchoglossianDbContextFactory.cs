@@ -1,9 +1,4 @@
-﻿// <copyright file="EchoglossianDbContextFactory.cs" company="lokinmodar">
-// Copyright (c) lokinmodar. All rights reserved.
-// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
-// </copyright>
-
-using Microsoft.EntityFrameworkCore.Design;
+﻿using Microsoft.EntityFrameworkCore.Design;
 
 using System;
 using System.IO;

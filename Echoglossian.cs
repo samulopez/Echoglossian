@@ -222,6 +222,7 @@ namespace Echoglossian
       // Common.Functions.Tooltips.OnActionTooltip += this.TooltipsOnActionTooltip;
       // Common.Functions.Talk.OnTalk += this.GetTalk;
       // Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;
+
       this.EgloAddonHandler();
 
       this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
@@ -314,8 +315,8 @@ namespace Echoglossian
             {
               case true:
 
-                this.uiTalkAddonHandler.EgloAddonHandler("Talk");
-                this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");
+                /*this.uiTalkAddonHandler.EgloAddonHandler("Talk");
+                this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");*/
 
                 // this.TalkHandler("Talk", 1);  tentative fix for stuttering
 
@@ -443,6 +444,9 @@ namespace Echoglossian
 
     private void EgloAddonHandler()
     {
+      Echoglossian.PluginLog.Information("EgloAddonHandler called.");
+
+
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalResult", this.UiJournalResultHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostReceiveEvent, "RecommendList", this.UiRecommendListHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "RecommendList", this.UiRecommendListHandlerAsync);
@@ -453,6 +457,14 @@ namespace Echoglossian
       AddonLifecycle.RegisterListener(AddonEvent.PreRequestedUpdate, "JournalDetail", this.UiJournalDetailHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
+
+      this.EgloNeutralAddonHandler("Talk", new string[] {/* "PreSetup", "PostSetup",*/ "PreUpdate", /* "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", "PreRefresh", "PostRefresh" */});
+      // this.EgloNeutralAddonHandler("_BattleTalk", new string[] { "PreSetup", "PostSetup", "PreUpdate", "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", "PreRefresh", "PostRefresh" });
+
+
+
+
+
       /*      AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "TalkSubtitle", this.UpdateUI);
             AddonLifecycle.RegisterListener(AddonEvent.PostSetup, "TalkSubtitle", this.UpdateUI);*/
     }

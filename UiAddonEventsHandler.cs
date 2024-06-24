@@ -1,7 +1,4 @@
-﻿// <copyright file="UiAddonEventsHandler.cs" company="lokinmodar">
-// Copyright (c) lokinmodar. All rights reserved.
-// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
-// </copyright>
+﻿// Saving this for backup purposes. This is the original file that was used to handle the UI Addon events.
 
 using ImGuiNET;
 
