@@ -159,7 +159,7 @@ namespace Echoglossian
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName);
+            this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName); // mexer nisso aqui 25/06/24
             break;
           case "_BattleTalk":
             this.uiBattleTalkAddonHandler.EgloAddonHandler(args.AddonName);

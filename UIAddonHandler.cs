@@ -2,9 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
 using Dalamud;
 using Dalamud.Game.Text.Sanitizer;
 using Dalamud.Memory;
@@ -12,7 +13,6 @@ using Echoglossian.EFCoreSqlite.Models;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Humanizer;
 using ImGuiNET;
-
 using static Echoglossian.Echoglossian;
 
 namespace Echoglossian
@@ -35,7 +35,10 @@ namespace Echoglossian
     private AddonCharacteristicsInfo addonCharacteristicsInfo;
     private string configDir;
     private HashSet<string> translatedTexts = new HashSet<string>();
+    private Dictionary<int, NodeState> nodeStates;
+    private bool databaseChecked = false;
     private bool isInitialized = false;
+    private static ConcurrentDictionary<string, bool> addonHashes = new ConcurrentDictionary<string, bool>();
 
     public UIAddonHandler(
         Config configuration = default,
@@ -51,24 +54,28 @@ namespace Echoglossian
       this.translationService = new TranslationService(configuration, Echoglossian.PluginLog, new Sanitizer(this.clientLanguage));
       this.translations = new ConcurrentDictionary<int, TranslationEntry>();
       this.configDir = Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar;
-
+      this.nodeStates = new Dictionary<int, NodeState>();
       this.cts = new CancellationTokenSource();
       this.translationTask = Task.Run(async () => await this.ProcessTranslations(this.cts.Token));
     }
 
     public void EgloAddonHandler(string addonName)
     {
+      // Ensure initialization logic runs only once
       if (!this.isInitialized)
       {
         this.addonName = addonName;
+
         if (string.IsNullOrEmpty(this.addonName))
         {
           return;
         }
+
         this.DetermineAddonCharacteristics();
         this.AdjustAddonNodesFlags();
         this.isInitialized = true;
       }
+
       this.ExploreAddon();
     }
 
@@ -84,16 +91,16 @@ namespace Echoglossian
             NameNodeId = 2,
             MessageNodeId = 3,
             TalkMessage = new TalkMessage(
-                    senderName: string.Empty,
-                    originalTalkMessage: string.Empty,
-                    originalSenderNameLang: this.clientLanguage.Humanize(),
-                    translatedTalkMessage: string.Empty,
-                    originalTalkMessageLang: this.clientLanguage.Humanize(),
-                    translationLang: this.langToTranslateTo,
-                    translationEngine: this.configuration.ChosenTransEngine,
-                    translatedSenderName: string.Empty,
-                    createdDate: DateTime.Now,
-                    updatedDate: DateTime.Now),
+                      senderName: string.Empty,
+                      originalTalkMessage: string.Empty,
+                      originalSenderNameLang: this.clientLanguage.Humanize(),
+                      translatedTalkMessage: string.Empty,
+                      originalTalkMessageLang: this.clientLanguage.Humanize(),
+                      translationLang: this.langToTranslateTo,
+                      translationEngine: this.configuration.ChosenTransEngine,
+                      translatedSenderName: string.Empty,
+                      createdDate: DateTime.Now,
+                      updatedDate: DateTime.Now),
           };
           break;
         case "_BattleTalk":
@@ -104,16 +111,16 @@ namespace Echoglossian
             NameNodeId = 4,
             MessageNodeId = 6,
             BattleTalkMessage = new BattleTalkMessage(
-                    senderName: string.Empty,
-                    originalBattleTalkMessage: string.Empty,
-                    originalSenderNameLang: this.clientLanguage.Humanize(),
-                    translatedBattleTalkMessage: string.Empty,
-                    originalBattleTalkMessageLang: this.clientLanguage.Humanize(),
-                    translationLang: this.langToTranslateTo,
-                    translationEngine: this.configuration.ChosenTransEngine,
-                    translatedSenderName: string.Empty,
-                    createdDate: DateTime.Now,
-                    updatedDate: DateTime.Now),
+                      senderName: string.Empty,
+                      originalBattleTalkMessage: string.Empty,
+                      originalSenderNameLang: this.clientLanguage.Humanize(),
+                      translatedBattleTalkMessage: string.Empty,
+                      originalBattleTalkMessageLang: this.clientLanguage.Humanize(),
+                      translationLang: this.langToTranslateTo,
+                      translationEngine: this.configuration.ChosenTransEngine,
+                      translatedSenderName: string.Empty,
+                      createdDate: DateTime.Now,
+                      updatedDate: DateTime.Now),
           };
           break;
         default:
@@ -124,6 +131,7 @@ namespace Echoglossian
     private void AdjustAddonNodesFlags()
     {
       this.addonNodesFlags = new Dictionary<int, TextFlags>();
+
       switch (this.addonName)
       {
         case "Talk":
@@ -141,26 +149,34 @@ namespace Echoglossian
     {
       var addon = GameGui.GetAddonByName(this.addonName, 1);
       var foundAddon = (AtkUnitBase*)addon;
+
       if (foundAddon == null)
       {
         return;
       }
 
-      if (!foundAddon->IsVisible) { return; }
+      this.isAddonVisible = foundAddon->IsVisible;
 
-      this.isAddonVisible = true;
+      if (!this.isAddonVisible)
+      {
+        return;
+      }
+
       this.translations.Clear();
+      this.databaseChecked = false;
 
-      this.ProcessNode(foundAddon, this.addonCharacteristicsInfo.NameNodeId, true);
-      this.ProcessNode(foundAddon, this.addonCharacteristicsInfo.MessageNodeId, false);
+      // Directly access the known node IDs
+      this.ProcessNode(foundAddon, this.addonCharacteristicsInfo.NameNodeId);
+      this.ProcessNode(foundAddon, this.addonCharacteristicsInfo.MessageNodeId);
 
-      Echoglossian.PluginLog.Information($"Addon {this.addonName} explored and the data generated is: \n{this.addonCharacteristicsInfo}");
+      Echoglossian.PluginLog.Information($"Addon {this.addonName} explored and the data generated is: \n{this.addonCharacteristicsInfo.ToString()}");
       this.CheckDatabaseForTranslation();
     }
 
-    private unsafe void ProcessNode(AtkUnitBase* foundAddon, int nodeId, bool isNameNode)
+    private unsafe void ProcessNode(AtkUnitBase* foundAddon, int nodeId)
     {
       var node = foundAddon->GetNodeById((uint)nodeId);
+
       if (node == null || node->Type != NodeType.Text)
       {
         return;
@@ -174,104 +190,156 @@ namespace Echoglossian
 
       var textFromNode = Echoglossian.CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nodeAsTextNode->NodeText.StringPtr));
 
-      if (string.IsNullOrEmpty(textFromNode) || this.translatedTexts.Contains(textFromNode))
+      if (string.IsNullOrEmpty(textFromNode))
+      {
+        return;
+      }
+
+      if (this.translatedTexts.Contains(textFromNode))
       {
         Echoglossian.PluginLog.Information($"Skipping already translated text: {textFromNode}");
         return;
       }
 
-      if (isNameNode)
+      if (nodeId == this.addonCharacteristicsInfo.NameNodeId)
       {
-        this.SetSenderName(textFromNode);
-      }
-      else
-      {
-        this.SetOriginalMessage(textFromNode);
-      }
-    }
+        Echoglossian.PluginLog.Information($"Text from Node in ExploreAddon NameNode: {textFromNode}");
 
-    private void SetSenderName(string textFromNode)
-    {
-      if (this.addonName == "Talk")
-      {
-        this.addonCharacteristicsInfo.TalkMessage.SenderName = textFromNode;
-        if (!this.configuration.TranslateNpcNames)
+        if (this.addonName == "Talk")
         {
-          this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = textFromNode;
+          Echoglossian.PluginLog.Information($"Text from Node in ExploreAddon Talk NameNode: {textFromNode}");
+          this.addonCharacteristicsInfo.TalkMessage.SenderName = textFromNode;
+
+          if (!this.configuration.TranslateNpcNames)
+          {
+            this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = textFromNode;
+          }
+        }
+        else if (this.addonName == "_BattleTalk")
+        {
+          Echoglossian.PluginLog.Information($"Text from Node in ExploreAddon _BattleTalk NameNode: {textFromNode}");
+          this.addonCharacteristicsInfo.BattleTalkMessage.SenderName = textFromNode;
+
+          if (!this.configuration.TranslateNpcNames)
+          {
+            this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = textFromNode;
+          }
+        }
+
+        if (this.configuration.TranslateNpcNames)
+        {
+          this.TranslateSenderName(textFromNode, nodeId, this.addonName);
         }
       }
-      else if (this.addonName == "_BattleTalk")
+
+      if (nodeId == this.addonCharacteristicsInfo.MessageNodeId)
       {
-        this.addonCharacteristicsInfo.BattleTalkMessage.SenderName = textFromNode;
-        if (!this.configuration.TranslateNpcNames)
+        Echoglossian.PluginLog.Information($"Text from Node in ExploreAddon messageNode: {textFromNode}");
+
+        if (this.addonName == "Talk")
         {
-          this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = textFromNode;
+          this.addonCharacteristicsInfo.TalkMessage.OriginalTalkMessage = textFromNode;
+        }
+        else if (this.addonName == "_BattleTalk")
+        {
+          this.addonCharacteristicsInfo.BattleTalkMessage.OriginalBattleTalkMessage = textFromNode;
         }
       }
 
-      if (this.configuration.TranslateNpcNames)
+      if (!this.nodeStates.ContainsKey(nodeId))
       {
-        this.TranslateSenderName(textFromNode);
+        this.nodeStates[nodeId] = new NodeState();
       }
+
+      this.nodeStates[nodeId].OriginalTextExtracted = true;
     }
 
-    private void SetOriginalMessage(string textFromNode)
-    {
-      if (this.addonName == "Talk")
-      {
-        this.addonCharacteristicsInfo.TalkMessage.OriginalTalkMessage = textFromNode;
-      }
-      else if (this.addonName == "_BattleTalk")
-      {
-        this.addonCharacteristicsInfo.BattleTalkMessage.OriginalBattleTalkMessage = textFromNode;
-      }
-    }
-
-    private void TranslateSenderName(string senderName)
+    private void TranslateSenderName(string senderName, int nodeId, string addonType)
     {
       Task.Run(async () =>
       {
         var translation = await this.translationService.TranslateAsync(senderName, this.clientLanguage.Humanize(), this.langToTranslateTo);
-        if (this.addonName == "Talk")
+
+        if (addonType == "Talk")
         {
           this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = translation;
         }
-        else if (this.addonName == "_BattleTalk")
+        else if (addonType == "_BattleTalk")
         {
           this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = translation;
         }
+
         this.SetTranslationToAddon();
       });
     }
 
     private void CheckDatabaseForTranslation()
     {
+      if (this.databaseChecked)
+      {
+        return;
+      }
+
       if (this.addonName == "Talk")
       {
         var talkMessage = this.addonCharacteristicsInfo.TalkMessage;
-        if (Echoglossian.FindTalkMessage(talkMessage))
+
+        Echoglossian.PluginLog.Warning($"Checking database for translation: {this.addonName}, TalkMessage: {talkMessage}");
+
+        if (talkMessage != null && !string.IsNullOrEmpty(talkMessage.SenderName) && !string.IsNullOrEmpty(talkMessage.OriginalTalkMessage))
         {
-          this.addonCharacteristicsInfo.TalkMessage = Echoglossian.FoundTalkMessage;
-          this.SetTranslationToAddon();
-        }
-        else
-        {
-          this.TranslateTexts(talkMessage.OriginalTalkMessage, "Talk");
+          if (Echoglossian.FindTalkMessage(talkMessage))
+          {
+            Echoglossian.PluginLog.Warning($"Found talk message in CheckDatabaseForTranslation: {Echoglossian.FoundTalkMessage}");
+            if (!string.IsNullOrEmpty(Echoglossian.FoundTalkMessage.TranslatedTalkMessage))
+            {
+              this.addonCharacteristicsInfo.TalkMessage.TranslatedTalkMessage = Echoglossian.FoundTalkMessage.TranslatedTalkMessage;
+            }
+
+            if (!string.IsNullOrEmpty(Echoglossian.FoundTalkMessage.TranslatedSenderName))
+            {
+              this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = Echoglossian.FoundTalkMessage.TranslatedSenderName;
+            }
+
+            this.SetTranslationToAddon();
+          }
+          else
+          {
+            this.TranslateTexts(talkMessage.OriginalTalkMessage, "Talk");
+          }
         }
       }
       else if (this.addonName == "_BattleTalk")
       {
         var battleTalkMessage = this.addonCharacteristicsInfo.BattleTalkMessage;
-        if (Echoglossian.FindBattleTalkMessage(battleTalkMessage))
+
+        Echoglossian.PluginLog.Warning($"Checking database for translation: {this.addonName}, BattleTalkMessage: {battleTalkMessage}");
+
+        if (battleTalkMessage != null && !string.IsNullOrEmpty(battleTalkMessage.SenderName) && !string.IsNullOrEmpty(battleTalkMessage.OriginalBattleTalkMessage))
         {
-          this.addonCharacteristicsInfo.BattleTalkMessage = Echoglossian.FoundBattleTalkMessage;
-          this.SetTranslationToAddon();
-        }
-        else
-        {
-          this.TranslateTexts(battleTalkMessage.OriginalBattleTalkMessage, "_BattleTalk");
+          if (Echoglossian.FindBattleTalkMessage(battleTalkMessage))
+          {
+            Echoglossian.PluginLog.Warning($"Found battle talk message in CheckDatabaseForTranslation: {Echoglossian.FoundBattleTalkMessage}");
+            if (!string.IsNullOrEmpty(Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage))
+            {
+              this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedBattleTalkMessage = Echoglossian.FoundBattleTalkMessage.TranslatedBattleTalkMessage;
+            }
+
+            if (!string.IsNullOrEmpty(Echoglossian.FoundBattleTalkMessage.TranslatedSenderName))
+            {
+              this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = Echoglossian.FoundBattleTalkMessage.TranslatedSenderName;
+            }
+
+            this.SetTranslationToAddon();
+          }
+          else
+          {
+            this.TranslateTexts(battleTalkMessage.OriginalBattleTalkMessage, "_BattleTalk");
+          }
         }
       }
+
+      this.databaseChecked = true;
     }
 
     private void TranslateTexts(string originalText, string addonType)
@@ -279,37 +347,51 @@ namespace Echoglossian
       Task.Run(async () =>
       {
         var translation = await this.translationService.TranslateAsync(originalText, this.clientLanguage.Humanize(), this.langToTranslateTo);
-        if (addonType == "Talk")
-        {
-          this.addonCharacteristicsInfo.TalkMessage.TranslatedTalkMessage = translation;
-          this.SaveTranslationToDatabase(this.addonCharacteristicsInfo.TalkMessage);
-        }
-        else if (addonType == "_BattleTalk")
-        {
-          this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedBattleTalkMessage = translation;
-          this.SaveTranslationToDatabase(this.addonCharacteristicsInfo.BattleTalkMessage);
-        }
+        this.SaveTranslationToDatabase(originalText, translation, addonType);
         this.translatedTexts.Add(translation);
-        this.translations.TryAdd(this.addonCharacteristicsInfo.MessageNodeId, new TranslationEntry { OriginalText = originalText, TranslatedText = translation, IsTranslated = true });
+
+        this.translations.TryAdd(this.addonCharacteristicsInfo.MessageNodeId, new TranslationEntry
+        {
+          OriginalText = originalText,
+          TranslatedText = translation,
+          IsTranslated = true,
+        });
+
         this.SetTranslationToAddon();
       });
     }
 
-    private void SaveTranslationToDatabase(TalkMessage talkMessage)
+    private void SaveTranslationToDatabase(string originalText, string translatedText, string addonType)
     {
-      if (!this.translatedTexts.Contains(talkMessage.TranslatedTalkMessage))
+      if (addonType == "Talk")
       {
-        Echoglossian.InsertTalkData(talkMessage);
-        this.translatedTexts.Add(talkMessage.TranslatedTalkMessage);
-      }
-    }
+        var talkMessage = this.addonCharacteristicsInfo.TalkMessage;
 
-    private void SaveTranslationToDatabase(BattleTalkMessage battleTalkMessage)
-    {
-      if (!this.translatedTexts.Contains(battleTalkMessage.TranslatedBattleTalkMessage))
+        if (talkMessage.TranslatedTalkMessage != translatedText)
+        {
+          talkMessage.OriginalTalkMessage = originalText;
+          talkMessage.TranslatedTalkMessage = translatedText;
+          if (!this.translatedTexts.Contains(talkMessage.TranslatedTalkMessage))
+          {
+            Echoglossian.InsertTalkData(talkMessage);
+            this.translatedTexts.Add(talkMessage.TranslatedTalkMessage);
+          }
+        }
+      }
+      else if (addonType == "_BattleTalk")
       {
-        Echoglossian.InsertBattleTalkData(battleTalkMessage);
-        this.translatedTexts.Add(battleTalkMessage.TranslatedBattleTalkMessage);
+        var battleTalkMessage = this.addonCharacteristicsInfo.BattleTalkMessage;
+
+        if (battleTalkMessage.TranslatedBattleTalkMessage != translatedText)
+        {
+          battleTalkMessage.OriginalBattleTalkMessage = originalText;
+          battleTalkMessage.TranslatedBattleTalkMessage = translatedText;
+          if (!this.translatedTexts.Contains(battleTalkMessage.TranslatedBattleTalkMessage))
+          {
+            Echoglossian.InsertBattleTalkData(battleTalkMessage);
+            this.translatedTexts.Add(battleTalkMessage.TranslatedBattleTalkMessage);
+          }
+        }
       }
     }
 
@@ -324,6 +406,7 @@ namespace Echoglossian
             await this.TranslateText(key, entry.OriginalText);
           }
         }
+
         await Task.Delay(100, token);
       }
     }
@@ -339,16 +422,7 @@ namespace Echoglossian
           entry.IsTranslated = true;
           this.translatedTexts.Add(translation);
 
-          if (this.addonName == "Talk")
-          {
-            this.addonCharacteristicsInfo.TalkMessage.TranslatedTalkMessage = translation;
-            this.SaveTranslationToDatabase(this.addonCharacteristicsInfo.TalkMessage);
-          }
-          else if (this.addonName == "_BattleTalk")
-          {
-            this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedBattleTalkMessage = translation;
-            this.SaveTranslationToDatabase(this.addonCharacteristicsInfo.BattleTalkMessage);
-          }
+          await Task.Run(() => this.SaveTranslationToDatabase(text, translation, this.addonName));
         }
       }
       catch (Exception e)
@@ -359,6 +433,8 @@ namespace Echoglossian
 
     private unsafe void SetTranslationToAddon()
     {
+      Echoglossian.PluginLog.Information($"Setting translation to addon: {this.addonName}");
+
       var addon = GameGui.GetAddonByName(this.addonName, 1);
       var foundAddon = (AtkUnitBase*)addon;
 
@@ -367,27 +443,14 @@ namespace Echoglossian
         return;
       }
 
-      this.SetNodeText(foundAddon, this.addonCharacteristicsInfo.NameNodeId, this.addonCharacteristicsInfo.TalkMessage?.TranslatedSenderName ?? this.addonCharacteristicsInfo.BattleTalkMessage?.TranslatedSenderName);
-      this.SetNodeText(foundAddon, this.addonCharacteristicsInfo.MessageNodeId, this.addonCharacteristicsInfo.TalkMessage?.TranslatedTalkMessage ?? this.addonCharacteristicsInfo.BattleTalkMessage?.TranslatedBattleTalkMessage);
-
-      foreach (var key in this.translations.Keys)
-      {
-        if (this.translations.TryGetValue(key, out var entry) && entry.IsTranslated)
-        {
-          this.SetNodeText(foundAddon, key, entry.TranslatedText);
-          this.translations.TryRemove(key, out _);
-        }
-      }
+      this.SetNodeTranslation(foundAddon, this.addonCharacteristicsInfo.NameNodeId, true);
+      this.SetNodeTranslation(foundAddon, this.addonCharacteristicsInfo.MessageNodeId, false);
     }
 
-    private unsafe void SetNodeText(AtkUnitBase* addon, int nodeId, string text)
+    private unsafe void SetNodeTranslation(AtkUnitBase* foundAddon, int nodeId, bool isNameNode)
     {
-      if (string.IsNullOrEmpty(text))
-      {
-        return;
-      }
+      var node = foundAddon->GetNodeById((uint)nodeId);
 
-      var node = addon->GetNodeById((uint)nodeId);
       if (node == null || node->Type != NodeType.Text)
       {
         return;
@@ -399,8 +462,119 @@ namespace Echoglossian
         return;
       }
 
-      nodeAsTextNode->SetText(text);
-      nodeAsTextNode->ResizeNodeForCurrentText();
+      var textFromNode = Echoglossian.CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nodeAsTextNode->NodeText.StringPtr));
+
+      if (string.IsNullOrEmpty(textFromNode))
+      {
+        return;
+      }
+
+      if (!this.nodeStates.ContainsKey(nodeId))
+      {
+        return;
+      }
+
+      var nodeState = this.nodeStates[nodeId];
+
+      if (nodeState.TranslationSet)
+      {
+        return;
+      }
+
+      if (isNameNode)
+      {
+        var translatedName = this.addonName == "Talk"
+            ? this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName
+            : this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName;
+
+        if (this.configuration.TranslateNpcNames && !string.IsNullOrEmpty(translatedName) && textFromNode != translatedName)
+        {
+          Echoglossian.PluginLog.Warning($"Text from NodeID {nodeId} in SetTranslationToAddon: {textFromNode}, translation: {translatedName}");
+          nodeAsTextNode->SetText(translatedName);
+          nodeAsTextNode->ResizeNodeForCurrentText();
+        }
+        else if (!this.configuration.TranslateNpcNames)
+        {
+          if (this.addonName == "Talk")
+          {
+            this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = this.addonCharacteristicsInfo.TalkMessage.SenderName;
+          }
+          else if (this.addonName == "_BattleTalk")
+          {
+            this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = this.addonCharacteristicsInfo.BattleTalkMessage.SenderName;
+          }
+        }
+
+        nodeState.TranslationSet = true;
+        return;
+      }
+
+      var translatedMessage = this.addonName == "Talk"
+          ? this.addonCharacteristicsInfo.TalkMessage.TranslatedTalkMessage
+          : this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedBattleTalkMessage;
+
+      if (!isNameNode)
+      {
+        if (textFromNode != string.Empty && textFromNode != translatedMessage && !string.IsNullOrEmpty(translatedMessage))
+        {
+          Echoglossian.PluginLog.Warning($"Text from NodeID {nodeId} in SetTranslationToAddon: {textFromNode}, translation: {translatedMessage}");
+
+          nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[nodeId];
+          nodeAsTextNode->SetText(translatedMessage);
+          nodeAsTextNode->ResizeNodeForCurrentText();
+        }
+
+        nodeState.TranslationSet = true;
+        return;
+      }
+
+      if (this.translations.TryGetValue(nodeId, out var entry) && entry.IsTranslated)
+      {
+        if (entry.TranslatedText == textFromNode)
+        {
+          nodeState.TranslationSet = true;
+          return;
+        }
+
+        if (entry.OriginalText == textFromNode)
+        {
+          var sanitizedText = Echoglossian.CleanString(entry.TranslatedText);
+
+          if (nodeId == this.addonCharacteristicsInfo.NameNodeId)
+          {
+            if (textFromNode != string.Empty && textFromNode != sanitizedText)
+            {
+              Echoglossian.PluginLog.Information($"Setting translation to addon NameNode if translating: {sanitizedText}");
+              nodeAsTextNode->SetText(sanitizedText);
+              nodeAsTextNode->ResizeNodeForCurrentText();
+            }
+
+            nodeState.TranslationSet = true;
+            return;
+          }
+
+          if (nodeId == this.addonCharacteristicsInfo.MessageNodeId)
+          {
+            if (textFromNode != string.Empty && textFromNode != sanitizedText)
+            {
+              Echoglossian.PluginLog.Information($"Setting translation to addon MessageNode if translating: {sanitizedText}");
+              nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[nodeId];
+              nodeAsTextNode->SetText(sanitizedText);
+              nodeAsTextNode->ResizeNodeForCurrentText();
+            }
+
+            nodeState.TranslationSet = true;
+            return;
+          }
+
+          nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[nodeId];
+          nodeAsTextNode->SetText(sanitizedText);
+          nodeAsTextNode->ResizeNodeForCurrentText();
+
+          this.translations.TryRemove(nodeId, out _);
+          nodeState.TranslationSet = true;
+        }
+      }
     }
 
     protected virtual void Dispose(bool disposing)
@@ -411,8 +585,10 @@ namespace Echoglossian
         {
           this.cts.Cancel();
           this.translationTask.Wait();
+
           this.cts.Dispose();
         }
+
         this.disposedValue = true;
       }
     }
@@ -430,6 +606,11 @@ namespace Echoglossian
       public string TranslatedText { get; set; }
 
       public bool IsTranslated { get; set; }
+
+      public override string ToString()
+      {
+        return $"OriginalText: {this.OriginalText}, TranslatedText: {this.TranslatedText}, IsTranslated: {this.IsTranslated}";
+      }
     }
 
     private class AddonCharacteristicsInfo
@@ -454,6 +635,35 @@ namespace Echoglossian
       {
         return $"AddonName: {this.AddonName}, IsComplexAddon: {this.IsComplexAddon}, NameNodeId: {this.NameNodeId}, MessageNodeId: {this.MessageNodeId}, ComplexStructure: {this.ComplexStructure}, TalkMessage: {this.TalkMessage}, BattleTalkMessage: {this.BattleTalkMessage}, TalkSubtitleMessage: {this.TalkSubtitleMessage}";
       }
+    }
+
+    private class NodeState
+    {
+      public bool OriginalTextExtracted { get; set; } = false;
+
+      public bool TranslationSet { get; set; } = false;
+
+      public override string ToString()
+      {
+        return $"OriginalTextExtracted: {this.OriginalTextExtracted}, TranslationSet: {this.TranslationSet}";
+      }
+    }
+
+    public static string CalculateHash(string input)
+    {
+      using var sha256 = SHA256.Create();
+      var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+      return Convert.ToBase64String(bytes);
+    }
+
+    public static bool IsAddonAlreadyProcessed(string addonHash)
+    {
+      return addonHashes.ContainsKey(addonHash);
+    }
+
+    public static void MarkAddonAsProcessed(string addonHash)
+    {
+      addonHashes[addonHash] = true;
     }
   }
 }
