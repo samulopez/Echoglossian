@@ -223,10 +223,11 @@ namespace Echoglossian
       // Common.Functions.Talk.OnTalk += this.GetTalk;
       // Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;
 
-      this.EgloAddonHandler();
-
       this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
       this.uiBattleTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
+
+      this.EgloAddonHandler();
+
 
       PluginInterface.UiBuilder.Draw += this.BuildUi;
 
