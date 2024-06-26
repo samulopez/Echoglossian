@@ -4,6 +4,7 @@ using System;
 
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace Echoglossian
 {
@@ -143,7 +144,7 @@ namespace Echoglossian
       }
     }
 
-    private void HandleUpdateArgs(AddonUpdateArgs args)
+    private unsafe void HandleUpdateArgs(AddonUpdateArgs args)
     {
       if (args == null)
       {
@@ -159,7 +160,16 @@ namespace Echoglossian
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName); // mexer nisso aqui 25/06/24
+
+            try
+            {
+              this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName);
+            }
+            catch (Exception e)
+            {
+              Echoglossian.PluginLog.Error($"Error in HandleUpdateArgs: {e}");
+            }
+
             break;
           case "_BattleTalk":
             this.uiBattleTalkAddonHandler.EgloAddonHandler(args.AddonName);
