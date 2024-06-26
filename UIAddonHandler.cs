@@ -177,7 +177,12 @@ namespace Echoglossian
     {
       var node = foundAddon->GetNodeById((uint)nodeId);
 
-      if (node == null || node->Type != NodeType.Text)
+      if (node == null)
+      {
+        return;
+      }
+
+      if (node->Type != NodeType.Text)
       {
         return;
       }
@@ -438,7 +443,12 @@ namespace Echoglossian
       var addon = GameGui.GetAddonByName(this.addonName, 1);
       var foundAddon = (AtkUnitBase*)addon;
 
-      if (foundAddon == null || !foundAddon->IsVisible)
+      if (foundAddon == null)
+      {
+        return;
+      }
+
+      if (!foundAddon->IsVisible)
       {
         return;
       }
@@ -449,20 +459,54 @@ namespace Echoglossian
 
     private unsafe void SetNodeTranslation(AtkUnitBase* foundAddon, int nodeId, bool isNameNode)
     {
-      var node = foundAddon->GetNodeById((uint)nodeId);
 
-      if (node == null || node->Type != NodeType.Text)
+      AtkResNode* node = null;
+
+      try
+      {
+        node = foundAddon->GetNodeById((uint)nodeId);
+      }
+      catch (Exception e)
+      {
+        Echoglossian.PluginLog.Error($"Error in SetNodeTranslation method GetNodeById: {e}");
+      }
+
+
+      if (node == null)
       {
         return;
       }
 
-      var nodeAsTextNode = node->GetAsAtkTextNode();
+      if (node->Type != NodeType.Text)
+      {
+        return;
+      }
+
+      AtkTextNode* nodeAsTextNode = null;
+
+      try
+      {
+        nodeAsTextNode = node->GetAsAtkTextNode();
+      }
+      catch (Exception e)
+      {
+        Echoglossian.PluginLog.Error($"Error in SetNodeTranslation method GetAsTextNode: {e}");
+      }
+
       if (nodeAsTextNode == null)
       {
         return;
       }
 
-      var textFromNode = Echoglossian.CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nodeAsTextNode->NodeText.StringPtr));
+      string textFromNode = string.Empty;
+      try
+      {
+        textFromNode = Echoglossian.CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nodeAsTextNode->NodeText.StringPtr));
+      }
+      catch (Exception e)
+      {
+        Echoglossian.PluginLog.Error($"Error in SetNodeTranslation method ReadSeStringAsString: {e}");
+      }
 
       if (string.IsNullOrEmpty(textFromNode))
       {
@@ -490,8 +534,16 @@ namespace Echoglossian
         if (this.configuration.TranslateNpcNames && !string.IsNullOrEmpty(translatedName) && textFromNode != translatedName)
         {
           Echoglossian.PluginLog.Warning($"Text from NodeID {nodeId} in SetTranslationToAddon: {textFromNode}, translation: {translatedName}");
-          nodeAsTextNode->SetText(translatedName);
-          nodeAsTextNode->ResizeNodeForCurrentText();
+          try
+          {
+            nodeAsTextNode->SetText(translatedName);
+            nodeAsTextNode->ResizeNodeForCurrentText();
+          }
+          catch (Exception e)
+          {
+            Echoglossian.PluginLog.Error($"Error in SetNodeTranslation method SetText: {e}");
+          }
+
         }
         else if (!this.configuration.TranslateNpcNames)
         {
@@ -519,9 +571,16 @@ namespace Echoglossian
         {
           Echoglossian.PluginLog.Warning($"Text from NodeID {nodeId} in SetTranslationToAddon: {textFromNode}, translation: {translatedMessage}");
 
-          nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[nodeId];
-          nodeAsTextNode->SetText(translatedMessage);
-          nodeAsTextNode->ResizeNodeForCurrentText();
+          try
+          {
+            nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[nodeId];
+            nodeAsTextNode->SetText(translatedMessage);
+            nodeAsTextNode->ResizeNodeForCurrentText();
+          }
+          catch (Exception e)
+          {
+            Echoglossian.PluginLog.Error($"Error in SetNodeTranslation method SetText SetMessageText: {e}");
+          }
         }
 
         nodeState.TranslationSet = true;
@@ -545,8 +604,15 @@ namespace Echoglossian
             if (textFromNode != string.Empty && textFromNode != sanitizedText)
             {
               Echoglossian.PluginLog.Information($"Setting translation to addon NameNode if translating: {sanitizedText}");
-              nodeAsTextNode->SetText(sanitizedText);
-              nodeAsTextNode->ResizeNodeForCurrentText();
+              try
+              {
+                nodeAsTextNode->SetText(sanitizedText);
+                nodeAsTextNode->ResizeNodeForCurrentText();
+              }
+              catch (Exception e)
+              {
+                Echoglossian.PluginLog.Error($"Error in SetNodeTranslation method SetText SetNameText: {e}");
+              }
             }
 
             nodeState.TranslationSet = true;
@@ -558,21 +624,28 @@ namespace Echoglossian
             if (textFromNode != string.Empty && textFromNode != sanitizedText)
             {
               Echoglossian.PluginLog.Information($"Setting translation to addon MessageNode if translating: {sanitizedText}");
-              nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[nodeId];
-              nodeAsTextNode->SetText(sanitizedText);
-              nodeAsTextNode->ResizeNodeForCurrentText();
+              try
+              {
+                nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[nodeId];
+                nodeAsTextNode->SetText(sanitizedText);
+                nodeAsTextNode->ResizeNodeForCurrentText();
+              }
+              catch (Exception e)
+              {
+                Echoglossian.PluginLog.Error($"Error in SetNodeTranslation method SetText SetMessageText: {e}");
+              }
             }
 
             nodeState.TranslationSet = true;
             return;
           }
 
-          nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[nodeId];
-          nodeAsTextNode->SetText(sanitizedText);
-          nodeAsTextNode->ResizeNodeForCurrentText();
+          /*          nodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[nodeId];
+                    nodeAsTextNode->SetText(sanitizedText);
+                    nodeAsTextNode->ResizeNodeForCurrentText();*/
 
           this.translations.TryRemove(nodeId, out _);
-          nodeState.TranslationSet = true;
+          /*nodeState.TranslationSet = true;*/
         }
       }
     }
