@@ -14,6 +14,7 @@ using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Command;
 using Dalamud.Game.Text.Sanitizer;
 using Dalamud.Interface.Internal;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
@@ -59,7 +60,10 @@ namespace Echoglossian
     [PluginService]
     public static INotificationManager NotificationManager { get; private set; } = null!;
 
-    // private static XivCommonBase Common { get; set; }
+    [PluginService]
+    public static ITextureProvider TextureProvider { get; private set; } = null!;
+
+    private static XivCommonBase Common { get; set; }
     public string Name => Resources.Name;
 
     private const string SlashCommand = "/eglo";
@@ -127,7 +131,7 @@ namespace Echoglossian
       langDict = this.languagesDictionary;
       identifier = Factory.Load($"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Wiki82.profile.xml");
 
-      // Common = new XivCommonBase(PluginInterface, Hooks.Talk | Hooks.BattleTalk);
+      Common = new XivCommonBase(PluginInterface, Hooks.Talk | Hooks.BattleTalk);
       try
       {
         this.CreateOrUseDb();
@@ -138,7 +142,7 @@ namespace Echoglossian
       }
       finally
       {
-        PluginLog.Information("Database created or used successfully.");
+        PluginLog.Information("Eglo database created or used successfully.");
       }
 
       this.cultureInfo = new CultureInfo(this.configuration.DefaultPluginCulture);
@@ -169,11 +173,11 @@ namespace Echoglossian
         this.PluginAssetsChecker();
       }
 
-      PluginInterface.UiBuilder.BuildFonts += this.LoadLanguageComboFont;
-      PluginInterface.UiBuilder.BuildFonts += this.LoadFont;
+      PluginInterface.UiBuilder.BuildFonts += this.LoadLanguageComboFont; // needs checking
+      PluginInterface.UiBuilder.BuildFonts += this.LoadFont; // needs checking
 
       // this.ListCultureInfos();
-      this.pixImage = PluginInterface.UiBuilder.LoadImage(Resources.pix);
+      this.pixImage = TextureProvider.CreateFromImageAsync(Resources.pix).Result; // needs checking
       this.choiceImage = PluginInterface.UiBuilder.LoadImage(Resources.choice);
       this.cutsceneChoiceImage = PluginInterface.UiBuilder.LoadImage(Resources.cutscenechoice);
       this.talkImage = PluginInterface.UiBuilder.LoadImage(Resources.prttws);
@@ -220,8 +224,8 @@ namespace Echoglossian
 
       // Common.Functions.ChatBubbles.OnChatBubble += this.ChatBubblesOnChatBubble;
       // Common.Functions.Tooltips.OnActionTooltip += this.TooltipsOnActionTooltip;
-      // Common.Functions.Talk.OnTalk += this.GetTalk;
-      // Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;
+      Common.Functions.Talk.OnTalk += this.GetTalk;
+      Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;
 
       this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
       this.uiBattleTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
@@ -246,12 +250,12 @@ namespace Echoglossian
 
     protected virtual void Dispose(bool disposing)
     {
-      /*Common.Functions.Talk.OnTalk -= this.GetTalk;
-      Common.Functions.BattleTalk.OnBattleTalk -= this.GetBattleTalk;*/
+      Common.Functions.Talk.OnTalk -= this.GetTalk; // broken
+      Common.Functions.BattleTalk.OnBattleTalk -= this.GetBattleTalk; // broken - xivcommon is outdated with no new nuget version so cannot be used anymore!!
       // Common.Functions.ChatBubbles.OnChatBubble -= this.ChatBubblesOnChatBubble;
       // Common.Functions.Tooltips.OnActionTooltip -= this.TooltipsOnActionTooltip;
-      /* Common.Functions.Talk.Dispose();
-       Common.Functions.BattleTalk.Dispose();*/
+      Common.Functions.Talk.Dispose();
+      Common.Functions.BattleTalk.Dispose();
 
       // Common.Functions.ChatBubbles.Dispose();
       // Common.Functions.Tooltips.Dispose();
@@ -285,8 +289,8 @@ namespace Echoglossian
 
       Framework.Update -= this.Tick;
 
-      PluginInterface.UiBuilder.BuildFonts -= this.LoadFont;
-      PluginInterface.UiBuilder.BuildFonts -= this.LoadLanguageComboFont;
+      PluginInterface.UiBuilder.BuildFonts -= this.LoadFont; // needs checking
+      PluginInterface.UiBuilder.BuildFonts -= this.LoadLanguageComboFont; // needs checking
       this.glyphRangeMainText?.Free();
       this.glyphRangeConfigText?.Free();
       this.glyphRangeMainText = null;

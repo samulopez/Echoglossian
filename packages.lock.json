@@ -4,11 +4,11 @@
     "net8.0-windows7.0": {
       "AWSSDK.Translate": {
         "type": "Direct",
-        "requested": "[3.7.300.111, )",
-        "resolved": "3.7.300.111",
-        "contentHash": "6zNB9EtizW6M99zyTvAgTAGE86y7lhBYqKDv3rN++GqmQqYm1pWvdyAuM7KJ5vd32bG0B+thD77NsvCtfK4IDQ==",
+        "requested": "[3.7.300.112, )",
+        "resolved": "3.7.300.112",
+        "contentHash": "80nTYocyGjaxlEZWdHxUe//rvjWpMCz5v17khcHT28Mt3Ww61yRWlBRer6KnIj6hHOGmKqEB1YUaRt01HTez0w==",
         "dependencies": {
-          "AWSSDK.Core": "[3.7.304.22, 4.0.0)"
+          "AWSSDK.Core": "[3.7.304.23, 4.0.0)"
         }
       },
       "DalamudPackager": {
@@ -133,8 +133,8 @@
       },
       "AWSSDK.Core": {
         "type": "Transitive",
-        "resolved": "3.7.304.22",
-        "contentHash": "aJPaRoxoJzQRfn7MXl7yEM2wncJl+K2jMU4IL3bIXmm7GBWDYspC2uLAEMiZMEJIDASmRmIzirx8z1GSYFY1Ng=="
+        "resolved": "3.7.304.23",
+        "contentHash": "Rfc04rBzFXXc+KgflS0yGU19PjW6FPP2vMLezUX1Wk8/fCCV4uqTNz0XO/UEvalQdjj1XtFnXH6h+ymWdV8ODQ=="
       },
       "Humanizer.Core": {
         "type": "Transitive",
