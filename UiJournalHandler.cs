@@ -38,20 +38,20 @@ namespace Echoglossian
           continue;
         }
 
-        if (!journalBox->UldManager.NodeList[i]->IsVisible)
+        if (!journalBox->UldManager.NodeList[i]->IsVisible())
         {
           continue;
         }
 
         var summaryItemNode = journalBox->UldManager.NodeList[i]->GetAsAtkComponentNode();
         var summaryNode = summaryItemNode->Component->UldManager.SearchNodeById(2);
-        if (summaryNode == null || summaryNode->Type != NodeType.Text || !summaryNode->IsVisible)
+        if (summaryNode == null || summaryNode->Type != NodeType.Text || !summaryNode->IsVisible())
         {
           continue;
         }
 
         var summaryTextNode = summaryNode->GetAsAtkTextNode();
-        if (summaryTextNode->NodeText.IsEmpty == true)
+        if (summaryTextNode->NodeText.IsEmpty)
         {
           continue;
         }
@@ -201,12 +201,12 @@ namespace Echoglossian
       try
       {
         var questNameNode = journalDetail->GetTextNodeById(38);
-        if (questNameNode == null || questNameNode->NodeText.IsEmpty == true)
+        if (questNameNode == null || questNameNode->NodeText.IsEmpty)
         {
           return false;
         }
 
-        if (!journalDetail->GetNodeById(43)->IsVisible)
+        if (!journalDetail->GetNodeById(43)->IsVisible())
         {
           return false;
         }
@@ -227,7 +227,7 @@ namespace Echoglossian
         var summaryText = string.Empty;
         AtkTextNode* summaryNode = null;
         var summaryBox = journalBox->UldManager.SearchNodeById(48);
-        if (summaryBox != null && summaryBox->IsVisible)
+        if (summaryBox != null && summaryBox->IsVisible())
         {
           var summaryResNode = summaryBox->GetComponent()->UldManager.SearchNodeById(2);
           if (summaryResNode != null && summaryResNode->Type == NodeType.Text)
@@ -266,12 +266,12 @@ namespace Echoglossian
       try
       {
         var questNameNode = journalDetail->GetTextNodeById(38);
-        if (questNameNode == null || questNameNode->NodeText.IsEmpty == true)
+        if (questNameNode == null || questNameNode->NodeText.IsEmpty)
         {
           return;
         }
 
-        if (!journalDetail->GetNodeById(46)->IsVisible != true)
+        if (!journalDetail->GetNodeById(46)->IsVisible())
         {
           return;
         }
@@ -386,7 +386,7 @@ namespace Echoglossian
         var questListNode = journal->GetNodeById(25)->GetAsAtkComponentNode()->Component;
         for (var i = 0; i < questListNode->UldManager.NodeListCount; i++)
         {
-          if (!questListNode->UldManager.NodeList[i]->IsVisible || questListNode->UldManager.NodeList[i]->NodeId == 5)
+          if (!questListNode->UldManager.NodeList[i]->IsVisible() || questListNode->UldManager.NodeList[i]->NodeId == 5)
           {
             continue;
           }
@@ -398,13 +398,13 @@ namespace Echoglossian
 
           var questItemNode = questListNode->UldManager.NodeList[i]->GetAsAtkComponentNode();
           var questNameNode = questItemNode->Component->UldManager.SearchNodeById(3);
-          if (questNameNode == null || !questNameNode->IsVisible || questNameNode->Type != NodeType.Text)
+          if (questNameNode == null || !questNameNode->IsVisible() || questNameNode->Type != NodeType.Text)
           {
             continue;
           }
 
           var questName = questNameNode->GetAsAtkTextNode();
-          if (questName->NodeText.IsEmpty == true)
+          if (questName->NodeText.IsEmpty)
           {
             continue;
           }
