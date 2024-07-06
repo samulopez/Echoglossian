@@ -30,7 +30,7 @@ namespace Echoglossian
       {
         // Replace the text in the nodes reading from the DB
         var questListNode = recommendList->GetNodeById(5);
-        if (questListNode == null || !questListNode->IsVisible)
+        if (questListNode == null || !questListNode->IsVisible())
         {
           return;
         }
@@ -38,7 +38,7 @@ namespace Echoglossian
         var questListComponent = questListNode->GetAsAtkComponentNode()->Component;
         for (var i = 0; i < questListComponent->UldManager.NodeListCount; i++)
         {
-          if (!questListComponent->UldManager.NodeList[i]->IsVisible)
+          if (!questListComponent->UldManager.NodeList[i]->IsVisible())
           {
             continue;
           }
@@ -50,13 +50,13 @@ namespace Echoglossian
 
           var questItemNode = questListComponent->UldManager.NodeList[i]->GetAsAtkComponentNode();
           var questNameNode = questItemNode->Component->UldManager.SearchNodeById(5);
-          if (questNameNode == null || !questNameNode->IsVisible || questNameNode->Type != NodeType.Text)
+          if (questNameNode == null || !questNameNode->IsVisible() || questNameNode->Type != NodeType.Text)
           {
             continue;
           }
 
           var questName = questNameNode->GetAsAtkTextNode();
-          if (questName->NodeText.IsEmpty == true)
+          if (questName->NodeText.IsEmpty)
           {
             continue;
           }
@@ -99,7 +99,7 @@ namespace Echoglossian
       {
         // First we store the non translated quest names in the DB
         var questListNode = recommendList->GetNodeById(5);
-        if (questListNode == null || !questListNode->IsVisible)
+        if (questListNode == null || !questListNode->IsVisible())
         {
           return;
         }
@@ -107,7 +107,7 @@ namespace Echoglossian
         var questListComponent = questListNode->GetAsAtkComponentNode()->Component;
         for (var i = 0; i < questListComponent->UldManager.NodeListCount; i++)
         {
-          if (!questListComponent->UldManager.NodeList[i]->IsVisible)
+          if (!questListComponent->UldManager.NodeList[i]->IsVisible())
           {
             continue;
           }
@@ -119,13 +119,13 @@ namespace Echoglossian
 
           var questItemNode = questListComponent->UldManager.NodeList[i]->GetAsAtkComponentNode();
           var questNameNode = questItemNode->Component->UldManager.SearchNodeById(5);
-          if (questNameNode == null || !questNameNode->IsVisible || questNameNode->Type != NodeType.Text)
+          if (questNameNode == null || !questNameNode->IsVisible() || questNameNode->Type != NodeType.Text)
           {
             continue;
           }
 
           var questName = questNameNode->GetAsAtkTextNode();
-          if (questName->NodeText.IsEmpty == true)
+          if (questName->NodeText.IsEmpty)
           {
             continue;
           }

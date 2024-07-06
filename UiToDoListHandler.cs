@@ -38,7 +38,7 @@ namespace Echoglossian
       List<ToDoItem> levelQuestObjectivesToTranslate = [];
       for (var i = 0; i < todoList->UldManager.NodeListCount; i++)
       {
-        if (!todoList->UldManager.NodeList[i]->IsVisible)
+        if (!todoList->UldManager.NodeList[i]->IsVisible())
         {
           continue;
         }
@@ -59,7 +59,7 @@ namespace Echoglossian
         var component = todoList->UldManager.NodeList[i]->GetAsAtkComponentNode();
         for (var j = 0; j < component->Component->UldManager.NodeListCount; j++)
         {
-          if (!component->Component->UldManager.NodeList[j]->IsVisible)
+          if (!component->Component->UldManager.NodeList[j]->IsVisible())
           {
             continue;
           }
@@ -71,7 +71,7 @@ namespace Echoglossian
 
           var childrenNodeID = component->Component->UldManager.NodeList[j]->NodeId;
           var originalStep = component->Component->UldManager.NodeList[j]->GetAsAtkTextNode()->NodeText;
-          if (originalStep.IsEmpty == true)
+          if (originalStep.IsEmpty)
           {
             continue;
           }
