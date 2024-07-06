@@ -13,14 +13,12 @@ using System.Threading;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Command;
 using Dalamud.Game.Text.Sanitizer;
-using Dalamud.Interface.Internal;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;
-using XivCommon;
 
 namespace Echoglossian
 {
@@ -31,7 +29,7 @@ namespace Echoglossian
     public static IDataManager DManager { get; private set; }
 
     [PluginService]
-    public static DalamudPluginInterface PluginInterface { get; private set; } = null!;
+    public static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
 
     [PluginService]
     public static ICommandManager CommandManager { get; private set; } = null!;
@@ -63,7 +61,7 @@ namespace Echoglossian
     [PluginService]
     public static ITextureProvider TextureProvider { get; private set; } = null!;
 
-    private static XivCommonBase Common { get; set; }
+    //  private static XivCommonBase Common { get; set; }
     public string Name => Resources.Name;
 
     private const string SlashCommand = "/eglo";
@@ -72,13 +70,31 @@ namespace Echoglossian
     private static int fontSize = 24;
     private static int chosenTransEngine;
     private static string transEngineName;
+
+    public static string ScriptCharList { get; set; }
+
+    public static string SpecialFontFilePath { get; set; }
+
+    public static string FontFilePath { get; set; }
+
+    public static string SymbolsFontFilePath { get; set; }
+
+    public static string DummyFontFilePath { get; set; }
+
+
+
     public string LangToTranslateTo = string.Empty;
+
 
     private bool pluginAssetsState;
     private static Dictionary<int, LanguageInfo> langDict;
     private bool config;
 
     private Config configuration;
+
+    private UINewFontHandler uINewFontHandler;
+
+    public static LanguageInfo SelectedLanguage { get; set; }
 
     private readonly SemaphoreSlim toastTranslationSemaphore;
     private readonly SemaphoreSlim talkTranslationSemaphore;
@@ -131,7 +147,7 @@ namespace Echoglossian
       langDict = this.languagesDictionary;
       identifier = Factory.Load($"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Wiki82.profile.xml");
 
-      Common = new XivCommonBase(PluginInterface, Hooks.Talk | Hooks.BattleTalk);
+      // Common = new XivCommonBase((DalamudPluginInterface)PluginInterface, Hooks.Talk | Hooks.BattleTalk);
       try
       {
         this.CreateOrUseDb();
@@ -173,15 +189,22 @@ namespace Echoglossian
         this.PluginAssetsChecker();
       }
 
-      PluginInterface.UiBuilder.BuildFonts += this.LoadLanguageComboFont; // needs checking
-      PluginInterface.UiBuilder.BuildFonts += this.LoadFont; // needs checking
+      Echoglossian.SelectedLanguage = this.languagesDictionary[this.configuration.Lang];
 
+      MountFontPaths();
+
+      this.uINewFontHandler = new UINewFontHandler(this.configuration);
+
+      /*
+            PluginInterface.UiBuilder.BuildFonts += this.LoadLanguageComboFont; // needs checking
+            PluginInterface.UiBuilder.BuildFonts += this.LoadFont; // needs checking
+      */
       // this.ListCultureInfos();
       this.pixImage = TextureProvider.CreateFromImageAsync(Resources.pix).Result; // needs checking
-      this.choiceImage = PluginInterface.UiBuilder.LoadImage(Resources.choice);
-      this.cutsceneChoiceImage = PluginInterface.UiBuilder.LoadImage(Resources.cutscenechoice);
-      this.talkImage = PluginInterface.UiBuilder.LoadImage(Resources.prttws);
-      this.logo = PluginInterface.UiBuilder.LoadImage(Resources.logo);
+      this.choiceImage = TextureProvider.CreateFromImageAsync(Resources.choice).Result;
+      this.cutsceneChoiceImage = TextureProvider.CreateFromImageAsync(Resources.cutscenechoice).Result;
+      this.talkImage = TextureProvider.CreateFromImageAsync(Resources.prttws).Result;
+      this.logo = TextureProvider.CreateFromImageAsync(Resources.logo).Result;
 
       PluginInterface.UiBuilder.DisableCutsceneUiHide = this.configuration.ShowInCutscenes;
 
@@ -224,8 +247,8 @@ namespace Echoglossian
 
       // Common.Functions.ChatBubbles.OnChatBubble += this.ChatBubblesOnChatBubble;
       // Common.Functions.Tooltips.OnActionTooltip += this.TooltipsOnActionTooltip;
-      Common.Functions.Talk.OnTalk += this.GetTalk;
-      Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;
+      /*Common.Functions.Talk.OnTalk += this.GetTalk;
+      Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;*/
 
       this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
       this.uiBattleTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
@@ -250,12 +273,12 @@ namespace Echoglossian
 
     protected virtual void Dispose(bool disposing)
     {
-      Common.Functions.Talk.OnTalk -= this.GetTalk; // broken
-      Common.Functions.BattleTalk.OnBattleTalk -= this.GetBattleTalk; // broken - xivcommon is outdated with no new nuget version so cannot be used anymore!!
-      // Common.Functions.ChatBubbles.OnChatBubble -= this.ChatBubblesOnChatBubble;
-      // Common.Functions.Tooltips.OnActionTooltip -= this.TooltipsOnActionTooltip;
-      Common.Functions.Talk.Dispose();
-      Common.Functions.BattleTalk.Dispose();
+      /*Common.Functions.Talk.OnTalk -= this.GetTalk; // broken
+      Common.Functions.BattleTalk.OnBattleTalk -= this.GetBattleTalk; */// broken - xivcommon is outdated with no new nuget version so cannot be used anymore!!
+                                                                        // Common.Functions.ChatBubbles.OnChatBubble -= this.ChatBubblesOnChatBubble;
+                                                                        // Common.Functions.Tooltips.OnActionTooltip -= this.TooltipsOnActionTooltip;
+      /*     Common.Functions.Talk.Dispose();
+           Common.Functions.BattleTalk.Dispose();*/
 
       // Common.Functions.ChatBubbles.Dispose();
       // Common.Functions.Tooltips.Dispose();
@@ -289,9 +312,9 @@ namespace Echoglossian
 
       Framework.Update -= this.Tick;
 
-      PluginInterface.UiBuilder.BuildFonts -= this.LoadFont; // needs checking
+      /*PluginInterface.UiBuilder.BuildFonts -= this.LoadFont; // needs checking
       PluginInterface.UiBuilder.BuildFonts -= this.LoadLanguageComboFont; // needs checking
-      this.glyphRangeMainText?.Free();
+      this.glyphRangeMainText?.Free();*/
       this.glyphRangeConfigText?.Free();
       this.glyphRangeMainText = null;
       this.glyphRangeConfigText = null;
@@ -356,19 +379,19 @@ namespace Echoglossian
         // this.PluginAssetsChecker();
         return;
       }
+      /*
+            if (!this.LanguageComboFontLoaded && !this.LanguageComboFontLoadFailed)
+            {
+              PluginInterface.UiBuilder.RebuildFonts();
+              return;
+            }
 
-      if (!this.LanguageComboFontLoaded && !this.LanguageComboFontLoadFailed)
-      {
-        PluginInterface.UiBuilder.RebuildFonts();
-        return;
-      }
-
-      if (!this.FontLoaded && !this.FontLoadFailed)
-      {
-        PluginInterface.UiBuilder.RebuildFonts();
-        return;
-      }
-
+            if (!this.FontLoaded && !this.FontLoadFailed)
+            {
+              PluginInterface.UiBuilder.RebuildFonts();
+              return;
+            }
+      */
       if (this.config)
       {
         this.EchoglossianConfigUi();
@@ -381,7 +404,7 @@ namespace Echoglossian
           this.configuration.FontChangeTime = 0;
           this.FontLoadFailed = false;
 
-          PluginInterface.UiBuilder.RebuildFonts();
+          /* PluginInterface.UiBuilder.RebuildFonts();*/
         }
       }
 

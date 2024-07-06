@@ -89,8 +89,8 @@ namespace Echoglossian
 #if DEBUG
         PluginLog.Debug($"Using QuestPlate Replace - {translatedQuestName}: {translatedQuestMessage}");
 #endif
-        setupAtkValues[5].SetString(translatedQuestName);
-        setupAtkValues[12].SetString(translatedQuestMessage);
+        setupAtkValues[5].SetManagedString(translatedQuestName);
+        setupAtkValues[12].SetManagedString(translatedQuestMessage);
       }
       catch (Exception e)
       {

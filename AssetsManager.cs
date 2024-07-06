@@ -11,7 +11,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using Dalamud.Interface.ImGuiNotification;
-using Dalamud.Interface.Internal.Notifications;
+
 using Echoglossian.Properties;
 
 namespace Echoglossian
@@ -35,6 +35,7 @@ namespace Echoglossian
         Content = Resources.AssetsCheckingPopupMsg,
         Title = Resources.Name,
         Icon = NotificationUtilities.ToNotificationIcon(Dalamud.Interface.FontAwesomeIcon.Vault),
+        Type = NotificationType.Warning,
       };
       NotificationManager.AddNotification(notification);
 
@@ -59,8 +60,15 @@ namespace Echoglossian
       {
         this.pluginAssetsState = true;
         this.configuration.PluginAssetsDownloaded = true;
-        PluginInterface.UiBuilder.AddNotification(Resources.AssetsPresentPopupMsg, Resources.Name,
-          NotificationType.Success);
+        var assetsNotification = new Notification
+        {
+          Content = Resources.AssetsPresentPopupMsg,
+          Title = Resources.Name,
+          Icon = NotificationUtilities.ToNotificationIcon(Dalamud.Interface.FontAwesomeIcon.Vault),
+          Type = NotificationType.Success,
+        };
+        NotificationManager.AddNotification(assetsNotification);
+
         this.SaveConfig();
         return;
       }
@@ -70,8 +78,14 @@ namespace Echoglossian
         this.DownloadPluginAssets(this.MissingAssetFiles.IndexOf(f));
       }
 
-      PluginInterface.UiBuilder.AddNotification(Resources.DownloadingAssetsPopupMsg, Resources.Name,
-        NotificationType.Warning);
+      var assetsDownloadNotification = new Notification
+      {
+        Content = Resources.DownloadingAssetsPopupMsg,
+        Title = Resources.Name,
+        Icon = NotificationUtilities.ToNotificationIcon(Dalamud.Interface.FontAwesomeIcon.Vault),
+        Type = NotificationType.Warning,
+      };
+      NotificationManager.AddNotification(assetsDownloadNotification);
     }
 
     private void DownloadPluginAssets(int missingAssetIndex)
@@ -85,8 +99,16 @@ namespace Echoglossian
           this.pluginAssetsState = true;
           this.configuration.PluginAssetsDownloaded = true;
           this.SaveConfig();
-          PluginInterface.UiBuilder.AddNotification(Resources.AssetsPresentPopupMsg, Resources.Name,
-            NotificationType.Success);
+
+          var assetsSuccessNotification = new Notification
+          {
+            Content = Resources.AssetsPresentPopupMsg,
+            Title = Resources.Name,
+            Icon = NotificationUtilities.ToNotificationIcon(Dalamud.Interface.FontAwesomeIcon.Vault),
+            Type = NotificationType.Success,
+          };
+
+          NotificationManager.AddNotification(assetsSuccessNotification);
           this.config = true;
         }
       }
@@ -143,10 +165,17 @@ namespace Echoglossian
       catch (Exception e)
       {
         PluginLog.Verbose($"Error downloading plugin assets: {e}");
-        PluginInterface.UiBuilder.AddNotification(
-            $"{Resources.AssetsDownloadError1stPart} {this.AssetFiles[index]}{Resources.AssetsDownloadError2ndPart}",
-            Resources.Name,
-            NotificationType.Error);
+
+        var assetsErrorNotification = new Notification
+        {
+          Content = $"{Resources.AssetsDownloadError1stPart} {this.AssetFiles[index]}{Resources.AssetsDownloadError2ndPart}",
+          Title = Resources.Name,
+          Icon = NotificationUtilities.ToNotificationIcon(Dalamud.Interface.FontAwesomeIcon.Vault),
+          Type = NotificationType.Error,
+        };
+
+        NotificationManager.AddNotification(assetsErrorNotification);
+
       }
     }
 
@@ -162,17 +191,32 @@ namespace Echoglossian
 #if DEBUG
       PluginLog.Information("Download finished!");
 #endif
-      PluginInterface.UiBuilder.AddNotification(
-        Resources.AssetsDownloadComplete,
-        Resources.Name,
-        NotificationType.Success);
+
+      var assetsDownloadCompleteNotification = new Notification
+      {
+        Content = Resources.AssetsDownloadComplete,
+        Title = Resources.Name,
+        Icon = NotificationUtilities.ToNotificationIcon(Dalamud.Interface.FontAwesomeIcon.Vault),
+        Type = NotificationType.Success,
+      };
+
+      NotificationManager.AddNotification(assetsDownloadCompleteNotification);
 
       if (this.MissingAssetFiles?.Any() != true)
       {
         this.pluginAssetsState = true;
         this.configuration.PluginAssetsDownloaded = true;
-        PluginInterface.UiBuilder.AddNotification(Resources.AssetsPresentPopupMsg, Resources.Name,
-          NotificationType.Success);
+
+        var assetsSuccessNotification = new Notification
+        {
+          Content = Resources.AssetsPresentPopupMsg,
+          Title = Resources.Name,
+          Icon = NotificationUtilities.ToNotificationIcon(Dalamud.Interface.FontAwesomeIcon.Vault),
+          Type = NotificationType.Success,
+        };
+
+        NotificationManager.AddNotification(assetsSuccessNotification);
+
         this.SaveConfig();
         this.config = true;
       }

@@ -54,7 +54,7 @@ namespace Echoglossian
 #if DEBUG
           PluginLog.Debug($"Name from database: {questNameText} -> {foundQuestPlate.TranslatedQuestName}");
 #endif
-          setupAtkValues[1].SetString(foundQuestPlate.TranslatedQuestName);
+          setupAtkValues[1].SetManagedString(foundQuestPlate.TranslatedQuestName);
         }
         else
         {
@@ -78,7 +78,7 @@ namespace Echoglossian
 #if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
 #endif
-          setupAtkValues[1].SetString(translatedNameText);
+          setupAtkValues[1].SetManagedString(translatedNameText);
         }
       }
       catch (Exception e)

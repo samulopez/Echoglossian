@@ -68,7 +68,7 @@ public partial class Echoglossian
         this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
       }
 
-      PluginInterface.UiBuilder.RebuildFonts();
+      /*PluginInterface.UiBuilder.RebuildFonts();*/
     }
 
     if (this.LanguageComboFontLoaded)

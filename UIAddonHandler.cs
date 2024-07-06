@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Dalamud;
 using Dalamud.Game;
 using Dalamud.Game.Text.Sanitizer;
 using Dalamud.Memory;

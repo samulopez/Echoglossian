@@ -10,6 +10,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+
 using Dalamud.Interface.ImGuiNotification;
 using Echoglossian.Properties;
 
@@ -83,7 +84,16 @@ namespace Echoglossian
       this.configuration.Version = 5;
 
       this.SaveConfig();
-      PluginInterface.UiBuilder.AddNotification(Resources.SettingsReset, this.Name, NotificationType.Info, 5000);
+
+      var settingsResetNotification = new Notification
+      {
+        Content = Resources.SettingsReset,
+        Title = Resources.Name,
+        Icon = NotificationUtilities.ToNotificationIcon(Dalamud.Interface.FontAwesomeIcon.Cog),
+        Type = NotificationType.Info,
+      };
+      NotificationManager.AddNotification(settingsResetNotification);
+
     }
 
     private void FixConfig()
@@ -145,7 +155,7 @@ namespace Echoglossian
       PluginLog.Warning("Inside image creation method");
 #endif
       PrivateFontCollection pfc = new();
-      pfc.AddFontFile($@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{this.specialFontFileName}");
+      pfc.AddFontFile($@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{Echoglossian.specialFontFileName}");
 
       Font font = new(pfc.Families[0], this.configuration.FontSize, FontStyle.Regular);
       if (fontOptional != null)

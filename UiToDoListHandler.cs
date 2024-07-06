@@ -26,7 +26,7 @@ namespace Echoglossian
         return;
       }
 
-      var atkStage = AtkStage.GetSingleton();
+      var atkStage = AtkStage.Instance();
       var todoList = atkStage->RaptureAtkUnitManager->GetAddonByName("_ToDoList");
       if (todoList == null || !todoList->IsVisible)
       {
@@ -48,7 +48,7 @@ namespace Echoglossian
           continue;
         }
 
-        var nodeID = todoList->UldManager.NodeList[i]->NodeID;
+        var nodeID = todoList->UldManager.NodeList[i]->NodeId;
 
         // don't translate unneeded fate information
         if (nodeID == 8 || nodeID == 9)
@@ -69,9 +69,9 @@ namespace Echoglossian
             continue;
           }
 
-          var childrenNodeID = component->Component->UldManager.NodeList[j]->NodeID;
+          var childrenNodeID = component->Component->UldManager.NodeList[j]->NodeId;
           var originalStep = component->Component->UldManager.NodeList[j]->GetAsAtkTextNode()->NodeText;
-          if (originalStep.IsEmpty == 1)
+          if (originalStep.IsEmpty == true)
           {
             continue;
           }
@@ -130,13 +130,13 @@ namespace Echoglossian
       var objective = objectivesToTranslate[currentIndex];
 
       // objectives of the same quest use adjacent node ids
-      if (Math.Abs(currentObjectiveNode - objective.NodeID) > 1)
+      if (Math.Abs(currentObjectiveNode - objective.NodeId) > 1)
       {
         return questObjectives;
       }
 
       questObjectives.Add(objective);
-      return this.GetQuestObjectives(objective.NodeID, currentIndex, objectivesToTranslate, questObjectives);
+      return this.GetQuestObjectives(objective.NodeId, currentIndex, objectivesToTranslate, questObjectives);
     }
 
     private unsafe void TranslateTodoItems(List<ToDoItem> questNamesToTranslate, List<ToDoItem> objectivesToTranslate, List<ToDoItem> levelQuestObjectivesToTranslate, AtkUnitBase* todoList)
@@ -151,11 +151,11 @@ namespace Echoglossian
           {
             var currentObjective = objectivesToTranslate[objectiveIndex];
             objectives.Add(currentObjective);
-            objectives = this.GetQuestObjectives(currentObjective.NodeID, objectiveIndex, objectivesToTranslate, objectives);
+            objectives = this.GetQuestObjectives(currentObjective.NodeId, objectiveIndex, objectivesToTranslate, objectives);
           }
 
           objectiveIndex += objectives.Count;
-          if (quest.NodeID == 4)
+          if (quest.NodeId == 4)
           {
             objectives.AddRange(levelQuestObjectivesToTranslate);
           }
@@ -267,14 +267,14 @@ namespace Echoglossian
 
     public int IndexJ { get; set; }
 
-    public uint NodeID { get; set; }
+    public uint NodeId { get; set; }
 
     public ToDoItem(string text, int indexI, int indexJ, uint nodeID)
     {
       this.Text = text;
       this.IndexI = indexI;
       this.IndexJ = indexJ;
-      this.NodeID = nodeID;
+      this.NodeId = nodeID;
     }
   }
 }

@@ -19,7 +19,7 @@ namespace Echoglossian
   {
     private unsafe void UpdateRecommendList()
     {
-      var atkStage = AtkStage.GetSingleton();
+      var atkStage = AtkStage.Instance();
       var recommendList = atkStage->RaptureAtkUnitManager->GetAddonByName("RecommendList");
       if (recommendList == null || !recommendList->IsVisible)
       {
@@ -56,7 +56,7 @@ namespace Echoglossian
           }
 
           var questName = questNameNode->GetAsAtkTextNode();
-          if (questName->NodeText.IsEmpty == 1)
+          if (questName->NodeText.IsEmpty == true)
           {
             continue;
           }
@@ -88,7 +88,7 @@ namespace Echoglossian
 
     private unsafe void TranslateRecommendListHandler()
     {
-      var atkStage = AtkStage.GetSingleton();
+      var atkStage = AtkStage.Instance();
       var recommendList = atkStage->RaptureAtkUnitManager->GetAddonByName("RecommendList");
       if (recommendList == null || !recommendList->IsVisible)
       {
@@ -125,7 +125,7 @@ namespace Echoglossian
           }
 
           var questName = questNameNode->GetAsAtkTextNode();
-          if (questName->NodeText.IsEmpty == 1)
+          if (questName->NodeText.IsEmpty == true)
           {
             continue;
           }

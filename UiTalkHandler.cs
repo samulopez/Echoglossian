@@ -213,11 +213,11 @@ namespace Echoglossian
                   if (nameId == this.currentNameTranslationId)
                   {
                     this.currentNameTranslation = nameTranslation;
-                    if (this.configuration.Lang == 2)
-                    {
-                      this.currentNameTranslationTexture =
-                        (ImGuiScene.TextureWrap)PluginInterface.UiBuilder.LoadImage(this.TranslationImageConverter(this.DrawText(this.currentNameTranslation)));
-                    }
+                    /* if (this.configuration.Lang == 2)
+                     {
+                       this.currentNameTranslationTexture =
+                         (ImGuiScene.TextureWrap)PluginInterface.UiBuilder.LoadImage(this.TranslationImageConverter(this.DrawText(this.currentNameTranslation)));
+                     }*/
                   }
 
                   this.nameTranslationSemaphore.Release();

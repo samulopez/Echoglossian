@@ -14,10 +14,11 @@ using static Echoglossian.Echoglossian;
 
 using Dalamud.Memory;
 using Humanizer;
-using Dalamud;
 using Dalamud.Game.Text.Sanitizer;
 
 using System.Collections.Concurrent;
+
+using Dalamud.Game;
 
 namespace Echoglossian
 {
@@ -350,7 +351,7 @@ namespace Echoglossian
           return;
         }
 
-        Echoglossian.PluginLog.Information($"Found addon: {foundAddon->Name->ToString()}");
+        Echoglossian.PluginLog.Information($"Found addon: {foundAddon->NameString}");
 
         if (!foundAddon->IsVisible)
         {

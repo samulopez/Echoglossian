@@ -3,10 +3,8 @@
 // Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 using ImGuiNET;
@@ -16,7 +14,7 @@ namespace Echoglossian;
 public partial class Echoglossian
 {
   public ImFontPtr ConfigUiFont;
-  private readonly string fontFileName = "NotoSans-Medium.ttf";
+  public static readonly string FontFileName = "NotoSans-Medium.ttf";
   public bool FontLoaded;
   public bool FontLoadFailed;
   private GCHandle? glyphRangeConfigText;
@@ -25,294 +23,314 @@ public partial class Echoglossian
 
   public bool LanguageComboFontLoaded;
   public bool LanguageComboFontLoadFailed;
-  private string scriptCharList = string.Empty;
 
-  private string specialFontFileName = string.Empty;
+
+  public static string specialFontFileName = string.Empty;
   public ImFontPtr UiFont;
 
-  private void AdjustLanguageForFontBuild()
+
+  private static void AdjustLanguageForFontBuild()
   {
 #if DEBUG
     PluginLog.Debug("Inside AdjustLanguageForFontBuild method");
 #endif
 
-    var lang = this.languagesDictionary[this.configuration.Lang];
-    this.specialFontFileName = lang.FontName;
-    this.scriptCharList = lang.ExclusiveCharsToAdd;
+    var lang = Echoglossian.SelectedLanguage;
+    Echoglossian.specialFontFileName = lang.FontName;
+    Echoglossian.ScriptCharList = lang.ExclusiveCharsToAdd;
   }
 
-  private unsafe void LoadFont()
+
+  public static void MountFontPaths()
   {
-    this.AdjustLanguageForFontBuild();
+    Echoglossian.AdjustLanguageForFontBuild();
 
-    var specialFontFilePath =
-      $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{this.specialFontFileName}";
-    var fontFilePath =
-      $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{this.fontFileName}";
-    var symbolsFontFilePath =
-      $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}symbols.ttf";
-    var dummyFontFilePath =
-      $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSans-Regular.ttf";
-#if DEBUG
-    PluginLog.Warning("Inside LoadFont method");
-    PluginLog.Warning($"Font file in DEBUG Mode: {specialFontFilePath}");
-#endif
-    this.FontLoaded = false;
-    if (File.Exists(specialFontFilePath) || File.Exists(fontFilePath))
+    Echoglossian.SpecialFontFilePath = $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{Echoglossian.specialFontFileName}";
+    Echoglossian.FontFilePath =
+       $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{Echoglossian.FontFileName}";
+    Echoglossian.SymbolsFontFilePath =
+          $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}symbols.ttf";
+    Echoglossian.DummyFontFilePath =
+          $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSans-Regular.ttf";
+  }
+
+  /*
+
+
+
+
+    private unsafe void LoadFont()
     {
-      ImFontConfigPtr fontConfig = null;
-      try
+      this.AdjustLanguageForFontBuild();
+
+      var specialFontFilePath =
+        $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{this.specialFontFileName}";
+      var fontFilePath =
+        $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{this.fontFileName}";
+      var symbolsFontFilePath =
+        $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}symbols.ttf";
+      var dummyFontFilePath =
+        $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSans-Regular.ttf";
+  #if DEBUG
+      PluginLog.Warning("Inside LoadFont method");
+      PluginLog.Warning($"Font file in DEBUG Mode: {specialFontFilePath}");
+  #endif
+      this.FontLoaded = false;
+      if (File.Exists(specialFontFilePath) || File.Exists(fontFilePath))
       {
-        var io = ImGui.GetIO();
-        List<ushort> chars = new();
-
-        var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative
-          .ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder());
-        builder.AddText(this.CharsToAddToAll);
-        builder.AddText(this.scriptCharList);
-
-        foreach (var c in this.CharsToAddToAll)
+        ImFontConfigPtr fontConfig = null;
+        try
         {
-          builder.AddChar(c);
-        }
+          var io = ImGui.GetIO();
+          List<ushort> chars = new();
 
-        foreach (var c in this.scriptCharList)
-        {
-          builder.AddChar(c);
-        }
+          var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative
+            .ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder());
+          builder.AddText(this.CharsToAddToAll);
+          builder.AddText(this.ScriptCharList);
 
-        foreach (var c in this.PuaCharCodes)
-        {
-          builder.AddChar(c);
-        }
+          foreach (var c in this.CharsToAddToAll)
+          {
+            builder.AddChar(c);
+          }
 
-        foreach (var c in this.PuaChars)
-        {
-          builder.AddChar(c);
-        }
+          foreach (var c in this.ScriptCharList)
+          {
+            builder.AddChar(c);
+          }
 
-        builder.BuildRanges(out var ranges);
+          foreach (var c in this.PuaCharCodes)
+          {
+            builder.AddChar(c);
+          }
 
-        this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesDefault());
-        this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesVietnamese());
-        this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesCyrillic());
-        if (this.configuration.Lang is 16 or 22)
-        {
-          this.AddCharsFromIntPtr(
-            chars,
-            (ushort*)io.Fonts.GetGlyphRangesChineseFull());
-          this.AddCharsFromIntPtr(
-            chars,
-            (ushort*)io.Fonts.GetGlyphRangesChineseSimplifiedCommon());
-        }
+          foreach (var c in this.PuaChars)
+          {
+            builder.AddChar(c);
+          }
 
-        if (this.configuration.Lang is 21)
-        {
-          this.AddCharsFromIntPtr(
-            chars,
-            (ushort*)io.Fonts.GetGlyphRangesChineseSimplifiedCommon());
-          this.AddCharsFromIntPtr(
-            chars,
-            (ushort*)io.Fonts.GetGlyphRangesChineseFull());
-        }
+          builder.BuildRanges(out var ranges);
 
-        if (this.configuration.Lang is 56)
-        {
-          this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesKorean());
-        }
+          this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesDefault());
+          this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesVietnamese());
+          this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesCyrillic());
+          if (this.configuration.Lang is 16 or 22)
+          {
+            this.AddCharsFromIntPtr(
+              chars,
+              (ushort*)io.Fonts.GetGlyphRangesChineseFull());
+            this.AddCharsFromIntPtr(
+              chars,
+              (ushort*)io.Fonts.GetGlyphRangesChineseSimplifiedCommon());
+          }
 
-        if (this.configuration.Lang is 50)
-        {
-          this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesJapanese());
-        }
+          if (this.configuration.Lang is 21)
+          {
+            this.AddCharsFromIntPtr(
+              chars,
+              (ushort*)io.Fonts.GetGlyphRangesChineseSimplifiedCommon());
+            this.AddCharsFromIntPtr(
+              chars,
+              (ushort*)io.Fonts.GetGlyphRangesChineseFull());
+          }
 
-        if (this.configuration.Lang is 103)
-        {
-          this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesThai());
-        }
+          if (this.configuration.Lang is 56)
+          {
+            this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesKorean());
+          }
 
-        this.AddCharsFromIntPtr(chars, (ushort*)ranges.Data);
+          if (this.configuration.Lang is 50)
+          {
+            this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesJapanese());
+          }
 
-        var addChars = string
-          .Join(string.Empty, chars.Select(c => new string((char)c, 2)))
-          .Select(c => (ushort)c).ToArray();
-        chars.AddRange(addChars);
+          if (this.configuration.Lang is 103)
+          {
+            this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesThai());
+          }
 
-        chars.Add(0);
+          this.AddCharsFromIntPtr(chars, (ushort*)ranges.Data);
 
-        fontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
-        fontConfig.OversampleH = 1;
-        fontConfig.OversampleV = 1;
-        this.glyphRangeMainText?.Free();
-        this.glyphRangeMainText =
-          GCHandle.Alloc(chars.ToArray(), GCHandleType.Pinned);
-        fontConfig.GlyphRanges = this.glyphRangeMainText.Value.AddrOfPinnedObject();
+          var addChars = string
+            .Join(string.Empty, chars.Select(c => new string((char)c, 2)))
+            .Select(c => (ushort)c).ToArray();
+          chars.AddRange(addChars);
 
-        this.UiFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(
-          dummyFontFilePath,
-          this.configuration.FontSize, fontConfig);
+          chars.Add(0);
 
-        fontConfig.MergeMode = true;
-        ImGui.GetIO().Fonts.AddFontFromFileTTF(
-          symbolsFontFilePath,
-          this.configuration.FontSize, fontConfig);
-        ImGui.GetIO().Fonts.AddFontFromFileTTF(
-          fontFilePath,
-          this.configuration.FontSize, fontConfig);
-        if (specialFontFilePath != string.Empty)
-        {
-          ImGui.GetIO().Fonts.AddFontFromFileTTF(
-            specialFontFilePath,
+          fontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
+          fontConfig.OversampleH = 1;
+          fontConfig.OversampleV = 1;
+          this.glyphRangeMainText?.Free();
+          this.glyphRangeMainText =
+            GCHandle.Alloc(chars.ToArray(), GCHandleType.Pinned);
+          fontConfig.GlyphRanges = this.glyphRangeMainText.Value.AddrOfPinnedObject();
+
+          this.UiFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(
+            dummyFontFilePath,
             this.configuration.FontSize, fontConfig);
-        }
 
-#if DEBUG
-        PluginLog.Debug($"UiFont Data size: {ImGui.GetIO().Fonts.Fonts.Size}");
-#endif
-        this.FontLoaded = true;
-#if DEBUG
-        PluginLog.Debug($"Font loaded? {this.FontLoaded}");
-#endif
+          fontConfig.MergeMode = true;
+          ImGui.GetIO().Fonts.AddFontFromFileTTF(
+            symbolsFontFilePath,
+            this.configuration.FontSize, fontConfig);
+          ImGui.GetIO().Fonts.AddFontFromFileTTF(
+            fontFilePath,
+            this.configuration.FontSize, fontConfig);
+          if (specialFontFilePath != string.Empty)
+          {
+            ImGui.GetIO().Fonts.AddFontFromFileTTF(
+              specialFontFilePath,
+              this.configuration.FontSize, fontConfig);
+          }
+
+  #if DEBUG
+          PluginLog.Debug($"UiFont Data size: {ImGui.GetIO().Fonts.Fonts.Size}");
+  #endif
+          this.FontLoaded = true;
+  #if DEBUG
+          PluginLog.Debug($"Font loaded? {this.FontLoaded}");
+  #endif
+        }
+        catch (Exception ex)
+        {
+          PluginLog.Information($"Special Font failed to load. {specialFontFilePath}");
+          PluginLog.Information(ex.ToString());
+          this.FontLoadFailed = true;
+        }
+        finally
+        {
+          if (fontConfig.NativePtr != null)
+          {
+            fontConfig.Destroy();
+          }
+        }
       }
-      catch (Exception ex)
+      else
       {
-        PluginLog.Information($"Special Font failed to load. {specialFontFilePath}");
-        PluginLog.Information(ex.ToString());
+        PluginLog.Information($"Special Font doesn't exist. {specialFontFilePath}");
         this.FontLoadFailed = true;
       }
-      finally
-      {
-        if (fontConfig.NativePtr != null)
-        {
-          fontConfig.Destroy();
-        }
-      }
     }
-    else
+
+    private unsafe void LoadLanguageComboFont()
     {
-      PluginLog.Information($"Special Font doesn't exist. {specialFontFilePath}");
-      this.FontLoadFailed = true;
-    }
-  }
+      var fontDir =
+        $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}";
+  #if DEBUG
+      PluginLog.Verbose("Inside LoadLanguageComboFont method");
 
-  private unsafe void LoadLanguageComboFont()
-  {
-    var fontDir =
-      $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}";
-#if DEBUG
-    PluginLog.Verbose("Inside LoadLanguageComboFont method");
+      var fontFile = $@"{fontDir}NotoSans-Medium-Custom2.otf";
+      var dummyFontFilePath = $@"{fontDir}NotoSans-SemiBold.ttf";
+      var symbolsFontFilePath = $@"{fontDir}symbols.ttf";
 
-    var fontFile = $@"{fontDir}NotoSans-Medium-Custom2.otf";
-    var dummyFontFilePath = $@"{fontDir}NotoSans-SemiBold.ttf";
-    var symbolsFontFilePath = $@"{fontDir}symbols.ttf";
+      PluginLog.Verbose($"Font file in DEBUG Mode: {fontFile}");
+  #else
+        // PluginLog.Verbose("Inside LoadLanguageComboFont method");
+        var fontFile =
+   $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSans-Medium-Custom2.otf";
+        var dummyFontFilePath =
+   $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSans-SemiBold.ttf";
+        string symbolsFontFilePath =
+          $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}symbols.ttf";
 
-    PluginLog.Verbose($"Font file in DEBUG Mode: {fontFile}");
-#else
-      // PluginLog.Verbose("Inside LoadLanguageComboFont method");
-      var fontFile =
- $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSans-Medium-Custom2.otf";
-      var dummyFontFilePath =
- $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSans-SemiBold.ttf";
-      string symbolsFontFilePath =
-        $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}symbols.ttf";
-
-      // PluginLog.Verbose($"Font file in PROD Mode: {fontFile}");
-#endif
-    this.LanguageComboFontLoaded = false;
-    if (File.Exists(fontFile))
-    {
-      ImFontConfigPtr fontConfig = null;
-      try
+        // PluginLog.Verbose($"Font file in PROD Mode: {fontFile}");
+  #endif
+      this.LanguageComboFontLoaded = false;
+      if (File.Exists(fontFile))
       {
-        var io = ImGui.GetIO();
-        List<ushort> chars = new();
-
-        var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative
-          .ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder());
-        builder.AddText(this.CharsToAddToAll);
-        builder.AddText(this.LangComboItems);
-        builder.AddText(this.scriptCharList);
-
-        foreach (var c in this.PuaChars)
+        ImFontConfigPtr fontConfig = null;
+        try
         {
-          builder.AddChar(c);
-        }
+          var io = ImGui.GetIO();
+          List<ushort> chars = new();
 
-        foreach (var c in this.PuaCharCodes)
-        {
-          builder.AddChar(c);
-        }
+          var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative
+            .ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder());
+          builder.AddText(this.CharsToAddToAll);
+          builder.AddText(this.LangComboItems);
+          builder.AddText(this.ScriptCharList);
 
-        builder.BuildRanges(out var ranges);
+          foreach (var c in this.PuaChars)
+          {
+            builder.AddChar(c);
+          }
 
-        this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesDefault());
-        this.AddCharsFromIntPtr(chars, (ushort*)ranges.Data);
+          foreach (var c in this.PuaCharCodes)
+          {
+            builder.AddChar(c);
+          }
 
-        var addChars = string
-          .Join(string.Empty, chars.Select(c => new string((char)c, 2)))
-          .Select(c => (ushort)c).ToArray();
-        chars.AddRange(addChars);
-        chars.Add(0);
+          builder.BuildRanges(out var ranges);
 
-        fontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
-        fontConfig.OversampleH = 1;
-        fontConfig.OversampleV = 1;
-        this.glyphRangeConfigText?.Free();
-        this.glyphRangeConfigText =
-          GCHandle.Alloc(chars.ToArray(), GCHandleType.Pinned);
-        fontConfig.GlyphRanges =
-          this.glyphRangeConfigText.Value.AddrOfPinnedObject();
+          this.AddCharsFromIntPtr(chars, (ushort*)io.Fonts.GetGlyphRangesDefault());
+          this.AddCharsFromIntPtr(chars, (ushort*)ranges.Data);
 
-        this.ConfigUiFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(
-          dummyFontFilePath,
-          this.configuration.FontSize, fontConfig);
+          var addChars = string
+            .Join(string.Empty, chars.Select(c => new string((char)c, 2)))
+            .Select(c => (ushort)c).ToArray();
+          chars.AddRange(addChars);
+          chars.Add(0);
 
-        fontConfig.MergeMode = true;
-        ImGui.GetIO().Fonts.AddFontFromFileTTF(
-          symbolsFontFilePath,
-          this.configuration.FontSize, fontConfig);
-        ImGui.GetIO().Fonts
-          .AddFontFromFileTTF(fontFile, this.configuration.FontSize, fontConfig);
+          fontConfig = ImGuiNative.ImFontConfig_ImFontConfig();
+          fontConfig.OversampleH = 1;
+          fontConfig.OversampleV = 1;
+          this.glyphRangeConfigText?.Free();
+          this.glyphRangeConfigText =
+            GCHandle.Alloc(chars.ToArray(), GCHandleType.Pinned);
+          fontConfig.GlyphRanges =
+            this.glyphRangeConfigText.Value.AddrOfPinnedObject();
 
-        foreach (var fileName in this.languagesDictionary.Values
-                   .Select(x => x.FontName).ToHashSet())
-        {
-          ImGui.GetIO().Fonts.AddFontFromFileTTF(
-            fontDir + fileName,
+          this.ConfigUiFont = ImGui.GetIO().Fonts.AddFontFromFileTTF(
+            dummyFontFilePath,
             this.configuration.FontSize, fontConfig);
-        }
 
-#if DEBUG
-        PluginLog.Debug(
-          $"ConfigUiFont data size: {ImGui.GetIO().Fonts.Fonts.Size}");
-#endif
-        this.LanguageComboFontLoaded = true;
-#if DEBUG
-        PluginLog.Debug(
-          $"Language Combo Font loaded? {this.LanguageComboFontLoaded}");
-#endif
+          fontConfig.MergeMode = true;
+          ImGui.GetIO().Fonts.AddFontFromFileTTF(
+            symbolsFontFilePath,
+            this.configuration.FontSize, fontConfig);
+          ImGui.GetIO().Fonts
+            .AddFontFromFileTTF(fontFile, this.configuration.FontSize, fontConfig);
+
+          foreach (var fileName in this.languagesDictionary.Values
+                     .Select(x => x.FontName).ToHashSet())
+          {
+            ImGui.GetIO().Fonts.AddFontFromFileTTF(
+              fontDir + fileName,
+              this.configuration.FontSize, fontConfig);
+          }
+
+  #if DEBUG
+          PluginLog.Debug(
+            $"ConfigUiFont data size: {ImGui.GetIO().Fonts.Fonts.Size}");
+  #endif
+          this.LanguageComboFontLoaded = true;
+  #if DEBUG
+          PluginLog.Debug(
+            $"Language Combo Font loaded? {this.LanguageComboFontLoaded}");
+  #endif
+        }
+        catch (Exception ex)
+        {
+          PluginLog.Information($"Language Combo Font failed to load. {fontFile}");
+          PluginLog.Information(ex.ToString());
+          this.LanguageComboFontLoadFailed = true;
+        }
+        finally
+        {
+          if (fontConfig.NativePtr != null)
+          {
+            fontConfig.Destroy();
+          }
+        }
       }
-      catch (Exception ex)
+      else
       {
-        PluginLog.Information($"Language Combo Font failed to load. {fontFile}");
-        PluginLog.Information(ex.ToString());
+        PluginLog.Information($"Language Combo Font doesn't exist. {fontFile}");
         this.LanguageComboFontLoadFailed = true;
       }
-      finally
-      {
-        if (fontConfig.NativePtr != null)
-        {
-          fontConfig.Destroy();
-        }
-      }
     }
-    else
-    {
-      PluginLog.Information($"Language Combo Font doesn't exist. {fontFile}");
-      this.LanguageComboFontLoadFailed = true;
-    }
-  }
-
+  */
   private unsafe void AddCharsFromIntPtr(List<ushort> chars, ushort* ptr)
   {
     while (*ptr != 0)

@@ -42,7 +42,7 @@ namespace Echoglossian
             /*var tsWindow = new SimpleWindow("TsWindow", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoDecoration, false, storedTranslation, true, 
             */
-            setupAtkValues[0].SetString(storedTranslation);
+            setupAtkValues[0].SetManagedString(storedTranslation);
           }
 
           break;
@@ -57,11 +57,11 @@ namespace Echoglossian
               if (this.translations.TryGetValue(currentText, out var storedTranslation) && !string.IsNullOrEmpty(storedTranslation))
               {
                 PluginLog.Information($"Setting new translation: {storedTranslation}");
-                refreshAtkValues[0].SetString(storedTranslation);
+                refreshAtkValues[0].SetManagedString(storedTranslation);
               }
               else
               {
-                refreshAtkValues[0].SetString("cu");
+                refreshAtkValues[0].SetManagedString("cu");
                 PluginLog.Warning($"No translation found for: {currentText}");
               }
             }
