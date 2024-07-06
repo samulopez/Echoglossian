@@ -12,7 +12,6 @@ using Dalamud.Utility;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using XivCommon.Functions;
 
 namespace Echoglossian
 {
@@ -43,7 +42,7 @@ namespace Echoglossian
       }
     }
 
-    private void GetBattleTalk(ref SeString sender, ref SeString message, ref BattleTalkOptions options,
+    private void GetBattleTalk(ref SeString sender, ref SeString message, /*ref BattleTalkOptions options*/
       ref bool ishandled)
     {
       if (!this.configuration.TranslateBattleTalk)

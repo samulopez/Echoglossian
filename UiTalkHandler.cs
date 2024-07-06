@@ -14,7 +14,6 @@ using Dalamud.Utility;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using XivCommon.Functions;
 
 namespace Echoglossian
 {
@@ -107,7 +106,7 @@ namespace Echoglossian
       }
     }
 
-    private void GetTalk(ref SeString name, ref SeString text, ref TalkStyle style)
+    private void GetTalk(ref SeString name, ref SeString text, /*ref TalkStyle style*/)
     {
       if (!this.configuration.TranslateTalk)
       {

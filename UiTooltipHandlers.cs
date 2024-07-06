@@ -8,13 +8,12 @@ using System.Threading.Tasks;
 
 using Dalamud.Game.Gui;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using XivCommon.Functions.Tooltips;
 
 namespace Echoglossian
 {
   public partial class Echoglossian
   {
-    private void TooltipsOnActionTooltip(ActionTooltip actionTooltip, HoveredAction action)
+    private void TooltipsOnActionTooltip(/*ActionTooltip actionTooltip,*/ HoveredAction action)
     {
       Dalamud.Game.Text.SeStringHandling.SeString tooltipDescription = actionTooltip[ActionTooltipString.Description];
 #if DEBUG
