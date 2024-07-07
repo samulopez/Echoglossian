@@ -9,12 +9,14 @@ namespace Echoglossian
   {
     private bool disposedValue;
     private Config configuration;
+    private SafeFontConfig sfc;
+    private IFontHandle fh;
 
     public UINewFontHandler(Config configuration = default)
     {
       this.configuration = configuration;
 
-      var fh = Echoglossian.PluginInterface.UiBuilder.FontAtlas.NewDelegateFontHandle(
+      this.fh = Echoglossian.PluginInterface.UiBuilder.FontAtlas.NewDelegateFontHandle(
         e => e.OnPreBuild(tk =>
         {
           var rangeBuilder = default(FluentGlyphRangeBuilder)
@@ -32,17 +34,17 @@ namespace Echoglossian
 
           // more ranges here
 
-          var sfc = new SafeFontConfig
+          this.sfc = new SafeFontConfig
           {
             SizePx = this.configuration.FontSize,
             GlyphRanges = rangeBuilder.Build(),
           };
-          sfc.MergeFont = tk.Font = tk.AddFontFromFile(Echoglossian.DummyFontFilePath, sfc);
-          tk.AddFontFromFile(Echoglossian.SymbolsFontFilePath, sfc);
-          tk.AddFontFromFile(Echoglossian.FontFilePath, sfc);
+          this.sfc.MergeFont = tk.Font = tk.AddFontFromFile(Echoglossian.DummyFontFilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.SymbolsFontFilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.FontFilePath, this.sfc);
           if (!string.IsNullOrWhiteSpace(Echoglossian.SpecialFontFilePath))
           {
-            tk.AddFontFromFile(Echoglossian.SpecialFontFilePath, sfc);
+            tk.AddFontFromFile(Echoglossian.SpecialFontFilePath, this.sfc);
           }
         }));
     }

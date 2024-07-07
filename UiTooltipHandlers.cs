@@ -3,17 +3,11 @@
 // Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
 // </copyright>
 
-using System.Linq;
-using System.Threading.Tasks;
-
-using Dalamud.Game.Gui;
-using Dalamud.Game.Text.SeStringHandling.Payloads;
-
 namespace Echoglossian
 {
   public partial class Echoglossian
   {
-    private void TooltipsOnActionTooltip(/*ActionTooltip actionTooltip,*/ HoveredAction action)
+    /*private void TooltipsOnActionTooltip(ActionTooltip actionTooltip, HoveredAction action)
     {
       Dalamud.Game.Text.SeStringHandling.SeString tooltipDescription = actionTooltip[ActionTooltipString.Description];
 #if DEBUG
@@ -35,6 +29,6 @@ namespace Echoglossian
       PluginLog.Warning($"Tooltip desc: {desc}");
       PluginLog.Verbose($"Tooltip trans: {status.Result}");
 #endif
-    }
+    }*/
   }
 }

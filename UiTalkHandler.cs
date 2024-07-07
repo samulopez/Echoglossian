@@ -5,14 +5,9 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
-using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Utility;
 using Echoglossian.EFCoreSqlite.Models;
-using Echoglossian.Properties;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace Echoglossian
@@ -106,7 +101,7 @@ namespace Echoglossian
       }
     }
 
-    private void GetTalk(ref SeString name, ref SeString text, /*ref TalkStyle style*/)
+    /*private void GetTalk(ref SeString name, ref SeString text, ref TalkStyle style)
     {
       if (!this.configuration.TranslateTalk)
       {
@@ -216,7 +211,7 @@ namespace Echoglossian
                      {
                        this.currentNameTranslationTexture =
                          (ImGuiScene.TextureWrap)PluginInterface.UiBuilder.LoadImage(this.TranslationImageConverter(this.DrawText(this.currentNameTranslation)));
-                     }*/
+                     }
                   }
 
                   this.nameTranslationSemaphore.Release();
@@ -234,7 +229,7 @@ namespace Echoglossian
                 {
                   this.currentTalkTranslation = translation;
                   // TODO: check image creation logic for RTL
-                  /*                  if (this.configuration.Lang == 2)
+                                  if (this.configuration.Lang == 2)
                                     {
                   #if DEBUG
                                       PluginLog.Warning("Lang is 2!");
@@ -246,7 +241,7 @@ namespace Echoglossian
                   #endif
                                       this.currentTalkTranslationTexture =
                                         pluginInterface.UiBuilder.LoadImage(textImageAsBytes);
-                                    }*/
+                                    }
                 }
 
                 this.talkTranslationSemaphore.Release();
@@ -350,10 +345,10 @@ namespace Echoglossian
                   }
 
                   this.talkTranslationSemaphore.Release();
-                  /*#if DEBUG
+                  #if DEBUG
                                     PluginLog.Verbose($"Before if talk translation: {this.currentTalkTranslation}");
-                  #endif*/
-                  /*if (this.currentNameTranslation != Resources.WaitingForTranslation &&
+                  #endif
+                  if (this.currentNameTranslation != Resources.WaitingForTranslation &&
                       this.currentTalkTranslation != Resources.WaitingForTranslation)
                   {
                     var translatedTalkData = new TalkMessage(this.currentNameTranslation, this.currentTalkTranslation,
@@ -366,7 +361,7 @@ namespace Echoglossian
 #if DEBUG
                     PluginLog.Verbose($"Talk Message DB Insert operation result: {result}");
 #endif
-                  }*/
+                  }
                 });
 
                 TalkMessage translatedTalkData = new TalkMessage(
@@ -505,6 +500,6 @@ namespace Echoglossian
         PluginLog.Information("Exception: " + e.StackTrace);
         throw;
       }
-    }
+    } */
   }
 }
