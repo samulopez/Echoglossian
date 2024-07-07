@@ -389,8 +389,14 @@ namespace Echoglossian
           }
         }
 
-        /*await Task.Delay(100, token);*/
-        await Task.Yield(); // Remove Task.Delay and yield to other tasks.
+        try
+        {
+          await Task.Delay(100, token); // tried using Task.Yeld() but I saw no difference
+        }
+        catch (TaskCanceledException)
+        {
+          break;
+        }
       }
     }
 
@@ -540,11 +546,26 @@ namespace Echoglossian
         if (disposing)
         {
           this.cts.Cancel();
-          this.translationTask.Wait();
 
-          this.translationTask.Dispose(); // see if it is needed
-
-          this.cts.Dispose();
+          try
+          {
+            // Wait for the task to complete within a reasonable time frame.
+            this.translationTask.Wait(5000); // Adjust timeout as needed.
+          }
+          catch (AggregateException ae)
+          {
+            // Handle or log exceptions that may occur when waiting for the task.
+            foreach (var ex in ae.InnerExceptions)
+            {
+              Echoglossian.PluginLog.Error($"Exception in Dispose method: {ex}");
+            }
+          }
+          finally
+          {
+            // Dispose of the task and the cancellation token source.
+            this.translationTask.Dispose();
+            this.cts.Dispose();
+          }
         }
 
         this.disposedValue = true;
@@ -556,6 +577,7 @@ namespace Echoglossian
       this.Dispose(disposing: true);
       GC.SuppressFinalize(this);
     }
+
 
     private class TranslationEntry
     {

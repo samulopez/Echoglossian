@@ -44,7 +44,7 @@ namespace Echoglossian.EFCoreSqlite
       this.DbPath = $"{configDir}Echoglossian.db";
 #if DEBUG
       // this.LogStream = new StreamWriter($"{configDir}DBContextLog.txt", append: true);
-      Echoglossian.PluginLog.Verbose($"DBPath {this.DbPath}");
+      // Echoglossian.PluginLog.Verbose($"DBPath {this.DbPath}");
 #endif
     }
 
