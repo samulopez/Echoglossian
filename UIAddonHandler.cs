@@ -37,7 +37,7 @@ namespace Echoglossian
     private string configDir;
     private HashSet<string> translatedTexts = new HashSet<string>();
     private const string TranslationMarker = "\u0020\u0020\u0020\u0020\u0020"; // 5 spaces
-    private static readonly Dictionary<string, bool> processedAddons = new Dictionary<string, bool>();
+    private static readonly Dictionary<string, bool> ProcessedAddons = new Dictionary<string, bool>();
 
     public UIAddonHandler(
         Config configuration = default,
@@ -481,7 +481,7 @@ namespace Echoglossian
           Echoglossian.PluginLog.Information($"Comparison to SetTranslationToAddon: 'this.configuration.TranslateNpcNames' is {this.configuration.TranslateNpcNames} and '!translatedName.Contains(TranslationMarker)' is {nameTextFromNode.Contains(TranslationMarker)} and the result is {this.configuration.TranslateNpcNames && nameTextFromNode.Contains(TranslationMarker)}");
           if (this.configuration.TranslateNpcNames && !nameTextFromNode.Contains(TranslationMarker))
           {
-            Echoglossian.PluginLog.Information($"Setting name node text in SetTranslationToAddon.");
+            Echoglossian.PluginLog.Warning($"Setting name node text in SetTranslationToAddon.");
             nameNodeAsTextNode->SetText(translatedName);
             nameNodeAsTextNode->ResizeNodeForCurrentText();
           }
@@ -507,7 +507,7 @@ namespace Echoglossian
           Echoglossian.PluginLog.Information($"Comparison to SetTranslationToAddon: '!translatedMessage.Contains(TranslationMarker)' is {!messageTextFromNode.Contains(TranslationMarker)} and the result is {!messageTextFromNode.Contains(TranslationMarker)}");
           if (!messageTextFromNode.Contains(TranslationMarker))
           {
-            Echoglossian.PluginLog.Information($"Setting message node text in SetTranslationToAddon.");
+            Echoglossian.PluginLog.Warning($"Setting message node text in SetTranslationToAddon.");
 
             messageNodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[this.addonCharacteristicsInfo.MessageNodeId];
             messageNodeAsTextNode->SetText(translatedMessage);
