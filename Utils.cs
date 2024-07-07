@@ -265,11 +265,17 @@ namespace Echoglossian
         return input;
       }
 
-      // Remove double spaces
-      string result = Regex.Replace(input, @"\s{2,}", " ");
+      // Check if the string ends with 5 spaces
+      bool endsWithFiveSpaces = input.EndsWith("     ");
 
-      // Remove line breaks and carriage returns
-      result = result.Replace("\r", string.Empty).Replace("\n", string.Empty);
+      // Remove double spaces, line breaks, and carriage returns
+      string result = Regex.Replace(input, @"\s{2,}", " ").Replace("\r", string.Empty).Replace("\n", string.Empty);
+
+      // Reattach the 5 spaces if they were originally present
+      if (endsWithFiveSpaces)
+      {
+        result += "     ";
+      }
 
       return result;
     }

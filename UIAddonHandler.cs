@@ -163,7 +163,7 @@ namespace Echoglossian
         foundAddon = (AtkUnitBase*)addon;
         if (foundAddon == null)
         {
-          Echoglossian.PluginLog.Information($"Addon {this.addonName} not found.");
+          Echoglossian.PluginLog.Information($"Addon {this.addonName} not found in ExploreAddon.");
           return;
         }
       }
@@ -196,7 +196,8 @@ namespace Echoglossian
         var nameNode = foundAddon->GetNodeById((uint)this.addonCharacteristicsInfo.NameNodeId);
         nameNodeAsTextNode = nameNode->GetAsAtkTextNode();
 
-        Echoglossian.PluginLog.Information($"Addon {this.addonName} name node found.");
+        Echoglossian.PluginLog.Information($"Addon {this.addonName} name node found in ExploreAddon.");
+        Echoglossian.PluginLog.Information($"Addon {this.addonName} name node text in ExploreAddon: {MemoryHelper.ReadSeStringAsString(out _, (nint)nameNodeAsTextNode->NodeText.StringPtr)}");
       }
       catch (Exception ex)
       {
@@ -208,7 +209,8 @@ namespace Echoglossian
         var messageNode = foundAddon->GetNodeById((uint)this.addonCharacteristicsInfo.MessageNodeId);
         messageNodeAsTextNode = messageNode->GetAsAtkTextNode();
 
-        Echoglossian.PluginLog.Information($"Addon {this.addonName} message node found.");
+        Echoglossian.PluginLog.Information($"Addon {this.addonName} message node found in ExploreAddon.");
+        Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text in ExploreAddon: {MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr)}");
       }
       catch (Exception ex)
       {
@@ -219,7 +221,7 @@ namespace Echoglossian
       {
         var nameText = CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nameNodeAsTextNode->NodeText.StringPtr));
 
-        Echoglossian.PluginLog.Information($"Addon {this.addonName} name node text: {nameText}");
+        Echoglossian.PluginLog.Information($"Addon {this.addonName} name node text in ExploreAddon: {nameText}");
 
         if (!string.IsNullOrEmpty(nameText) && nameText.Contains(TranslationMarker))
         {
@@ -239,7 +241,7 @@ namespace Echoglossian
       {
         var messageText = CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr));
 
-        Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text: {messageText}");
+        Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text in ExploreAddon: {messageText}");
 
         if (!string.IsNullOrEmpty(messageText) && messageText.Contains(TranslationMarker))
         {
@@ -259,6 +261,8 @@ namespace Echoglossian
       {
         var talkMessage = this.addonCharacteristicsInfo.TalkMessage;
 
+        Echoglossian.PluginLog.Information($"Checking database for: {this.addonCharacteristicsInfo.TalkMessage.ToString()}");
+
         if (talkMessage != null && !string.IsNullOrEmpty(talkMessage.SenderName) && !string.IsNullOrEmpty(talkMessage.OriginalTalkMessage))
         {
           if (Echoglossian.FindTalkMessage(talkMessage))
@@ -269,6 +273,7 @@ namespace Echoglossian
             if (this.configuration.TranslateNpcNames)
             {
               this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = Echoglossian.FoundTalkMessage.TranslatedSenderName + TranslationMarker;
+              Echoglossian.PluginLog.Information($"Addon {this.addonName} sender name node text found in database is {this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName}");
             }
             else
             {
@@ -279,7 +284,7 @@ namespace Echoglossian
           }
           else
           {
-            Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text not found in database.");
+            Echoglossian.PluginLog.Information($"Current addon {this.addonName} not found in database. Sending to translate!");
             this.TranslateTexts(talkMessage.OriginalTalkMessage, "Talk");
           }
         }
@@ -287,6 +292,8 @@ namespace Echoglossian
       else if (this.addonName == "_BattleTalk")
       {
         var battleTalkMessage = this.addonCharacteristicsInfo.BattleTalkMessage;
+
+        Echoglossian.PluginLog.Information($"Checking database for: {this.addonCharacteristicsInfo.BattleTalkMessage.ToString()}");
 
         if (battleTalkMessage != null && !string.IsNullOrEmpty(battleTalkMessage.SenderName) && !string.IsNullOrEmpty(battleTalkMessage.OriginalBattleTalkMessage))
         {
@@ -298,12 +305,18 @@ namespace Echoglossian
             if (this.configuration.TranslateNpcNames)
             {
               this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = Echoglossian.FoundBattleTalkMessage.TranslatedSenderName + TranslationMarker;
+              Echoglossian.PluginLog.Information($"Addon {this.addonName} sender name node text found in database is {this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName}");
             }
+            else
+            {
+              this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = Echoglossian.FoundBattleTalkMessage.SenderName + TranslationMarker;
+            }
+
             this.SetTranslationToAddon();
           }
           else
           {
-            Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text not found in database.");
+            Echoglossian.PluginLog.Information($"Current addon {this.addonName} not found in database. Sending to translate!");
             this.TranslateTexts(battleTalkMessage.OriginalBattleTalkMessage, "_BattleTalk");
           }
         }
@@ -410,7 +423,7 @@ namespace Echoglossian
       {
         var addon = GameGui.GetAddonByName(this.addonName, 1);
 
-        Echoglossian.PluginLog.Information($"Addon {this.addonName} found.");
+        Echoglossian.PluginLog.Warning($"Addon {this.addonName} found in SetTranslationToAddon.");
         foundAddon = (AtkUnitBase*)addon;
         if (foundAddon == null)
         {
@@ -469,7 +482,7 @@ namespace Echoglossian
 
       if (nameNodeAsTextNode != null)
       {
-        var nameTextFromNode = MemoryHelper.ReadSeStringAsString(out _, (nint)nameNodeAsTextNode->NodeText.StringPtr);
+        var nameTextFromNode = CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nameNodeAsTextNode->NodeText.StringPtr));
 
         Echoglossian.PluginLog.Information($"Addon {this.addonName} name node text in SetTranslationToAddon: {nameTextFromNode}");
         try
@@ -485,7 +498,6 @@ namespace Echoglossian
             nameNodeAsTextNode->SetText(translatedName);
             nameNodeAsTextNode->ResizeNodeForCurrentText();
           }
-
         }
         catch (Exception ex)
         {
@@ -495,7 +507,7 @@ namespace Echoglossian
 
       if (messageNodeAsTextNode != null)
       {
-        var messageTextFromNode = MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr);
+        var messageTextFromNode = CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr));
 
         Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text in SetTranslationToAddon: {messageTextFromNode}");
         try
@@ -513,11 +525,10 @@ namespace Echoglossian
             messageNodeAsTextNode->SetText(translatedMessage);
             messageNodeAsTextNode->ResizeNodeForCurrentText();
           }
-
         }
         catch (Exception ex)
         {
-          Echoglossian.PluginLog.Error($"Error setting message node text: {ex}");
+          Echoglossian.PluginLog.Error($"Error setting message node text in SetTranslationToAddon: {ex}");
         }
       }
     }
@@ -530,6 +541,8 @@ namespace Echoglossian
         {
           this.cts.Cancel();
           this.translationTask.Wait();
+
+          this.translationTask.Dispose(); // see if it is needed
 
           this.cts.Dispose();
         }
