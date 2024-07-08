@@ -125,7 +125,8 @@ namespace Echoglossian
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
+            // this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName, args);
+            this.uiTalkAddonHandler.SetTranslationToAddon();
 
             break;
           case "_BattleTalk":
@@ -162,6 +163,7 @@ namespace Echoglossian
             try
             {
               this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName, args);
+              // this.uiTalkAddonHandler.SetTranslationToAddon();
             }
             catch (Exception e)
             {
@@ -199,10 +201,10 @@ namespace Echoglossian
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
+            this.uiTalkAddonHandler.SetTranslationToAddon();
             break;
           case "_BattleTalk":
-            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
+            this.uiBattleTalkAddonHandler.SetTranslationToAddon();
             break;
           default:
             Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
@@ -265,7 +267,8 @@ namespace Echoglossian
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
+            // this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
+            this.uiTalkAddonHandler.SetTranslationToAddon();
             break;
           case "_BattleTalk":
             this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
@@ -300,7 +303,8 @@ namespace Echoglossian
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
+            // this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
+            this.uiTalkAddonHandler.SetTranslationToAddon();
             break;
           case "_BattleTalk":
             this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
@@ -333,6 +337,7 @@ namespace Echoglossian
         {
           case "Talk":
             this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
+            // this.uiTalkAddonHandler.SetTranslationToAddon();
             break;
           case "_BattleTalk":
             this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);

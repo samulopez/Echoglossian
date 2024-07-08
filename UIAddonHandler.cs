@@ -347,9 +347,13 @@ namespace Echoglossian
 
       if (messageNodeAsTextNode != null)
       {
-        var messageText = CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr));
+        var messageNodeText = MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr);
 
-        PluginLog.Information($"Addon {this.addonName} message node text in ExploreAddon: {messageText}");
+        Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text in ExploreAddon: {messageNodeText}");
+
+        var messageText = CleanString(messageNodeText);
+
+        PluginLog.Information($"Addon {this.addonName} clean message node text in ExploreAddon: {messageText}");
 
         if (!string.IsNullOrEmpty(messageText) && messageText.Contains(TranslationMarker))
         {
@@ -528,38 +532,10 @@ namespace Echoglossian
       }
     }
 
-    private unsafe void SetTranslationToAddon()
+    public unsafe void SetTranslationToAddon()
     {
       PluginLog.Information($"Called SetTranslationToAddon for addon {this.addonName}.");
       AtkUnitBase* foundAddon = null;
-
-      // --- experiment --- //
-
-      /*var atkvalues = (AtkValue*)this.addonDrawArgs.AtkValues;
-
-      if (atkvalues == null)
-      {
-        return;
-      }*/
-
-      /*   try
-         {
-           Echoglossian.PluginLog.Information($"atkvalues[0].Value: {atkvalues[0].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[1].Value: {atkvalues[1].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[2].Value: {atkvalues[2].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[3].Value: {atkvalues[3].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[4].Value: {atkvalues[4].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[5].Value: {atkvalues[5].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[6].Value: {atkvalues[6].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[7].Value: {atkvalues[7].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[8].Value: {atkvalues[8].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[9].Value: {atkvalues[9].ToString}");
-           Echoglossian.PluginLog.Information($"atkvalues[10].Value: {atkvalues[10].ToString}");
-         }
-         catch (Exception ex)
-         {
-           PluginLog.Error($"Error in SetTranslationToAddon atkvalues capture: {ex}");
-         }*/
 
       try
       {
@@ -567,6 +543,7 @@ namespace Echoglossian
 
         PluginLog.Warning($"Addon {this.addonName} found in SetTranslationToAddon.");
         foundAddon = (AtkUnitBase*)addon;
+
         if (foundAddon == null)
         {
           return;
@@ -644,6 +621,8 @@ namespace Echoglossian
         PluginLog.Error($"Error retrieving message node in SetTranslationToAddon: {ex}");
       }
 
+      this.AdjustAddonNodesFlags();
+
       if (nameNodeAsTextNode != null)
       {
         var nameTextFromNode = CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)nameNodeAsTextNode->NodeText.StringPtr));
@@ -662,6 +641,11 @@ namespace Echoglossian
             nameNodeAsTextNode->SetText(translatedName);
             nameNodeAsTextNode->ResizeNodeForCurrentText();
           }
+          else
+          {
+            PluginLog.Information($"Name node text in SetTranslationToAddon has already been processed.");
+            return;
+          }
         }
         catch (Exception ex)
         {
@@ -671,9 +655,13 @@ namespace Echoglossian
 
       if (messageNodeAsTextNode != null)
       {
-        var messageTextFromNode = CleanString(MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr));
+        var messageTextFromNode = MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr);
 
-        PluginLog.Information($"Addon {this.addonName} message node text in SetTranslationToAddon: {messageTextFromNode}");
+        Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text in SetTranslationToAddon: {messageTextFromNode}");
+
+        var cleanMessageTextFromNode = CleanString(messageTextFromNode);
+
+        PluginLog.Information($"Addon {this.addonName} clean message node text in SetTranslationToAddon: {cleanMessageTextFromNode}");
         try
         {
           var translatedMessage = this.addonCharacteristicsInfo.TalkMessage.TranslatedTalkMessage + TranslationMarker;
@@ -681,7 +669,7 @@ namespace Echoglossian
           PluginLog.Information($"Addon {this.addonName} trasnslatedMessage node text in SetTranslationToAddon: {translatedMessage}");
 
           PluginLog.Information($"Comparison to SetTranslationToAddon: '!translatedMessage.Contains(TranslationMarker)' is {!messageTextFromNode.Contains(TranslationMarker)} and the result is {!messageTextFromNode.Contains(TranslationMarker)}");
-          if (!messageTextFromNode.Contains(TranslationMarker))
+          if (!cleanMessageTextFromNode.Contains(TranslationMarker))
           {
             PluginLog.Warning($"Setting message node text in SetTranslationToAddon.");
 
@@ -689,12 +677,21 @@ namespace Echoglossian
             messageNodeAsTextNode->SetText(translatedMessage);
             messageNodeAsTextNode->ResizeNodeForCurrentText();
           }
+          else
+          {
+            PluginLog.Information($"Message node text in SetTranslationToAddon has already been processed.");
+            return;
+          }
         }
         catch (Exception ex)
         {
           PluginLog.Error($"Error setting message node text in SetTranslationToAddon: {ex}");
         }
       }
+
+      /*var atkEvent = this.addonReceiveEventArgs.AtkEvent;
+
+      foundAddon->ReceiveEvent(AtkEventType.MouseMove, 0, (AtkEvent*)atkEvent);*/
     }
 
     protected virtual void Dispose(bool disposing)
@@ -757,6 +754,10 @@ namespace Echoglossian
       public bool IsComplexAddon { get; set; }
 
       public int NameNodeId { get; set; }
+
+      public NodeFlags NameNodeFlags { get; set; }
+
+      public NodeFlags MessageNodeFlags { get; set; }
 
       public int MessageNodeId { get; set; }
 
