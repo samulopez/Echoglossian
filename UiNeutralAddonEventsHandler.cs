@@ -71,7 +71,6 @@ namespace Echoglossian
 
     private void GrabAddonEventInfo(AddonEvent type, AddonArgs args)
     {
-      // Echoglossian.PluginLog.Information($"AddonEvent type in GrabAddonEventInfo: {type}, args: {args}");
       if (args == null)
       {
         Echoglossian.PluginLog.Error("AddonArgs is null");
@@ -116,21 +115,21 @@ namespace Echoglossian
         return;
       }
 
-      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleSetupArgs: {args.AddonName}");
+      /*Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleSetupArgs: {args.AddonName}");
       Echoglossian.PluginLog.Information($"Addonargs.AtkValues in HandleSetupArgs: {args.AtkValues}");
       Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleSetupArgs: {args.Addon}");
       Echoglossian.PluginLog.Information($"Addonargs.StringArrayData in HandleSetupArgs: {args.AtkValueSpan.ToString()}");
-
+*/
       try
       {
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk");
+            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
 
             break;
           case "_BattleTalk":
-            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");
+            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
             break;
           default:
             Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
@@ -162,7 +161,7 @@ namespace Echoglossian
 
             try
             {
-              this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName);
+              this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName, args);
             }
             catch (Exception e)
             {
@@ -171,7 +170,7 @@ namespace Echoglossian
 
             break;
           case "_BattleTalk":
-            this.uiBattleTalkAddonHandler.EgloAddonHandler(args.AddonName);
+            this.uiBattleTalkAddonHandler.EgloAddonHandler(args.AddonName, args);
             break;
           default:
             Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
@@ -190,20 +189,20 @@ namespace Echoglossian
       {
         return;
       }
-
-      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleDrawArgs: {args.AddonName}");
-      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleDrawArgs: {args.Addon}");
-      Echoglossian.PluginLog.Information($"Addonargs in HandleDrawArgs: {args.ToString}");
-
+      /*
+            Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleDrawArgs: {args.AddonName}");
+            Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleDrawArgs: {args.Addon}");
+            Echoglossian.PluginLog.Information($"Addonargs in HandleDrawArgs: {args.ToString}");
+      */
       try
       {
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk");
+            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
             break;
           case "_BattleTalk":
-            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");
+            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
             break;
           default:
             Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
@@ -223,19 +222,19 @@ namespace Echoglossian
         return;
       }
 
-      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleFinalizeArgs: {args.AddonName}");
-      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleFinalizeArgs: {args.Addon}");
-      Echoglossian.PluginLog.Information($"Addonargs in HandleFinalizeArgs: {args.ToString}");
-
+      /*      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleFinalizeArgs: {args.AddonName}");
+            Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleFinalizeArgs: {args.Addon}");
+            Echoglossian.PluginLog.Information($"Addonargs in HandleFinalizeArgs: {args.ToString}");
+      */
       try
       {
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk");
+            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
             break;
           case "_BattleTalk":
-            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");
+            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
             break;
           default:
             Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
@@ -254,22 +253,22 @@ namespace Echoglossian
       {
         return;
       }
-
-      Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleRequestedUpdateArgs: {args.AddonName}");
-      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleRequestedUpdateArgs: {args.Addon}");
-      Echoglossian.PluginLog.Information($"Addonargs in HandleRequestedUpdateArgs: {args.ToString}");
-      Echoglossian.PluginLog.Information($"Addonargs StringArrayData in HandleRequestedUpdateArgs: {args.StringArrayData.ToString()}");
-      Echoglossian.PluginLog.Information($"Addonargs NumberArrayData in HandleRequestedUpdateArgs: {args.NumberArrayData.ToString()}");
-
+      /*
+            Echoglossian.PluginLog.Information($"Addonargs.AddonName in HandleRequestedUpdateArgs: {args.AddonName}");
+            Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleRequestedUpdateArgs: {args.Addon}");
+            Echoglossian.PluginLog.Information($"Addonargs in HandleRequestedUpdateArgs: {args.ToString}");
+            Echoglossian.PluginLog.Information($"Addonargs StringArrayData in HandleRequestedUpdateArgs: {args.StringArrayData.ToString()}");
+            Echoglossian.PluginLog.Information($"Addonargs NumberArrayData in HandleRequestedUpdateArgs: {args.NumberArrayData.ToString()}");
+      */
       try
       {
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk");
+            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
             break;
           case "_BattleTalk":
-            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");
+            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
             break;
           default:
             Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
@@ -288,23 +287,23 @@ namespace Echoglossian
       {
         return;
       }
-
-      Echoglossian.PluginLog.Information($"AddonRefreshArgs in HandleRefreshArgs: {args.AddonName}");
-      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleRefreshArgs: {args.Addon}");
-      Echoglossian.PluginLog.Information($"Addonargs in HandleRefreshArgs: {args.ToString}");
-      Echoglossian.PluginLog.Information($"Addonargs.AtkValues in HandleRefreshArgs: {args.AtkValues}");
-      Echoglossian.PluginLog.Information($"Addonargs AtkValueSpan in HandleRefreshArgs: {args.AtkValueSpan.ToString()}");
-      Echoglossian.PluginLog.Information($"Addonargs AtkValueCount in HandleRefreshArgs: {args.AtkValueCount}");
-
+      /*
+            Echoglossian.PluginLog.Information($"AddonRefreshArgs in HandleRefreshArgs: {args.AddonName}");
+            Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleRefreshArgs: {args.Addon}");
+            Echoglossian.PluginLog.Information($"Addonargs in HandleRefreshArgs: {args.ToString}");
+            Echoglossian.PluginLog.Information($"Addonargs.AtkValues in HandleRefreshArgs: {args.AtkValues}");
+            Echoglossian.PluginLog.Information($"Addonargs AtkValueSpan in HandleRefreshArgs: {args.AtkValueSpan.ToString()}");
+            Echoglossian.PluginLog.Information($"Addonargs AtkValueCount in HandleRefreshArgs: {args.AtkValueCount}");
+      */
       try
       {
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk");
+            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
             break;
           case "_BattleTalk":
-            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");
+            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
             break;
           default:
             Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
@@ -315,8 +314,6 @@ namespace Echoglossian
       {
         Echoglossian.PluginLog.Error($"Error in HandleRefreshArgs: {e}");
       }
-
-
     }
 
     private void HandleReceiveEvent(AddonReceiveEventArgs args)
@@ -326,19 +323,19 @@ namespace Echoglossian
         return;
       }
 
-      Echoglossian.PluginLog.Information($"AddonReceiveEventArgs in HandleReceiveEvent: {args.AddonName}");
-      Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleReceiveEvent: {args.Addon}");
-      Echoglossian.PluginLog.Information($"Addonargs in HandleReceiveEvent: {args.ToString}");
-
+      /*      Echoglossian.PluginLog.Information($"AddonReceiveEventArgs in HandleReceiveEvent: {args.AddonName}");
+            Echoglossian.PluginLog.Information($"Addonargs.Addon in HandleReceiveEvent: {args.Addon}");
+            Echoglossian.PluginLog.Information($"Addonargs in HandleReceiveEvent: {args.ToString}");
+      */
       try
       {
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk");
+            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
             break;
           case "_BattleTalk":
-            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");
+            this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
             break;
           default:
             Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
@@ -349,7 +346,6 @@ namespace Echoglossian
       {
         Echoglossian.PluginLog.Error($"Error in HandleReceiveEvent: {e}");
       }
-
     }
   }
 }

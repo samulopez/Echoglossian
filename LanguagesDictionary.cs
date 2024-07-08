@@ -252,7 +252,7 @@ public partial class Echoglossian
       "NotoSans-Medium.ttf", string.Empty, new[] { 0 }),
     [80] = new LanguageInfo(@"pl", @"Język Polski; Polish",
       "NotoSans-Medium.ttf", string.Empty, new[] { 0, 1 }),
-    [81] = new LanguageInfo(@"pt", @"Português; Portuguese",
+    [81] = new LanguageInfo(@"pt", @"Português Brasileiro; Brazilian Portuguese",
       "NotoSans-Medium.ttf", string.Empty, new[] { 0, 1 }),
     [82] = new LanguageInfo(@"ps", @"پښتو Pax̌Tow; Pushto; Pashto",
       "NotoSansArabic-Medium.ttf",
@@ -355,7 +355,9 @@ public partial class Echoglossian
     [117] = new LanguageInfo(@"yo", @"Èdè Yorùbá; Yoruba",
       "NotoSans-Medium.ttf", string.Empty, new[] { 0 }),
     [118] = new LanguageInfo(@"zu", @"Isizulu; Zulu", "NotoSans-Medium.ttf",
-      string.Empty, new[] { 0 })
+      string.Empty, new[] { 0 }),
+    [119] = new LanguageInfo(@"pt-PT", @"Português; Portuguese",
+      "NotoSans-Medium.ttf", string.Empty, new[] { 0, 1 }),
   };
 
   public class LanguageInfo

@@ -486,10 +486,10 @@ namespace Echoglossian
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
 
-      this.EgloNeutralAddonHandler("Talk", new string[] {/* "PreSetup", "PostSetup",*/ "PreUpdate", /* "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", "PreRefresh", "PostRefresh" */});
-      this.EgloNeutralAddonHandler("_BattleTalk", new string[] { /*"PreSetup", "PostSetup", "PreUpdate", "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", */"PreRequestedUpdate"/*, "PostRequestedUpdate", "PreRefresh", "PostRefresh" */});
+      this.EgloNeutralAddonHandler("Talk", new string[] { /*"PreUpdate", "PostUpdate","PreDraw",*/ "PostDraw" /*, "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", "PreRefresh", "PostRefresh" */});
+      this.EgloNeutralAddonHandler("_BattleTalk", new string[] { /*"PreSetup", "PostSetup", "PreUpdate", "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", */ "PreRefresh"/*, "PostRefresh" */});
 
-
+      /*"PreSetup","PostSetup", "PreUpdate", "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", "PreRefresh", "PostRefresh" */
 
 
 
