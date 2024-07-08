@@ -253,6 +253,8 @@ namespace Echoglossian
           return "PT-BR";
         case "zh-CN":
           return "ZH";
+        case "pt-PT":
+          return "PT-PT";
         default:
           return source.ToUpper();
       }
@@ -267,9 +269,11 @@ namespace Echoglossian
         case "no":
           return "NB";
         case "pt":
-          return "PT";
+          return "PT-BR";
         case "zh-CN":
           return "ZH";
+        case "pt-PT":
+          return "PT-PT";
         default:
           return source.ToUpper();
       }

@@ -162,8 +162,8 @@ namespace Echoglossian
 
             try
             {
-              this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName, args);
-              // this.uiTalkAddonHandler.SetTranslationToAddon();
+              // this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName, args);
+              this.uiTalkAddonHandler.SetTranslationToAddon();
             }
             catch (Exception e)
             {
@@ -201,7 +201,8 @@ namespace Echoglossian
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.SetTranslationToAddon();
+            this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName, args);
+            // this.uiTalkAddonHandler.SetTranslationToAddon();
             break;
           case "_BattleTalk":
             this.uiBattleTalkAddonHandler.SetTranslationToAddon();
@@ -233,7 +234,7 @@ namespace Echoglossian
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
+            // this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
             break;
           case "_BattleTalk":
             this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
@@ -336,8 +337,8 @@ namespace Echoglossian
         switch (args.AddonName)
         {
           case "Talk":
-            this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
-            // this.uiTalkAddonHandler.SetTranslationToAddon();
+            // this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
+            this.uiTalkAddonHandler.SetTranslationToAddon();
             break;
           case "_BattleTalk":
             this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk", args);
