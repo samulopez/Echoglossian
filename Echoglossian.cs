@@ -119,6 +119,7 @@ namespace Echoglossian
 
     private UIAddonHandler uiBattleTalkAddonHandler;
     private UIAddonHandler uiTalkAddonHandler;
+    private UIAddonHandler uiTalkSubtitleHandler;
 
     private TranslationService translationService;
 
@@ -243,15 +244,10 @@ namespace Echoglossian
       ToastGui.ErrorToast += this.OnErrorToast;
       ToastGui.QuestToast += this.OnQuestToast;
 
-      // this.HandleTalkAsync();
-
-      // Common.Functions.ChatBubbles.OnChatBubble += this.ChatBubblesOnChatBubble;
-      // Common.Functions.Tooltips.OnActionTooltip += this.TooltipsOnActionTooltip;
-      /*Common.Functions.Talk.OnTalk += this.GetTalk;
-      Common.Functions.BattleTalk.OnBattleTalk += this.GetBattleTalk;*/
 
       this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
       this.uiBattleTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
+      this.uiTalkSubtitleHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
 
       this.EgloAddonHandler();
 
@@ -273,19 +269,6 @@ namespace Echoglossian
 
     protected virtual void Dispose(bool disposing)
     {
-      /*Common.Functions.Talk.OnTalk -= this.GetTalk; // broken
-      Common.Functions.BattleTalk.OnBattleTalk -= this.GetBattleTalk; */// broken - xivcommon is outdated with no new nuget version so cannot be used anymore!!
-                                                                        // Common.Functions.ChatBubbles.OnChatBubble -= this.ChatBubblesOnChatBubble;
-                                                                        // Common.Functions.Tooltips.OnActionTooltip -= this.TooltipsOnActionTooltip;
-      /*     Common.Functions.Talk.Dispose();
-           Common.Functions.BattleTalk.Dispose();*/
-
-      // Common.Functions.ChatBubbles.Dispose();
-      // Common.Functions.Tooltips.Dispose();
-      /*Common.Functions.Dispose();
-
-      Common?.Dispose();*/
-
       ToastGui.Toast -= this.OnToast;
       ToastGui.ErrorToast -= this.OnErrorToast;
       ToastGui.QuestToast -= this.OnQuestToast;
@@ -342,24 +325,13 @@ namespace Echoglossian
             switch (ClientState.IsLoggedIn)
             {
               case true:
-
-                /*this.uiTalkAddonHandler.EgloAddonHandler("Talk");
-                this.uiBattleTalkAddonHandler.EgloAddonHandler("_BattleTalk");*/
-
-                // this.TalkHandler("Talk", 1);  tentative fix for stuttering
-
-                // this.BattleTalkHandler("_BattleTalk", 1); tentative fix for stuttering
                 this.TextErrorToastHandler("_TextError", 1);
 
                 this.ToastHandler("_WideText", 1);
 
-                // this.ClassChangeToastHandler("_WideText", 1);
-                //
-                // this.ClassChangeToastHandler("_WideText", 2);
                 this.ToastHandler("_TextClassChange", 1);
                 this.ToastHandler("_AreaText", 1);
 
-                // this.QuestToastHandler("_ScreenText", 1);
                 break;
             }
 
@@ -486,8 +458,9 @@ namespace Echoglossian
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
 
-      this.EgloNeutralAddonHandler("Talk", new string[] {  /* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent",*/ "PostReceiveEvent",/* "PreRequestedUpdate", "PostRequestedUpdate" /*, "PreRefresh", "PostRefresh"*/ });
-      this.EgloNeutralAddonHandler("_BattleTalk", new string[] { /*"PreSetup", "PostSetup", "PreUpdate", "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent",*/ "PreRequestedUpdate"/*, "PostRequestedUpdate",  "PreRefresh"/*, "PostRefresh" */});
+      this.EgloNeutralAddonHandler("Talk", new string[] {  /* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/ });
+      this.EgloNeutralAddonHandler("_BattleTalk", new string[] { /* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/});
+      this.EgloNeutralAddonHandler("TalkSubtitle", new string[] {/* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/});
 
       /*"PreSetup","PostSetup", "PreUpdate", "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", "PreRefresh", "PostRefresh" */
     }

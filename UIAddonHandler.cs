@@ -336,12 +336,33 @@ namespace Echoglossian
           return;
         }
 
-        this.addonCharacteristicsInfo.TalkMessage.SenderName = nameText;
-
         if (!this.configuration.TranslateNpcNames)
         {
-          this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = nameText;
+          if (this.addonName == "Talk")
+          {
+            this.addonCharacteristicsInfo.TalkMessage.SenderName = nameText;
+            this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = nameText;
+          }
+
+          if (this.addonName == "_BattleTalk")
+          {
+            this.addonCharacteristicsInfo.BattleTalkMessage.SenderName = nameText;
+            this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = nameText;
+          }
         }
+
+        if (this.addonName == "Talk")
+        {
+          this.addonCharacteristicsInfo.TalkMessage.SenderName = nameText;
+        }
+
+        if (this.addonName == "_BattleTalk")
+        {
+          this.addonCharacteristicsInfo.BattleTalkMessage.SenderName = nameText;
+        }
+
+
+
       }
 
       if (messageNodeAsTextNode != null)
@@ -360,7 +381,15 @@ namespace Echoglossian
           return;
         }
 
-        this.addonCharacteristicsInfo.TalkMessage.OriginalTalkMessage = messageText;
+        if (this.addonName == "Talk")
+        {
+          this.addonCharacteristicsInfo.TalkMessage.OriginalTalkMessage = messageText;
+        }
+
+        if (this.addonName == "_BattleTalk")
+        {
+          this.addonCharacteristicsInfo.BattleTalkMessage.OriginalBattleTalkMessage = messageText;
+        }
       }
 
       this.CheckDatabaseForTranslation();
@@ -638,7 +667,17 @@ namespace Echoglossian
         PluginLog.Information($"Addon {this.addonName} name node text in SetTranslationToAddon: {nameTextFromNode}");
         try
         {
-          var translatedName = this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName + TranslationMarker;
+          var translatedName = string.Empty;
+
+          if (this.addonName == "Talk")
+          {
+            translatedName = this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName + TranslationMarker;
+          }
+
+          if (this.addonName == "_BattleTalk")
+          {
+            translatedName = this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName + TranslationMarker;
+          }
 
           PluginLog.Information($"Addon {this.addonName} translatedName node text in SetTranslationToAddon: {translatedName}");
 
@@ -672,7 +711,17 @@ namespace Echoglossian
         PluginLog.Information($"Addon {this.addonName} clean message node text in SetTranslationToAddon: {cleanMessageTextFromNode}");
         try
         {
-          var translatedMessage = this.addonCharacteristicsInfo.TalkMessage.TranslatedTalkMessage + TranslationMarker;
+          var translatedMessage = string.Empty;
+
+          if (this.addonName == "Talk")
+          {
+            translatedMessage = this.addonCharacteristicsInfo.TalkMessage.TranslatedTalkMessage + TranslationMarker;
+          }
+
+          if (this.addonName == "_BattleTalk")
+          {
+            translatedMessage = this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedBattleTalkMessage + TranslationMarker;
+          }
 
           PluginLog.Information($"Addon {this.addonName} trasnslatedMessage node text in SetTranslationToAddon: {translatedMessage}");
 
@@ -759,11 +808,11 @@ namespace Echoglossian
 
       public int NameNodeId { get; set; }
 
+      public int MessageNodeId { get; set; }
+
       public NodeFlags NameNodeFlags { get; set; }
 
       public NodeFlags MessageNodeFlags { get; set; }
-
-      public int MessageNodeId { get; set; }
 
       public string ComplexStructure { get; set; }
 
