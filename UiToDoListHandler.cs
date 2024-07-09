@@ -160,7 +160,9 @@ namespace Echoglossian
             objectives.AddRange(levelQuestObjectivesToTranslate);
           }
 
-          if (this.translatedQuestNames.ContainsKey(quest.Text))
+          // because sometimes the quest name translation is the same as the original name but the objectives are not
+          var questWithObjectives = quest.Text + string.Join<ToDoItem>(",", objectives);
+          if (this.translatedQuestNames.ContainsKey(sanitizer.Sanitize(questWithObjectives)))
           {
             continue;
           }
@@ -173,12 +175,13 @@ namespace Echoglossian
             PluginLog.Debug($"Name from database: {quest.Text} -> {foundQuestPlate.TranslatedQuestName}");
 #endif
             todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(foundQuestPlate.TranslatedQuestName);
-            this.translatedQuestNames.TryAdd(foundQuestPlate.TranslatedQuestName, true);
 
+            List<string> translatedStoredObjectives = new();
             foreach (var objective in objectives)
             {
               if (objective.Text == EmptyObjective)
               {
+                translatedStoredObjectives.Add(EmptyObjective);
                 // let's not store empty objectives on the database
                 continue;
               }
@@ -188,18 +191,24 @@ namespace Echoglossian
 #if DEBUG
                 PluginLog.Debug($"Objective from database: {objective.Text} {storedObjectiveText}");
 #endif
+                translatedStoredObjectives.Add(storedObjectiveText);
                 todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(storedObjectiveText);
                 continue;
               }
 
               var translatedQuestObjective = this.Translate(objective.Text);
               foundQuestPlate.Objectives.TryAdd(objective.Text, translatedQuestObjective);
+              translatedStoredObjectives.Add(translatedQuestObjective);
               string resultUpdate = this.UpdateQuestPlate(foundQuestPlate);
 #if DEBUG
               PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {resultUpdate}");
 #endif
               todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedQuestObjective);
             }
+
+            // because sometimes the quest name translation is the same as the original name but the objectives are not
+            var translatedStoredQuestWithObjectives = foundQuestPlate.TranslatedQuestName + string.Join<string>(",", translatedStoredObjectives);
+            this.translatedQuestNames.TryAdd(translatedStoredQuestWithObjectives, true);
 
             continue;
           }
@@ -221,10 +230,12 @@ namespace Echoglossian
             DateTime.Now);
           todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(translatedNameText);
 
+          List<string> translatedObjectives = new();
           foreach (var objective in objectives)
           {
             if (objective.Text == EmptyObjective)
             {
+              translatedObjectives.Add(EmptyObjective);
               // let's not store empty objectives on the database
               continue;
             }
@@ -233,6 +244,7 @@ namespace Echoglossian
 #if DEBUG
             PluginLog.Debug($"Objective translated: {translatedObjectiveText}");
 #endif
+            translatedObjectives.Add(translatedObjectiveText);
             translatedQuestPlate.Objectives.TryAdd(objective.Text, translatedObjectiveText);
             todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedObjectiveText);
           }
@@ -241,7 +253,10 @@ namespace Echoglossian
 #if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
 #endif
-          this.translatedQuestNames.TryAdd(translatedNameText, true);
+
+          // because sometimes the quest name translation is the same as the original name but the objectives are not
+          var translatedQuestWithObjectives = translatedNameText + string.Join<string>(",", translatedObjectives);
+          this.translatedQuestNames.TryAdd(translatedQuestWithObjectives, true);
         }
       }
       catch (Exception e)
@@ -275,6 +290,11 @@ namespace Echoglossian
       this.IndexI = indexI;
       this.IndexJ = indexJ;
       this.NodeId = nodeID;
+    }
+
+    public override string ToString()
+    {
+      return this.Text;
     }
   }
 }
