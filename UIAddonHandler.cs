@@ -330,25 +330,10 @@ namespace Echoglossian
 
         PluginLog.Information($"Addon {this.addonName} name node text in ExploreAddon: {nameText}");
 
-        if (string.IsNullOrEmpty(nameText) || (!string.IsNullOrEmpty(nameText) && nameText.Contains(TranslationMarker)))
+        if (string.IsNullOrEmpty(nameText) || nameText.Contains(TranslationMarker))
         {
           PluginLog.Information($"Addon {this.addonName} name node has already been processed.");
           return;
-        }
-
-        if (!this.configuration.TranslateNpcNames)
-        {
-          if (this.addonName == "Talk")
-          {
-            this.addonCharacteristicsInfo.TalkMessage.SenderName = nameText;
-            this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = nameText;
-          }
-
-          if (this.addonName == "_BattleTalk")
-          {
-            this.addonCharacteristicsInfo.BattleTalkMessage.SenderName = nameText;
-            this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = nameText;
-          }
         }
 
         if (this.addonName == "Talk")
@@ -361,15 +346,25 @@ namespace Echoglossian
           this.addonCharacteristicsInfo.BattleTalkMessage.SenderName = nameText;
         }
 
+        if (!this.configuration.TranslateNpcNames)
+        {
+          if (this.addonName == "Talk")
+          {
+            this.addonCharacteristicsInfo.TalkMessage.TranslatedSenderName = nameText;
+          }
 
-
+          if (this.addonName == "_BattleTalk")
+          {
+            this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedSenderName = nameText;
+          }
+        }
       }
 
       if (messageNodeAsTextNode != null)
       {
         var messageNodeText = MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr);
 
-        Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text in ExploreAddon: {messageNodeText}");
+        PluginLog.Information($"Addon {this.addonName} message node text in ExploreAddon: {messageNodeText}");
 
         var messageText = CleanString(messageNodeText);
 
@@ -682,16 +677,17 @@ namespace Echoglossian
           PluginLog.Information($"Addon {this.addonName} translatedName node text in SetTranslationToAddon: {translatedName}");
 
           PluginLog.Information($"Comparison to SetTranslationToAddon: 'this.configuration.TranslateNpcNames' is {this.configuration.TranslateNpcNames} and '!translatedName.Contains(TranslationMarker)' is {nameTextFromNode.Contains(TranslationMarker)} and the result is {this.configuration.TranslateNpcNames && nameTextFromNode.Contains(TranslationMarker)}");
-          if (this.configuration.TranslateNpcNames && !nameTextFromNode.Contains(TranslationMarker))
+          if (nameTextFromNode.Contains(TranslationMarker))
+          {
+            PluginLog.Information($"Name node text in SetTranslationToAddon has already been processed.");
+            return;
+          }
+
+          if (this.configuration.TranslateNpcNames)
           {
             PluginLog.Warning($"Setting name node text in SetTranslationToAddon.");
             nameNodeAsTextNode->SetText(translatedName);
             nameNodeAsTextNode->ResizeNodeForCurrentText();
-          }
-          else
-          {
-            PluginLog.Information($"Name node text in SetTranslationToAddon has already been processed.");
-            return;
           }
         }
         catch (Exception ex)
@@ -704,7 +700,7 @@ namespace Echoglossian
       {
         var messageTextFromNode = MemoryHelper.ReadSeStringAsString(out _, (nint)messageNodeAsTextNode->NodeText.StringPtr);
 
-        Echoglossian.PluginLog.Information($"Addon {this.addonName} message node text in SetTranslationToAddon: {messageTextFromNode}");
+        PluginLog.Information($"Addon {this.addonName} message node text in SetTranslationToAddon: {messageTextFromNode}");
 
         var cleanMessageTextFromNode = CleanString(messageTextFromNode);
 
@@ -723,14 +719,14 @@ namespace Echoglossian
             translatedMessage = this.addonCharacteristicsInfo.BattleTalkMessage.TranslatedBattleTalkMessage + TranslationMarker;
           }
 
-          PluginLog.Information($"Addon {this.addonName} trasnslatedMessage node text in SetTranslationToAddon: {translatedMessage}");
+          PluginLog.Information($"Addon {this.addonName} translatedMessage node text in SetTranslationToAddon: {translatedMessage}");
 
           PluginLog.Information($"Comparison to SetTranslationToAddon: '!translatedMessage.Contains(TranslationMarker)' is {!messageTextFromNode.Contains(TranslationMarker)} and the result is {!messageTextFromNode.Contains(TranslationMarker)}");
           if (!cleanMessageTextFromNode.Contains(TranslationMarker))
           {
             PluginLog.Warning($"Setting message node text in SetTranslationToAddon.");
 
-            //messageNodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[this.addonCharacteristicsInfo.MessageNodeId];
+            // messageNodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[this.addonCharacteristicsInfo.MessageNodeId];
             messageNodeAsTextNode->SetText(translatedMessage);
             messageNodeAsTextNode->ResizeNodeForCurrentText();
           }
