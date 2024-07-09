@@ -93,7 +93,6 @@ namespace Echoglossian
         Type = NotificationType.Info,
       };
       NotificationManager.AddNotification(settingsResetNotification);
-
     }
 
     private void FixConfig()
@@ -155,7 +154,7 @@ namespace Echoglossian
       PluginLog.Warning("Inside image creation method");
 #endif
       PrivateFontCollection pfc = new();
-      pfc.AddFontFile($@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{Echoglossian.specialFontFileName}");
+      pfc.AddFontFile($@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{SpecialFontFileName}");
 
       Font font = new(pfc.Families[0], this.configuration.FontSize, FontStyle.Regular);
       if (fontOptional != null)

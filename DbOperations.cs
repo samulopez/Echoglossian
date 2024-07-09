@@ -28,7 +28,7 @@ namespace Echoglossian
     {
       using (EchoglossianDbContext context = new EchoglossianDbContext(this.configDir))
       {
-        Echoglossian.PluginLog.Verbose($"Config dir path: {this.configDir}");
+        PluginLog.Verbose($"Config dir path: {this.configDir}");
         try
         {
           PluginLog.Verbose($"Config dir path: {this.configDir}");
@@ -58,11 +58,11 @@ namespace Echoglossian
 
     public static bool FindTalkMessage(TalkMessage talkMessage)
     {
-      using EchoglossianDbContext context = new EchoglossianDbContext(Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+      using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
 
-      Echoglossian.PluginLog.Verbose($"TalkMessage to be found in DB: {talkMessage}");
+      PluginLog.Verbose($"TalkMessage to be found in DB: {talkMessage}");
 
-      var pluginConfig = Echoglossian.PluginInterface.GetPluginConfig() as Config;
+      var pluginConfig = PluginInterface.GetPluginConfig() as Config;
 
       try
       {
@@ -86,7 +86,7 @@ namespace Echoglossian
 
         FoundTalkMessage = localFoundTalkMessage;
 
-        Echoglossian.PluginLog.Verbose($"FoundTalkMessage in DB: {FoundTalkMessage}");
+        PluginLog.Verbose($"FoundTalkMessage in DB: {FoundTalkMessage}");
 
         return true;
       }
@@ -190,9 +190,9 @@ namespace Echoglossian
 
     public static bool FindBattleTalkMessage(BattleTalkMessage battleTalkMessage)
     {
-      using EchoglossianDbContext context = new EchoglossianDbContext(Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+      using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
 
-      Echoglossian.PluginLog.Verbose($"BattleTalkMessage to be found in DB: {battleTalkMessage}");
+      PluginLog.Verbose($"BattleTalkMessage to be found in DB: {battleTalkMessage}");
 
       var pluginConfig = PluginInterface.GetPluginConfig() as Config;
 
@@ -219,7 +219,7 @@ namespace Echoglossian
 
         FoundBattleTalkMessage = localFoundBattleTalkMessage;
 
-        Echoglossian.PluginLog.Verbose($"FoundBattleTalkMessage in DB: {FoundBattleTalkMessage}");
+        PluginLog.Verbose($"FoundBattleTalkMessage in DB: {FoundBattleTalkMessage}");
         return true;
       }
       catch (Exception e)
@@ -292,13 +292,13 @@ namespace Echoglossian
 
     public static string InsertTalkData(TalkMessage talkMessage)
     {
-      using EchoglossianDbContext context = new EchoglossianDbContext(Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+      using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
 #if DEBUG
       // using StreamWriter logStream = new($"{this.configDir}DbInsertTalkOperationsLog.txt", append: true);
-      Echoglossian.PluginLog.Verbose($"TalkMessage to be saved in DB: {talkMessage}");
+      PluginLog.Verbose($"TalkMessage to be saved in DB: {talkMessage}");
 #endif
 
-      var pluginConfig = Echoglossian.PluginInterface.GetPluginConfig() as Config;
+      var pluginConfig = PluginInterface.GetPluginConfig() as Config;
 
       try
       {
@@ -345,12 +345,12 @@ namespace Echoglossian
 
     public static string InsertBattleTalkData(BattleTalkMessage battleTalkMessage)
     {
-      using EchoglossianDbContext context = new EchoglossianDbContext(Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+      using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
       /*#if DEBUG
             using StreamWriter logStream = new($"{this.configDir}DbInsertBattleTalkOperationsLog.txt", append: true);
       #endif*/
 
-      var pluginConfig = Echoglossian.PluginInterface.GetPluginConfig() as Config;
+      var pluginConfig = PluginInterface.GetPluginConfig() as Config;
 
       try
       {

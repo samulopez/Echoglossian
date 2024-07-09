@@ -149,7 +149,7 @@ namespace Echoglossian
 
     private void DrawTranslatedBattleDialogueWindow()
     {
-      Dalamud.Interface.Utility.ImGuiHelpers.SetNextWindowPosRelativeMainViewport(new Vector2(
+      ImGuiHelpers.SetNextWindowPosRelativeMainViewport(new Vector2(
   this.battleTalkTextPosition.X + (this.battleTalkTextDimensions.X / 2) - (this.battleTalkTextImguiSize.X / 2),
   this.battleTalkTextPosition.Y - this.battleTalkTextImguiSize.Y - 20) + this.configuration.ImGuiWindowPosCorrection);
       /*      if (this.configuration.TranslateNpcNames)
@@ -164,13 +164,8 @@ namespace Echoglossian
         ImGui.CalcTextSize(this.currentBattleTalkTranslation).X + (ImGui.GetStyle().WindowPadding.X * 3));
       ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size, this.battleTalkTextDimensions.Y * 2.5f * this.configuration.ImGuiBattleTalkWindowHeightMult));
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayBattleTalkTextColor, 255));
-      if (this.FontLoaded)
-      {
-#if DEBUG
-        // PluginLog.Verbose("Pushing font");
-#endif
-        ImGui.PushFont(this.UiFont);
-      }
+
+      UINewFontHandler.GeneralFontHandle.Push();
 
       if (this.configuration.TranslateNpcNames)
       {
@@ -226,13 +221,8 @@ namespace Echoglossian
       ImGui.PopStyleColor(1);
 
       ImGui.End();
-      if (this.FontLoaded)
-      {
-#if DEBUG
-        // PluginLog.Verbose("Popping font!");
-#endif
-        ImGui.PopFont();
-      }
+
+      UINewFontHandler.GeneralFontHandle.Pop();
     }
 
     private void DrawTranslatedDialogueWindow()
@@ -243,13 +233,8 @@ namespace Echoglossian
       ImGuiHelpers.SetNextWindowPosRelativeMainViewport(new Vector2(
           this.talkTextPosition.X + (this.talkTextDimensions.X / 2) - (this.talkTextImguiSize.X / 2),
           this.talkTextPosition.Y - this.talkTextImguiSize.Y - 20) + this.configuration.ImGuiWindowPosCorrection);
-      if (this.FontLoaded)
-      {
-#if DEBUG
-        // PluginLog.Verbose("Pushing font");
-#endif
-        ImGui.PushFont(this.UiFont);
-      }
+
+      UINewFontHandler.GeneralFontHandle.Push();
 
       float size = Math.Min(
           (this.talkTextDimensions.X * this.configuration.ImGuiTalkWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
@@ -320,13 +305,8 @@ namespace Echoglossian
       ImGui.PopStyleColor(1);
 
       ImGui.End();
-      if (this.FontLoaded)
-      {
-#if DEBUG
-        // PluginLog.Verbose("Popping font!");
-#endif
-        ImGui.PopFont();
-      }
+
+      UINewFontHandler.GeneralFontHandle.Pop();
     }
 
     private void DrawTranslatedToastWindow()
@@ -341,13 +321,8 @@ namespace Echoglossian
           ImGui.CalcTextSize(this.currentToastTranslation).X + (ImGui.GetStyle().WindowPadding.X * 2));
         ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size * 4f, this.toastTranslationTextDimensions.Y * 2));
         ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
-        if (this.FontLoaded)
-        {
-#if DEBUG
-          // PluginLog.Verbose("Pushing font");
-#endif
-          ImGui.PushFont(this.UiFont);
-        }
+
+        UINewFontHandler.GeneralFontHandle.Push();
 
         ImGui.Begin(
           "Toast Translation",
@@ -370,6 +345,7 @@ namespace Echoglossian
         this.toastTranslationTextImguiSize = ImGui.GetWindowSize();
         ImGui.PopStyleColor(1);
         ImGui.End();
+        UINewFontHandler.GeneralFontHandle.Pop();
       }
     }
 
@@ -392,13 +368,8 @@ namespace Echoglossian
       // PluginLog.Warning($"size min: {new Vector2(size, 0)}, Size max: {new Vector2(size * 4, this.errorToastTranslationTextDimensions.Y * 2)}");
 #endif
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
-      if (this.FontLoaded)
-      {
-#if DEBUG
-        // PluginLog.Verbose("Pushing font");
-#endif
-        ImGui.PushFont(this.UiFont);
-      }
+
+      UINewFontHandler.GeneralFontHandle.Push();
 
       ImGui.Begin(
         "Error Toast Translation",
@@ -423,13 +394,8 @@ namespace Echoglossian
       this.errorToastTranslationTextImguiSize = ImGui.GetWindowSize();
       ImGui.PopStyleColor(1);
       ImGui.End();
-      if (this.FontLoaded)
-      {
-#if DEBUG
-        // PluginLog.Verbose("Popping font!");
-#endif
-        ImGui.PopFont();
-      }
+
+      UINewFontHandler.GeneralFontHandle.Pop();
     }
 
     private void DrawTranslatedClassChangeToastWindow()
@@ -451,13 +417,8 @@ namespace Echoglossian
       PluginLog.Warning($"size min: {new Vector2(size, 0)}, Size max: {new Vector2(size * 4, this.classChangeToastTranslationTextDimensions.Y * 2)}");
 #endif
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
-      if (this.FontLoaded)
-      {
-#if DEBUG
-        // PluginLog.Verbose("Pushing font");
-#endif
-        ImGui.PushFont(this.UiFont);
-      }
+
+      UINewFontHandler.GeneralFontHandle.Push();
 
       ImGui.Begin(
         "Error Toast Translation",
@@ -482,13 +443,8 @@ namespace Echoglossian
       this.classChangeToastTranslationTextImguiSize = ImGui.GetWindowSize();
       ImGui.PopStyleColor(1);
       ImGui.End();
-      if (this.FontLoaded)
-      {
-#if DEBUG
-        // PluginLog.Verbose("Popping font!");
-#endif
-        ImGui.PopFont();
-      }
+
+      UINewFontHandler.GeneralFontHandle.Pop();
     }
   }
 }

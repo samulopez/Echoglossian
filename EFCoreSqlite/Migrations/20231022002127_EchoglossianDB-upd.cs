@@ -1,4 +1,9 @@
-﻿using System;
+﻿// <copyright file="20231022002127_EchoglossianDB-upd.cs" company="lokinmodar">
+// Copyright (c) lokinmodar. All rights reserved.
+// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
+// </copyright>
+
+using System;
 
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -25,7 +30,7 @@ namespace Echoglossian.EFCoreSqlite.Migrations
             TranslationEngine = table.Column<int>(type: "INTEGER", nullable: false),
             CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
             UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-            RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
+            RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true),
           },
           constraints: table =>
           {
@@ -45,7 +50,7 @@ namespace Echoglossian.EFCoreSqlite.Migrations
             TranslationEngine = table.Column<int>(type: "INTEGER", nullable: false),
             CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
             UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-            RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
+            RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true),
           },
           constraints: table =>
           {
@@ -65,7 +70,7 @@ namespace Echoglossian.EFCoreSqlite.Migrations
             TranslationEngine = table.Column<int>(type: "INTEGER", nullable: false),
             CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
             UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: true),
-            RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true)
+            RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true),
           },
           constraints: table =>
           {

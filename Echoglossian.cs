@@ -61,7 +61,6 @@ namespace Echoglossian
     [PluginService]
     public static ITextureProvider TextureProvider { get; private set; } = null!;
 
-    //  private static XivCommonBase Common { get; set; }
     public string Name => Resources.Name;
 
     private const string SlashCommand = "/eglo";
@@ -81,10 +80,7 @@ namespace Echoglossian
 
     public static string DummyFontFilePath { get; set; }
 
-
-
     public string LangToTranslateTo = string.Empty;
-
 
     private bool pluginAssetsState;
     private static Dictionary<int, LanguageInfo> langDict;
@@ -92,7 +88,7 @@ namespace Echoglossian
 
     private Config configuration;
 
-    private UINewFontHandler uINewFontHandler;
+    public static UINewFontHandler UINewFontHandler;
 
     public static LanguageInfo SelectedLanguage { get; set; }
 
@@ -190,11 +186,7 @@ namespace Echoglossian
         this.PluginAssetsChecker();
       }
 
-      Echoglossian.SelectedLanguage = this.languagesDictionary[this.configuration.Lang];
-
-      MountFontPaths();
-
-      this.uINewFontHandler = new UINewFontHandler(this.configuration);
+      SelectedLanguage = this.languagesDictionary[this.configuration.Lang];
 
       /*
             PluginInterface.UiBuilder.BuildFonts += this.LoadLanguageComboFont; // needs checking
@@ -218,6 +210,10 @@ namespace Echoglossian
       chosenTransEngine = this.configuration.ChosenTransEngine;
 
       this.LangToTranslateTo = langDict[languageInt].Code;
+
+      MountFontPaths();
+
+      Echoglossian.UINewFontHandler = new UINewFontHandler(this.configuration);
 
       TransEngines t = (TransEngines)chosenTransEngine;
       transEngineName = t.ToString();
@@ -244,13 +240,11 @@ namespace Echoglossian
       ToastGui.ErrorToast += this.OnErrorToast;
       ToastGui.QuestToast += this.OnQuestToast;
 
-
       this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
       this.uiBattleTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
       this.uiTalkSubtitleHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
 
       this.EgloAddonHandler();
-
 
       PluginInterface.UiBuilder.Draw += this.BuildUi;
 
@@ -288,10 +282,15 @@ namespace Echoglossian
 
       PluginInterface.UiBuilder.Draw -= this.BuildUi;
 
+      this.uiTalkAddonHandler?.Dispose();
+      this.uiBattleTalkAddonHandler?.Dispose();
+      this.uiTalkSubtitleHandler?.Dispose();
+
       this.pixImage?.Dispose();
       this.choiceImage?.Dispose();
       this.cutsceneChoiceImage?.Dispose();
       this.talkImage?.Dispose();
+      this.logo?.Dispose();
 
       Framework.Update -= this.Tick;
 
@@ -351,6 +350,7 @@ namespace Echoglossian
         // this.PluginAssetsChecker();
         return;
       }
+
       /*
             if (!this.LanguageComboFontLoaded && !this.LanguageComboFontLoadFailed)
             {
@@ -444,8 +444,7 @@ namespace Echoglossian
 
     private void EgloAddonHandler()
     {
-      Echoglossian.PluginLog.Information("EgloAddonHandler called.");
-
+      PluginLog.Information("EgloAddonHandler called.");
 
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalResult", this.UiJournalResultHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostReceiveEvent, "RecommendList", this.UiRecommendListHandler);
@@ -458,7 +457,7 @@ namespace Echoglossian
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
 
-      this.EgloNeutralAddonHandler("Talk", new string[] {  /* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/ });
+      this.EgloNeutralAddonHandler("Talk", new string[] {  /* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent",*/ "PreRequestedUpdate", /* "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/ });
       this.EgloNeutralAddonHandler("_BattleTalk", new string[] { /* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/});
       this.EgloNeutralAddonHandler("TalkSubtitle", new string[] {/* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/});
 

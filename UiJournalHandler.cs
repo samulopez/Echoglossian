@@ -80,8 +80,7 @@ namespace Echoglossian
       AtkTextNode* questNameNode,
       AtkTextNode* descriptionNode,
       AtkTextNode* objectiveNode,
-      AtkTextNode* summaryNode
-      )
+      AtkTextNode* summaryNode)
     {
       string translatedQuestName;
       string translatedQuestMessage;

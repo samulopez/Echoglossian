@@ -1,18 +1,22 @@
-﻿// Saving this for backup purposes. This is the original file that was used to handle the UI Addon events.
+﻿// <copyright file="UiNeutralAddonEventsHandler.cs" company="lokinmodar">
+// Copyright (c) lokinmodar. All rights reserved.
+// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
+// </copyright>
 
 using System;
 
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using Dalamud.Memory;
+using FFXIVClientStructs.FFXIV.Component.GUI;
+using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace Echoglossian
 {
   public partial class Echoglossian
   {
-
     public void EgloNeutralAddonHandler(string addonName, string[] eventsToWatch)
     {
-
       if (string.IsNullOrEmpty(addonName) || eventsToWatch.Length <= 0)
       {
         return;
@@ -20,7 +24,7 @@ namespace Echoglossian
 
       foreach (var eventName in eventsToWatch)
       {
-        Echoglossian.PluginLog.Information($"AddonName in EgloNeutralAddonHandler: {addonName}, eventName: {eventName}");
+        PluginLog.Information($"AddonName in EgloNeutralAddonHandler: {addonName}, eventName: {eventName}");
         switch (eventName)
         {
           case "PreSetup":
@@ -63,7 +67,7 @@ namespace Echoglossian
             AddonLifecycle.RegisterListener(AddonEvent.PostRefresh, addonName, this.GrabAddonEventInfo);
             break;
           default:
-            Echoglossian.PluginLog.Error($"Event name not found: {eventName}");
+            PluginLog.Error($"Event name not found: {eventName}");
             break;
         }
       }
@@ -73,7 +77,7 @@ namespace Echoglossian
     {
       if (args == null)
       {
-        Echoglossian.PluginLog.Error("AddonArgs is null");
+        PluginLog.Error("AddonArgs is null");
         return;
       }
 
@@ -101,17 +105,17 @@ namespace Echoglossian
           this.HandleReceiveEvent((AddonReceiveEventArgs)args);
           break;
         default:
-          Echoglossian.PluginLog.Error($"AddonArgs type not found: {args.GetType()}");
+          PluginLog.Error($"AddonArgs type not found: {args.GetType()}");
           break;
       }
     }
 
     private unsafe void HandleSetupArgs(AddonSetupArgs args)
     {
-      Echoglossian.PluginLog.Information($"Addonargs in HandleSetupArgs: {args}");
+      PluginLog.Information($"Addonargs in HandleSetupArgs: {args}");
       if (args == null)
       {
-        Echoglossian.PluginLog.Error("AddonSetupArgs is null");
+        PluginLog.Error("AddonSetupArgs is null");
         return;
       }
 
@@ -129,13 +133,13 @@ namespace Echoglossian
             this.uiBattleTalkAddonHandler.SetTranslationToAddon();
             break;
           default:
-            Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
+            PluginLog.Error($"AddonName not found: {args.AddonName}");
             break;
         }
       }
       catch (Exception e)
       {
-        Echoglossian.PluginLog.Error($"Error in HandleSetupArgs: {e}");
+        PluginLog.Error($"Error in HandleSetupArgs: {e}");
       }
     }
 
@@ -159,7 +163,7 @@ namespace Echoglossian
             }
             catch (Exception e)
             {
-              Echoglossian.PluginLog.Error($"Error in HandleUpdateArgs: {e}");
+              PluginLog.Error($"Error in HandleUpdateArgs: {e}");
             }
 
             break;
@@ -168,13 +172,13 @@ namespace Echoglossian
             this.uiBattleTalkAddonHandler.SetTranslationToAddon();
             break;
           default:
-            Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
+            PluginLog.Error($"AddonName not found: {args.AddonName}");
             break;
         }
       }
       catch (Exception e)
       {
-        Echoglossian.PluginLog.Error($"Error in HandleUpdateArgs: {e}");
+        PluginLog.Error($"Error in HandleUpdateArgs: {e}");
       }
     }
 
@@ -198,13 +202,13 @@ namespace Echoglossian
             // this.uiBattleTalkAddonHandler.SetTranslationToAddon();
             break;
           default:
-            Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
+            PluginLog.Error($"AddonName not found: {args.AddonName}");
             break;
         }
       }
       catch (Exception e)
       {
-        Echoglossian.PluginLog.Error($"Error in HandleDrawArgs: {e}");
+        PluginLog.Error($"Error in HandleDrawArgs: {e}");
       }
     }
 
@@ -227,13 +231,13 @@ namespace Echoglossian
             // this.uiBattleTalkAddonHandler.SetTranslationToAddon();
             break;
           default:
-            Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
+            PluginLog.Error($"AddonName not found: {args.AddonName}");
             break;
         }
       }
       catch (Exception e)
       {
-        Echoglossian.PluginLog.Error($"Error in HandleFinalizeArgs: {e}");
+        PluginLog.Error($"Error in HandleFinalizeArgs: {e}");
       }
     }
 
@@ -257,13 +261,13 @@ namespace Echoglossian
             this.uiBattleTalkAddonHandler.SetTranslationToAddon();
             break;
           default:
-            Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
+            PluginLog.Error($"AddonName not found: {args.AddonName}");
             break;
         }
       }
       catch (Exception e)
       {
-        Echoglossian.PluginLog.Error($"Error in HandleRequestedUpdateArgs: {e}");
+        PluginLog.Error($"Error in HandleRequestedUpdateArgs: {e}");
       }
     }
 
@@ -281,19 +285,55 @@ namespace Echoglossian
           case "Talk":
             // this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
             this.uiTalkAddonHandler.SetTranslationToAddon();
+
+            var atkvals = (AtkValue*)args.AtkValues;
+
+            if (atkvals != null)
+            {
+              for (var i = 0; i < args.AtkValueCount; i++)
+              {
+                if (atkvals != null)
+                {
+                  if (atkvals[i].Type == ValueType.String && atkvals[i].String != null)
+                  {
+                    var text = MemoryHelper.ReadSeStringAsString(out _, (nint)atkvals[i].String);
+                    PluginLog.Information($"Text from {args.AddonName} in pos {i} in HandleRefreshArgs: {text}");
+                  }
+                }
+              }
+            }
+
             break;
           case "_BattleTalk":
             // this.uiBattleTalkAddonHandler.EgloAddonHandler(args.AddonName, args);
             this.uiBattleTalkAddonHandler.SetTranslationToAddon();
+
+            var btatkvals = (AtkValue*)args.AtkValues;
+
+            if (btatkvals != null)
+            {
+              for (var i = 0; i < args.AtkValueCount; i++)
+              {
+                if (btatkvals != null)
+                {
+                  if (btatkvals[i].Type == ValueType.String && btatkvals[i].String != null)
+                  {
+                    var text = MemoryHelper.ReadSeStringAsString(out _, (nint)btatkvals[i].String);
+                    PluginLog.Information($"Text from {args.AddonName} in pos {i} in HandleRefreshArgs: {text}");
+                  }
+                }
+              }
+            }
+
             break;
           default:
-            Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
+            PluginLog.Error($"AddonName not found: {args.AddonName}");
             break;
         }
       }
       catch (Exception e)
       {
-        Echoglossian.PluginLog.Error($"Error in HandleRefreshArgs: {e}");
+        PluginLog.Error($"Error in HandleRefreshArgs: {e}");
       }
     }
 
@@ -317,13 +357,13 @@ namespace Echoglossian
             this.uiBattleTalkAddonHandler.SetTranslationToAddon();
             break;
           default:
-            Echoglossian.PluginLog.Error($"AddonName not found: {args.AddonName}");
+            PluginLog.Error($"AddonName not found: {args.AddonName}");
             break;
         }
       }
       catch (Exception e)
       {
-        Echoglossian.PluginLog.Error($"Error in HandleReceiveEvent: {e}");
+        PluginLog.Error($"Error in HandleReceiveEvent: {e}");
       }
     }
   }

@@ -39,10 +39,8 @@ public partial class Echoglossian
     ImGui.Begin($"{Resources.ConfigWindowTitle} - Plugin Version: {this.configuration.PluginVersion}", ref this.config);
 
     ImGui.BeginGroup();
-    if (this.LanguageComboFontLoaded)
-    {
-      ImGui.PushFont(this.ConfigUiFont);
-    }
+
+    UINewFontHandler.GeneralFontHandle.Push();
 
     if (ImGui.Combo(Resources.LanguageSelectLabelText, ref languageInt, this.languageList.ToArray(), this.languageList.ToArray().Length))
     {
@@ -68,13 +66,10 @@ public partial class Echoglossian
         this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
       }
 
-      /*PluginInterface.UiBuilder.RebuildFonts();*/
+      PluginInterface.UiBuilder.FontAtlas.BuildFontsAsync();
     }
 
-    if (this.LanguageComboFontLoaded)
-    {
-      ImGui.PopFont();
-    }
+    Echoglossian.UINewFontHandler.GeneralFontHandle.Pop();
 
     ImGui.SameLine();
     ImGui.Text(Resources.HoverTooltipIndicator);

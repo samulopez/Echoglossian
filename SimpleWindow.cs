@@ -1,4 +1,9 @@
-﻿using System;
+﻿// <copyright file="SimpleWindow.cs" company="lokinmodar">
+// Copyright (c) lokinmodar. All rights reserved.
+// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
+// </copyright>
+
+using System;
 using System.Numerics;
 using System.Threading;
 
@@ -85,7 +90,8 @@ namespace Echoglossian
 #if DEBUG
         // PluginLog.Verbose("Pushing font");
 #endif
-        ImGui.PushFont(this.uiFont);
+
+        Echoglossian.UINewFontHandler.GeneralFontHandle.Push();
       }
 
       float size = Math.Min(
@@ -153,7 +159,7 @@ namespace Echoglossian
 #if DEBUG
         // PluginLog.Verbose("Popping font!");
 #endif
-        ImGui.PopFont();
+        Echoglossian.UINewFontHandler.GeneralFontHandle.Pop();
       }
     }
 

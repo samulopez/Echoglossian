@@ -82,8 +82,7 @@ namespace Echoglossian.EFCoreSqlite.Models.Journal
       string originalLang,
       string translatedQuestName, string translatedQuestMessage,
       string questId, string translationLang, int translationEngine,
-      DateTime createdDate, DateTime? updatedDate
-    )
+      DateTime createdDate, DateTime? updatedDate)
     {
       this.QuestId = questId;
       this.QuestName = questName;

@@ -175,7 +175,6 @@ namespace Echoglossian
         };
 
         NotificationManager.AddNotification(assetsErrorNotification);
-
       }
     }
 

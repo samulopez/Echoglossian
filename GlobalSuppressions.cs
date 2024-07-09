@@ -1,8 +1,9 @@
-﻿// This file is used by Code Analysis to maintain SuppressMessage
-// attributes that are applied to this project.
-// Project-level suppressions either have no target or are given
-// a specific target and scoped to a namespace, type, member, etc.
+﻿// <copyright file="GlobalSuppressions.cs" company="lokinmodar">
+// Copyright (c) lokinmodar. All rights reserved.
+// Licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International Public License license.
+// </copyright>
 
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1010:Opening square brackets should be spaced correctly", Justification = "<Pending>", Scope = "member", Target = "~M:Echoglossian.Echoglossian.#ctor")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "<Pending>", Scope = "type", Target = "~T:Echoglossian.SummaryQuest")]
