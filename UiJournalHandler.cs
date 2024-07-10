@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
@@ -18,7 +19,7 @@ namespace Echoglossian
   public partial class Echoglossian
   {
     // used to be sure we don't translate the same quest name twice
-    private readonly Dictionary<string, bool> translatedQuestNames = new();
+    private readonly ConcurrentDictionary<string, bool> translatedQuestNames = new();
 
     private unsafe List<SummaryQuest> TranslateSummaries(
       AtkComponentBase* journalBox,
