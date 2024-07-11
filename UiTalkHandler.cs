@@ -79,7 +79,7 @@ namespace Echoglossian
       if (talk != IntPtr.Zero)
       {
         AtkUnitBase* talkMaster = (AtkUnitBase*)talk;
-        if (talkMaster->IsVisible)
+        while (talkMaster->IsVisible)
         {
           this.talkDisplayTranslation = true;
           this.talkTextDimensions.X = talkMaster->RootNode->Width * talkMaster->Scale;
@@ -90,14 +90,10 @@ namespace Echoglossian
           // PluginLog.Verbose("Inside Talk Handler.");
 #endif
         }
-        else
-        {
-          this.talkDisplayTranslation = false;
-        }
-      }
-      else
-      {
+
         this.talkDisplayTranslation = false;
+
+
       }
     }
 

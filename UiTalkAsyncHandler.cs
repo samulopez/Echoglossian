@@ -325,7 +325,12 @@ namespace Echoglossian
               this.currentTalkTranslation = translatedTalkMessage;
             }
 
+
+
+
+
             this.talkTranslationSemaphore.Release();
+            this.TalkHandler("Talk", 1);
           }
           catch (Exception e)
           {

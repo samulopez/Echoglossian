@@ -395,6 +395,7 @@ namespace Echoglossian
 
       if (this.configuration.UseImGuiForTalk && this.configuration.TranslateTalk && this.talkDisplayTranslation)
       {
+
         this.DrawTranslatedDialogueWindow();
 #if DEBUG
         // PluginLog.Verbose("Showing Talk Translation Overlay.");
@@ -444,8 +445,9 @@ namespace Echoglossian
 
     private void EgloAddonHandler()
     {
+#if DEBUG
       PluginLog.Information("EgloAddonHandler called.");
-
+#endif
       AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "Talk", this.UiTalkAsyncHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PreDraw, "Talk", this.UiTalkAsyncHandler);
 
