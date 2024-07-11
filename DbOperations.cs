@@ -221,6 +221,43 @@ namespace Echoglossian
       }
     }
 
+    public BattleTalkMessage FindAndReturnBattleTalkMessage(BattleTalkMessage battleTalkMessage)
+    {
+      using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+
+      var pluginConfig = PluginInterface.GetPluginConfig() as Config;
+
+      try
+      {
+        IQueryable<BattleTalkMessage> existingBattleTalkMessage =
+          context.BattleTalkMessage.Where(t =>
+            t.SenderName == battleTalkMessage.SenderName &&
+            t.OriginalBattleTalkMessage == battleTalkMessage.OriginalBattleTalkMessage &&
+            t.TranslationLang == battleTalkMessage.TranslationLang);
+
+        if (pluginConfig.TranslateAlreadyTranslatedTexts)
+        {
+          existingBattleTalkMessage = existingBattleTalkMessage.Where(t => t.TranslationEngine == battleTalkMessage.TranslationEngine);
+        }
+
+        BattleTalkMessage localFoundBattleTalkMessage = existingBattleTalkMessage.FirstOrDefault();
+        if (existingBattleTalkMessage.FirstOrDefault() == null ||
+            localFoundBattleTalkMessage?.OriginalBattleTalkMessage != battleTalkMessage.OriginalBattleTalkMessage)
+        {
+          return null;
+        }
+
+        FoundBattleTalkMessage = localFoundBattleTalkMessage;
+
+        return localFoundBattleTalkMessage;
+      }
+      catch (Exception e)
+      {
+        PluginLog.Debug($"FindAndReturnBattleTalkMessage exception {e}");
+        return null;
+      }
+    }
+
     public static bool FindBattleTalkMessage(BattleTalkMessage battleTalkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
