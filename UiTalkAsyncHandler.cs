@@ -4,8 +4,6 @@
 // </copyright>
 
 using System;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Dalamud.Game.Addon.Lifecycle;
@@ -161,6 +159,7 @@ namespace Echoglossian
             }
             else
             {
+              this.translatedName = nameToTranslate;
               this.translatedText = textTranslation;
 
               this.currentTalkTranslationId = Environment.TickCount;
@@ -176,12 +175,14 @@ namespace Echoglossian
               this.talkTranslationSemaphore.Release();
             }
 
+            this.TalkHandler("Talk", 1);
+
             TalkMessage translatedTalkData = new TalkMessage(
                nameToTranslate,
                textToTranslate,
                ClientState.ClientLanguage.Humanize(),
                ClientState.ClientLanguage.Humanize(),
-               string.Empty,
+               nameTranslation,
                textTranslation,
                langDict[languageInt].Code,
                this.configuration.ChosenTransEngine,
@@ -224,6 +225,7 @@ namespace Echoglossian
 
           this.talkTranslationSemaphore.Release();
           this.translatedText = foundTalkMessage.TranslatedTalkMessage;
+          this.TalkHandler("Talk", 1);
         }
         catch (Exception e)
         {
@@ -255,12 +257,6 @@ namespace Echoglossian
                 if (nameId == this.currentNameTranslationId)
                 {
                   this.currentNameTranslation = nameTranslation;
-                  // TODO: Implement ImGuiScene for Talk
-                  // if (this.configuration.Lang == 2)
-                  // {
-                  //   this.currentNameTranslationTexture =
-                  //     (ImGuiScene.TextureWrap)PluginInterface.UiBuilder.LoadImage(this.TranslationImageConverter(this.DrawText(this.currentNameTranslation)));
-                  // }
                 }
 
                 this.nameTranslationSemaphore.Release();
@@ -277,6 +273,8 @@ namespace Echoglossian
               }
 
               this.talkTranslationSemaphore.Release();
+
+              this.TalkHandler("Talk", 1);
 
               PluginLog.Debug($"Before if talk translation: {this.currentTalkTranslation}");
               if (this.currentNameTranslation != Resources.WaitingForTranslation &&
@@ -324,10 +322,6 @@ namespace Echoglossian
             {
               this.currentTalkTranslation = translatedTalkMessage;
             }
-
-
-
-
 
             this.talkTranslationSemaphore.Release();
             this.TalkHandler("Talk", 1);
