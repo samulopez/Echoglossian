@@ -56,7 +56,7 @@ namespace Echoglossian
             }
 
             var textToTranslate = MemoryHelper.ReadSeStringAsString(out _, (nint)textNode->NodeText.StringPtr);
-            if (this.translatedBattleTalkTexts.Contains(textToTranslate))
+            if (this.translatedBattleTalkTexts.Contains(sanitizer.Sanitize(textToTranslate)))
             {
               Thread.Sleep(this.delayBetweenTriesToTranslateBattleTalk);
               continue;
@@ -83,7 +83,7 @@ namespace Echoglossian
               string nameTranslation = nameToTranslate.IsNullOrEmpty() ? string.Empty : this.Translate(nameToTranslate);
               this.lastBattleTalkMessage.TranslatedSenderName = nameTranslation;
               this.lastBattleTalkMessage.TranslatedBattleTalkMessage = textTranslation;
-              translatedBattleTalkTexts.Add(textTranslation);
+              this.translatedBattleTalkTexts.Add(textTranslation);
               InsertBattleTalkData(this.lastBattleTalkMessage);
 
               return;
@@ -128,7 +128,11 @@ namespace Echoglossian
           nameNode->SetText(this.lastBattleTalkMessage.TranslatedSenderName);
         }
 
+        var parentNode = battleTalkAddon->GetNodeById(7);
+        textNode->TextFlags = (byte)(TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine);
+        textNode->SetWidth(parentNode->GetWidth());
         textNode->SetText(this.lastBattleTalkMessage.TranslatedBattleTalkMessage);
+        textNode->ResizeNodeForCurrentText();
       }
       catch (Exception e)
       {
@@ -145,10 +149,15 @@ namespace Echoglossian
         return;
       }
 
-      if (args is not AddonRefreshArgs)
+      switch (type)
       {
-        this.TranslateBattleTalkReplacing();
-        return;
+        case AddonEvent.PreReceiveEvent:
+          // to be sure we don't show the same text twice
+          this.lastBattleTalkMessage = null;
+          return;
+        case AddonEvent.PreDraw:
+          this.TranslateBattleTalkReplacing();
+          return;
       }
 
       try
