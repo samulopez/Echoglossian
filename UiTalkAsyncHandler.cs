@@ -357,9 +357,20 @@ namespace Echoglossian
         return;
       }
 
+      switch (type)
+      {
+        case AddonEvent.PreReceiveEvent:
+          // to be sure we don't show the same text twice
+          this.translatedName = string.Empty;
+          this.translatedText = string.Empty;
+          return;
+        case AddonEvent.PreDraw:
+          this.TranslateTalkReplacing();
+          return;
+      }
+
       if (args is not AddonRefreshArgs refreshArgs)
       {
-        this.TranslateTalkReplacing();
         return;
       }
 
