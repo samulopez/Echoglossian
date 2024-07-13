@@ -174,7 +174,7 @@ namespace Echoglossian
           }
           catch (Exception e)
           {
-            PluginLog.Information("Exception: " + e.StackTrace);
+            PluginLog.Debug("Exception: " + e.StackTrace);
             throw;
           }
         }
@@ -338,7 +338,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Information("Exception: " + e.StackTrace);
+        PluginLog.Debug("Exception: " + e.StackTrace);
         throw;
       }
     }
@@ -427,7 +427,7 @@ namespace Echoglossian
         }
         catch (Exception e)
         {
-          PluginLog.Information("Exception: " + e.StackTrace);
+          PluginLog.Debug("Exception: " + e.StackTrace);
           throw;
         }
       }
@@ -559,7 +559,7 @@ namespace Echoglossian
         }
         catch (Exception e)
         {
-          PluginLog.Information("Exception: " + e.StackTrace);
+          PluginLog.Debug("Exception: " + e.StackTrace);
           throw;
         }
       }

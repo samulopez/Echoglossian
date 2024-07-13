@@ -27,7 +27,7 @@ namespace Echoglossian
     private void PluginAssetsChecker()
     {
 #if DEBUG
-      PluginLog.Information("Checking Plugin assets!");
+      PluginLog.Debug("Checking Plugin assets!");
 #endif
 
       var notification = new Notification
@@ -42,12 +42,12 @@ namespace Echoglossian
       foreach (string f in this.AssetFiles)
       {
 #if DEBUG
-        PluginLog.Information($"Asset file:{f}");
+        PluginLog.Debug($"Asset file:{f}");
 #endif
         if (!File.Exists($"{this.assetsPath}{f}"))
         {
 #if DEBUG
-          PluginLog.Information($"missing file:{f}");
+          PluginLog.Debug($"missing file:{f}");
 #endif
           this.MissingAssetFiles.Add(f);
 #if DEBUG
@@ -181,14 +181,14 @@ namespace Echoglossian
     private void WebClientDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
     {
 #if DEBUG
-      PluginLog.Information($"Download status: {e.ProgressPercentage}%.");
+      PluginLog.Debug($"Download status: {e.ProgressPercentage}%.");
 #endif
     }
 
     private void WebClientDownloadCompleted(object sender, DownloadDataCompletedEventArgs e)
     {
 #if DEBUG
-      PluginLog.Information("Download finished!");
+      PluginLog.Debug("Download finished!");
 #endif
 
       var assetsDownloadCompleteNotification = new Notification

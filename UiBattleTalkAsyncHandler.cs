@@ -13,8 +13,13 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Memory;
 using Dalamud.Utility;
 using Echoglossian.EFCoreSqlite.Models;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Event;
+using FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Humanizer;
+using Lumina.Excel.GeneratedSheets;
 
 namespace Echoglossian
 {
@@ -128,9 +133,14 @@ namespace Echoglossian
           nameNode->SetText(this.lastBattleTalkMessage.TranslatedSenderName);
         }
 
-        var parentNode = battleTalkAddon->GetNodeById(7);
-        textNode->TextFlags = (byte)(TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine);
-        textNode->SetWidth(parentNode->GetWidth());
+        var parentNode = battleTalkAddon->GetNodeById(1);
+        var nineGridNode = battleTalkAddon->GetNodeById(7);
+        textNode->TextFlags = (byte)(TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine/* | (byte)TextFlags.AutoAdjustNodeSize*/);
+        textNode->FontSize = 14;
+        parentNode->SetWidth((ushort)((int)textNode->GetWidth() + 48));
+        parentNode->SetHeight((ushort)((int)textNode->GetHeight() + 48));
+        nineGridNode->SetWidth((ushort)((int)textNode->GetWidth() + 48));
+        nineGridNode->SetHeight((ushort)((int)textNode->GetHeight() + 48));
         textNode->SetText(this.lastBattleTalkMessage.TranslatedBattleTalkMessage);
         textNode->ResizeNodeForCurrentText();
       }
@@ -140,9 +150,20 @@ namespace Echoglossian
       }
     }
 
+
+
     private unsafe void UiBattleTalkAsyncHandler(AddonEvent type, AddonArgs args)
     {
       PluginLog.Debug($"UiBattleTalkAsyncHandler: {type} {args.AddonName}");
+
+      var icDirector = EventFramework.Instance() != null ? EventFramework.Instance()->GetInstanceContentDirector() : null;
+
+      var isInstanceContent = icDirector != null && icDirector->InstanceContentType != 0;
+
+      if (isInstanceContent)
+      {
+        PluginLog.Debug($"UiBattleTalkAsyncHandler: isInstanceContent {isInstanceContent}");
+      }
 
       if (!this.configuration.TranslateBattleTalk)
       {

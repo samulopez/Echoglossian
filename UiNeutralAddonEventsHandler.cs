@@ -24,7 +24,7 @@ namespace Echoglossian
 
       foreach (var eventName in eventsToWatch)
       {
-        PluginLog.Information($"AddonName in EgloNeutralAddonHandler: {addonName}, eventName: {eventName}");
+        PluginLog.Debug($"AddonName in EgloNeutralAddonHandler: {addonName}, eventName: {eventName}");
         switch (eventName)
         {
           case "PreSetup":
@@ -112,7 +112,7 @@ namespace Echoglossian
 
     private unsafe void HandleSetupArgs(AddonSetupArgs args)
     {
-      PluginLog.Information($"Addonargs in HandleSetupArgs: {args}");
+      PluginLog.Debug($"Addonargs in HandleSetupArgs: {args}");
       if (args == null)
       {
         PluginLog.Error("AddonSetupArgs is null");
@@ -138,7 +138,7 @@ namespace Echoglossian
                   if (atkvals[i].Type == ValueType.String && atkvals[i].String != null)
                   {
                     var text = MemoryHelper.ReadSeStringAsString(out _, (nint)atkvals[i].String);
-                    PluginLog.Information($"Text from {args.AddonName} in pos {i} in HandleSetupArgs: {text}");
+                    PluginLog.Debug($"Text from {args.AddonName} in pos {i} in HandleSetupArgs: {text}");
                   }
                 }
               }
@@ -160,7 +160,7 @@ namespace Echoglossian
                   if (btatkvals[i].Type == ValueType.String && btatkvals[i].String != null)
                   {
                     var text = MemoryHelper.ReadSeStringAsString(out _, (nint)btatkvals[i].String);
-                    PluginLog.Information($"Text from {args.AddonName} in pos {i} in HandleSetupArgs: {text}");
+                    PluginLog.Debug($"Text from {args.AddonName} in pos {i} in HandleSetupArgs: {text}");
                   }
                 }
               }
@@ -323,41 +323,9 @@ namespace Echoglossian
         {
           case "Talk":
             // this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
-
             PluginLog.Warning($"AddonName in HandleRefreshArgs pre: {args.AddonName}");
 
             this.uiTalkAddonHandler.SetTranslationToAddonViaAddonRefreshArgs(args);
-            /*
-                        var atkvals = (AtkValue*)args.AtkValues;
-
-                        if (atkvals != null)
-                        {
-                          for (var i = 0; i < args.AtkValueCount; i++)
-                          {
-                            if (atkvals != null)
-                            {
-                              if (atkvals[i].Type == ValueType.String && atkvals[i].String != null)
-                              {
-                                var text = MemoryHelper.ReadSeStringAsString(out _, (nint)atkvals[i].String);
-                                PluginLog.Information($"Text from {args.AddonName} in pos {i} in HandleRefreshArgs: {text}");
-
-                                if (i == 0)
-                                {
-                                  atkvals[i].SetManagedString("Test cu");
-                                }
-
-                                if (i == 1)
-                                {
-                                  atkvals[i].SetManagedString("Test");
-                                }
-
-
-                              }
-                            }
-                          }
-                        }*/
-
-
             break;
           case "_BattleTalk":
             // this.uiBattleTalkAddonHandler.EgloAddonHandler(args.AddonName, args);

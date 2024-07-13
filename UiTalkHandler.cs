@@ -27,7 +27,7 @@ namespace Echoglossian
 
     public void TalkProc()
     {
-      PluginLog.Information("Translation Engine Started");
+      PluginLog.Debug("Translation Engine Started");
       while (this.configuration.TranslateTalk)
       {
         if (this._talkMessageQueue.Count > 0)
@@ -110,7 +110,7 @@ namespace Echoglossian
       try
       {
 #if DEBUG
-        PluginLog.Information(name.TextValue + ": " + text.TextValue);
+        PluginLog.Debug(name.TextValue + ": " + text.TextValue);
 #endif
 
         string nameToTranslate = !name.TextValue.IsNullOrEmpty() ? name.TextValue : string.Empty;
@@ -184,7 +184,7 @@ namespace Echoglossian
 #endif
             }
 #if DEBUG
-            PluginLog.Information($"Using Talk Replace - {name.TextValue}: {text.TextValue}");
+            PluginLog.Debug($"Using Talk Replace - {name.TextValue}: {text.TextValue}");
 #endif
           }
           else
@@ -399,7 +399,7 @@ namespace Echoglossian
               text = translatedText;
             }
 #if DEBUG
-            PluginLog.Information(name.TextValue + ": " + text.TextValue);
+            PluginLog.Debug(name.TextValue + ": " + text.TextValue);
 #endif
           }
           else
@@ -493,7 +493,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Information("Exception: " + e.StackTrace);
+        PluginLog.Debug("Exception: " + e.StackTrace);
         throw;
       }
     } */

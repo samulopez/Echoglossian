@@ -56,7 +56,7 @@ namespace Echoglossian
       try
       {
 #if DEBUG
-        PluginLog.Information(sender.TextValue + ": " + message.TextValue);
+        PluginLog.Debug(sender.TextValue + ": " + message.TextValue);
 #endif
 
         string senderToTranslate = !sender.TextValue.IsNullOrEmpty() ? sender.TextValue : "System Message";
@@ -115,7 +115,7 @@ namespace Echoglossian
 #endif
             }
 #if DEBUG
-            PluginLog.Information($"Using BattleTalk Replace - {sender.TextValue}: {message.TextValue}");
+            PluginLog.Debug($"Using BattleTalk Replace - {sender.TextValue}: {message.TextValue}");
 #endif
           }
           else
@@ -189,7 +189,7 @@ namespace Echoglossian
               message = translatedBattleMessage;
             }
 #if DEBUG
-            PluginLog.Information(sender.TextValue + ": " + message.TextValue);
+            PluginLog.Debug(sender.TextValue + ": " + message.TextValue);
 #endif
           }
           else
@@ -237,7 +237,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Information("Exception: " + e.StackTrace);
+        PluginLog.Debug("Exception: " + e.StackTrace);
         throw;
       }
     }

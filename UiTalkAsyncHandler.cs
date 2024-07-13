@@ -100,7 +100,9 @@ namespace Echoglossian
         }
 
         var parentNode = talkAddon->GetNodeById(10);
-        textNode->TextFlags = (byte)(TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine);
+        textNode->TextFlags = (byte)(TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine | (byte)TextFlags.AutoAdjustNodeSize);
+        var charCount = this.translatedText.Length;
+        textNode->FontSize = (byte)(charCount >= 256 ? 12 : 14);
         textNode->SetWidth(parentNode->GetWidth());
         textNode->SetText(this.translatedText);
         textNode->ResizeNodeForCurrentText();
@@ -361,8 +363,24 @@ namespace Echoglossian
       {
         case AddonEvent.PreReceiveEvent:
           // to be sure we don't show the same text twice
-          this.translatedName = string.Empty;
-          this.translatedText = string.Empty;
+
+          var addon = GameGui.GetAddonByName("Talk");
+          var talkAddon = (AtkUnitBase*)addon;
+          if (talkAddon == null || !talkAddon->IsVisible)
+          { return; }
+
+          var nameNode = talkAddon->GetTextNodeById(2);
+          var textNode = talkAddon->GetTextNodeById(3);
+          if (textNode == null || textNode->NodeText.IsEmpty)
+          { return; }
+
+          var textNodeText = MemoryHelper.ReadSeStringAsString(out _, (nint)textNode->NodeText.StringPtr);
+          if (textNodeText == this.translatedText)
+          {
+            this.translatedName = string.Empty;
+            this.translatedText = string.Empty;
+          }
+
           return;
         case AddonEvent.PreDraw:
           this.TranslateTalkReplacing();

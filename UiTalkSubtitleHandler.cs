@@ -24,21 +24,21 @@ namespace Echoglossian
         case AddonSetupArgs setupArgs:
           var setupAtkValues = (AtkValue*)setupArgs.AtkValues;
           var addonInfo = (AtkUnitBase*)setupArgs.Addon;
-          PluginLog.Information($"Addon Info: {addonInfo->ToString}");
+          PluginLog.Debug($"Addon Info: {addonInfo->ToString}");
           var addonDetails = addonInfo->GetTextNodeById(2);
-          PluginLog.Information($"Addon Details----------------: {addonDetails->NodeText} -> {addonDetails->NodeText.BufUsed}");
+          PluginLog.Debug($"Addon Details----------------: {addonDetails->NodeText} -> {addonDetails->NodeText.BufUsed}");
 
           var originalText = Marshal.PtrToStringUTF8(new IntPtr(setupAtkValues[0].String));
           var translatedText = this.Translate(originalText);
           this.translations[originalText] = translatedText;
-          PluginLog.Information($"AddonSetup-----------: {originalText} -> {translatedText}");
+          PluginLog.Debug($"AddonSetup-----------: {originalText} -> {translatedText}");
 
           var currentText = Marshal.PtrToStringUTF8(new IntPtr(setupAtkValues[0].String));
-          PluginLog.Information($"AddonSetup current text============: {currentText}");
+          PluginLog.Debug($"AddonSetup current text============: {currentText}");
 
           if (this.translations.TryGetValue(currentText, out var storedTranslation) && !string.IsNullOrEmpty(storedTranslation))
           {
-            PluginLog.Information($"Setting new translation: {storedTranslation}");
+            PluginLog.Debug($"Setting new translation: {storedTranslation}");
             /*var tsWindow = new SimpleWindow("TsWindow", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoDecoration, false, storedTranslation, true, 
             */
@@ -52,11 +52,11 @@ namespace Echoglossian
             {
               var refreshAtkValues = (AtkValue*)refreshArgs.AtkValues;
               var currentText = Marshal.PtrToStringUTF8(new IntPtr(refreshAtkValues[0].String));
-              PluginLog.Information($"AddonRefresh: {currentText}");
+              PluginLog.Debug($"AddonRefresh: {currentText}");
 
               if (this.translations.TryGetValue(currentText, out var storedTranslation) && !string.IsNullOrEmpty(storedTranslation))
               {
-                PluginLog.Information($"Setting new translation: {storedTranslation}");
+                PluginLog.Debug($"Setting new translation: {storedTranslation}");
                 refreshAtkValues[0].SetManagedString(storedTranslation);
               }
               else
@@ -97,7 +97,7 @@ namespace Echoglossian
               {
                 if (this.translations.TryGetValue(tNode->NodeText.ToString(), out var storedTranslation) && !string.IsNullOrEmpty(storedTranslation))
                 {
-                  PluginLog.Information($"Setting new translation: {storedTranslation}");
+                  PluginLog.Debug($"Setting new translation: {storedTranslation}");
                   tNode->SetText(storedTranslation);
                 }
               }
