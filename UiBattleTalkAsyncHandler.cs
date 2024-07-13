@@ -14,13 +14,9 @@ using Dalamud.Memory;
 using Dalamud.Utility;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Event;
-using FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;
-using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Humanizer;
-using Lumina.Excel.GeneratedSheets;
 
 namespace Echoglossian
 {
@@ -196,6 +192,15 @@ namespace Echoglossian
 
         PluginLog.Debug($"TranslateBattleTalkUsingImGuiAndSwapping text to translate {nameToTranslate}: {textToTranslate}");
 
+        if (textNode == null || textNode->NodeText.IsEmpty)
+        {
+          return;
+        }
+
+        if (this.configuration.TranslateNpcNames && nameNode != null && !nameNode->NodeText.IsEmpty)
+        {
+          nameNode->SetText(this.lastBattleTalkMessage.TranslatedSenderName);
+        }
         var textTranslation = this.Translate(textToTranslate);
         var nameTranslation = this.configuration.TranslateNpcNames ? (nameToTranslate.IsNullOrEmpty() ? string.Empty : this.Translate(nameToTranslate)) : nameToTranslate;
 
@@ -253,9 +258,9 @@ namespace Echoglossian
       }
     }
 
-    public unsafe void TranslateBattletalkUsingImGuiWithoutSwapping()
+    public unsafe void TranslateBattleTalkUsingImGuiWithoutSwapping()
     {
-      PluginLog.Debug($"TranslateBattletalkUsingImGuiWithoutSwapping");
+      PluginLog.Debug($"TranslateBattleTalkUsingImGuiWithoutSwapping");
 
       if (!this.configuration.TranslateBattleTalk)
       {
@@ -291,33 +296,36 @@ namespace Echoglossian
         var nameToTranslate = MemoryHelper.ReadSeStringAsString(out _, (nint)nameNode->NodeText.StringPtr);
         var textToTranslate = MemoryHelper.ReadSeStringAsString(out _, (nint)textNode->NodeText.StringPtr);
 
-        PluginLog.Debug($"TranslateBattletalkUsingImGuiWithoutSwapping text to translate {nameToTranslate}: {textToTranslate}");
+        PluginLog.Debug($"TranslateBattleTalkUsingImGuiWithoutSwapping text to translate {nameToTranslate}: {textToTranslate}");
 
-        var textTranslation = this.Translate(textToTranslate);
-        var nameTranslation = this.configuration.TranslateNpcNames ? (nameToTranslate.IsNullOrEmpty() ? string.Empty : this.Translate(nameToTranslate)) : nameToTranslate;
-
-        if (this.configuration.TranslateNpcNames)
-        {
-          this.currentSenderTranslationId = Environment.TickCount;
-          this.currentSenderTranslation = Resources.WaitingForTranslation;
-          Task.Run(() =>
-          {
-            int nameId = this.currentSenderTranslationId;
-            string senderTranslation = nameTranslation;
-            this.senderTranslationSemaphore.Wait();
-            if (nameId == this.currentSenderTranslationId)
-            {
-              this.currentSenderTranslation = senderTranslation;
-            }
-
-            this.senderTranslationSemaphore.Release();
-          });
-        }
-
-        this.currentBattleTalkTranslationId = Environment.TickCount;
-        this.currentBattleTalkTranslation = Resources.WaitingForTranslation;
         Task.Run(() =>
         {
+          var textTranslation = this.lastBattleTalkMessage.TranslatedBattleTalkMessage;
+          var nameTranslation = this.configuration.TranslateNpcNames ? (nameToTranslate.IsNullOrEmpty() ? string.Empty : this.lastBattleTalkMessage.TranslatedSenderName) : nameToTranslate;
+
+          if (textTranslation.IsNullOrEmpty())
+          {
+            return;
+          }
+
+
+          this.currentSenderTranslationId = Environment.TickCount;
+          this.currentSenderTranslation = Resources.WaitingForTranslation;
+
+          int nameId = this.currentSenderTranslationId;
+          string senderTranslation = nameTranslation;
+          this.senderTranslationSemaphore.Wait();
+          if (nameId == this.currentSenderTranslationId)
+          {
+            this.currentSenderTranslation = senderTranslation;
+          }
+
+          this.senderTranslationSemaphore.Release();
+
+
+          this.currentBattleTalkTranslationId = Environment.TickCount;
+          this.currentBattleTalkTranslation = Resources.WaitingForTranslation;
+
           int id = this.currentBattleTalkTranslationId;
           string translation = textTranslation;
           this.battleTalkTranslationSemaphore.Wait();
@@ -327,14 +335,28 @@ namespace Echoglossian
           }
 
           this.battleTalkTranslationSemaphore.Release();
+          this.BattleTalkHandler("_BattleTalk", 1);
         });
-
-        this.BattleTalkHandler("_BattleTalk", 1);
       }
       catch (Exception e)
       {
-        PluginLog.Warning("TranslateBattletalkUsingImGuiWithoutSwapping Exception: " + e);
+        PluginLog.Warning("TranslateBattleTalkUsingImGuiWithoutSwapping Exception: " + e);
       }
+    }
+
+    private unsafe void TranslateBattleTalkUsingImGui()
+    {
+      PluginLog.Debug($"TranslateBattleTalkUsingImGui: YES!");
+
+      if (this.configuration.SwapTextsUsingImGui)
+      {
+        this.translatedName = string.Empty;
+        this.translatedText = string.Empty;
+        this.TranslateBattleTalkUsingImGuiAndSwapping();
+        return;
+      }
+
+      this.TranslateBattleTalkUsingImGuiWithoutSwapping();
     }
 
     private unsafe void UiBattleTalkAsyncHandler(AddonEvent type, AddonArgs args)
@@ -362,7 +384,15 @@ namespace Echoglossian
           this.lastBattleTalkMessage = null;
           return;
         case AddonEvent.PreDraw:
-          this.TranslateBattleTalkReplacing();
+          if (this.configuration.UseImGuiForBattleTalk)
+          {
+            // this.TranslateBattleTalkUsingImGui(); disabled due to concurrency issues for now
+          }
+          else
+          {
+            this.TranslateBattleTalkReplacing();
+          }
+
           return;
       }
 

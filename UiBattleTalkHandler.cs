@@ -23,26 +23,22 @@ namespace Echoglossian
       if (battleTalk != IntPtr.Zero)
       {
         AtkUnitBase* battleTalkMaster = (AtkUnitBase*)battleTalk;
-        if (battleTalkMaster->IsVisible)
+        while (battleTalkMaster->IsVisible)
         {
           this.battleTalkDisplayTranslation = true;
-          this.battleTalkTextDimensions.X = battleTalkMaster->RootNode->Width * battleTalkMaster->Scale * 2;
+          this.battleTalkTextDimensions.X = battleTalkMaster->RootNode->Width * battleTalkMaster->Scale;
           this.battleTalkTextDimensions.Y = battleTalkMaster->RootNode->Height * battleTalkMaster->Scale;
           this.battleTalkTextPosition.X = battleTalkMaster->RootNode->X;
           this.battleTalkTextPosition.Y = battleTalkMaster->RootNode->Y;
         }
-        else
-        {
-          this.battleTalkDisplayTranslation = false;
-        }
-      }
-      else
-      {
+
         this.battleTalkDisplayTranslation = false;
       }
+
+      this.battleTalkDisplayTranslation = false;
     }
 
-    private void GetBattleTalk(ref SeString sender, ref SeString message, /*ref BattleTalkOptions options*/
+    /*private void GetBattleTalk(ref SeString sender, ref SeString message, *//*ref BattleTalkOptions options*//*
       ref bool ishandled)
     {
       if (!this.configuration.TranslateBattleTalk)
@@ -97,7 +93,7 @@ namespace Echoglossian
 #endif
               string result = InsertBattleTalkData(translatedBattleTalkData);
 #if DEBUG
-              PluginLog.Verbose($"BattleTalk Message DB Insert operation result: {result}");
+              PluginLog.Debug($"BattleTalk Message DB Insert operation result: {result}");
 #endif
             }
             else
@@ -111,7 +107,7 @@ namespace Echoglossian
 
               string result = InsertBattleTalkData(translatedBattleTalkData);
 #if DEBUG
-              PluginLog.Verbose($"Using BattleTalk Overlay - BattleTalk Message DB Insert operation result: {result}");
+              PluginLog.Debug($"Using BattleTalk Overlay - BattleTalk Message DB Insert operation result: {result}");
 #endif
             }
 #if DEBUG
@@ -152,7 +148,7 @@ namespace Echoglossian
 
               this.battleTalkTranslationSemaphore.Release();
 #if DEBUG
-              PluginLog.Verbose($"Before if BattleTalk translation: {this.currentBattleTalkTranslation}");
+              PluginLog.Debug($"Before if BattleTalk translation: {this.currentBattleTalkTranslation}");
 #endif
               if (this.currentSenderTranslation != Resources.WaitingForTranslation && this.currentBattleTalkTranslation != Resources.WaitingForTranslation)
               {
@@ -164,7 +160,7 @@ namespace Echoglossian
                   this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
                 string result = InsertBattleTalkData(translatedBattleTalkData);
 #if DEBUG
-                PluginLog.Verbose($"BattleTalk Message DB Insert operation result: {result}");
+                PluginLog.Debug($"BattleTalk Message DB Insert operation result: {result}");
 #endif
               }
             });
@@ -240,6 +236,6 @@ namespace Echoglossian
         PluginLog.Debug("Exception: " + e.StackTrace);
         throw;
       }
-    }
+    }*/
   }
 }

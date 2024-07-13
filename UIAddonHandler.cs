@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 using Dalamud.Game;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
-using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Text.Sanitizer;
 using Dalamud.Memory;
 using Echoglossian.EFCoreSqlite.Models;
@@ -22,7 +21,6 @@ using ImGuiNET;
 
 using static Echoglossian.Echoglossian;
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
-using static Lumina.Data.Parsing.Uld.NodeData;
 
 namespace Echoglossian
 {
@@ -215,7 +213,7 @@ namespace Echoglossian
           {
             AddonName = this.addonName,
             IsComplexAddon = false,
-            MessageNodeId = 3,
+            AtkValuesMessageStringIndex = 0,
             TalkSubtitleMessage = new TalkSubtitleMessage(
                   originalTalkSubtitleMessage: string.Empty,
                   translatedTalkSubtitleMessage: string.Empty,
@@ -242,6 +240,9 @@ namespace Echoglossian
           break;
         case "_BattleTalk":
           this.addonNodesFlags.Add(6, (TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine));
+          break;
+        case "TalkSubtitle":
+          this.addonNodesFlags.Add(3, (TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine));
           break;
         default:
           break;
@@ -528,6 +529,7 @@ namespace Echoglossian
           }
         }
       }
+
     }
 
     private async Task ProcessTranslations(CancellationToken token)

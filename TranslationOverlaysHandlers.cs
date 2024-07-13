@@ -228,7 +228,7 @@ namespace Echoglossian
     private void DrawTranslatedDialogueWindow()
     {
 #if DEBUG
-      // PluginLog.Verbose("Inside DrawTranslatedDialogueWindow method!");
+      // PluginLog.Debug("Inside DrawTranslatedDialogueWindow method!");
 #endif
       ImGuiHelpers.SetNextWindowPosRelativeMainViewport(new Vector2(
           this.talkTextPosition.X + (this.talkTextDimensions.X / 2) - (this.talkTextImguiSize.X / 2),
@@ -301,6 +301,64 @@ namespace Echoglossian
       }
 
       this.talkTextImguiSize = ImGui.GetWindowSize();
+
+      ImGui.PopStyleColor(1);
+
+      ImGui.End();
+
+      UINewFontHandler.GeneralFontHandle.Pop();
+    }
+
+    private void DrawTranslatedTalkSubtitleWindow()
+    {
+#if DEBUG
+      // PluginLog.Debug("Inside DrawTranslatedTalkSubtitleWindow method!");
+#endif
+      ImGuiHelpers.SetNextWindowPosRelativeMainViewport(new Vector2(
+          this.talkSubtitleTextPosition.X + (this.talkSubtitleTextDimensions.X / 2) - (this.talkSubtitleTextImguiSize.X / 2),
+          this.talkSubtitleTextPosition.Y - this.talkSubtitleTextImguiSize.Y - 20) + this.configuration.ImGuiWindowPosCorrection);
+
+      UINewFontHandler.GeneralFontHandle.Push();
+
+      float size = Math.Min(
+          (this.talkSubtitleTextDimensions.X * this.configuration.ImGuiTalkWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
+          (ImGui.CalcTextSize(this.currentTalkTranslation).X * 1.25f) + (ImGui.GetStyle().WindowPadding.X * 2));
+      ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size, this.talkSubtitleTextDimensions.Y * this.configuration.ImGuiTalkWindowHeightMult));
+      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
+
+
+      ImGui.Begin(
+        "TalkSubtitle translation",
+        ImGuiWindowFlags.NoTitleBar
+        | ImGuiWindowFlags.NoNav
+        | ImGuiWindowFlags.AlwaysAutoResize
+        | ImGuiWindowFlags.NoFocusOnAppearing
+        | ImGuiWindowFlags.NoMouseInputs
+        | ImGuiWindowFlags.NoScrollbar);
+
+
+      ImGui.SetWindowFontScale(this.configuration.FontScale);
+      if (this.talkSubtitleTranslationSemaphore.Wait(0))
+      {
+        if (this.configuration.Lang is 2)
+        {
+          ImGui.Image(
+            this.currentTalkTranslationTexture.ImGuiHandle,
+            new Vector2(
+              size,
+              this.talkSubtitleTextDimensions.Y * this.configuration.ImGuiTalkWindowHeightMult));
+        }
+
+        ImGui.TextWrapped(this.currentTalkTranslation);
+
+        this.talkSubtitleTranslationSemaphore.Release();
+      }
+      else
+      {
+        ImGui.Text(Resources.WaitingForTranslation);
+      }
+
+      this.talkSubtitleTextImguiSize = ImGui.GetWindowSize();
 
       ImGui.PopStyleColor(1);
 

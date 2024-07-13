@@ -246,8 +246,9 @@
           <target state="translated" state-qualifier="tm-suggestion">Configurações de diário</target>
         </trans-unit>
         <trans-unit id="ConfigTab5Name" translate="yes" xml:space="preserve">
-          <source>Tooltips settings</source>
-          <target state="translated">Configurações de Tooltips</target>
+          <source>TalkSubtitle settings</source>
+          <target state="needs-review-translation">Configurações de Tooltips</target>
+          <note from="MultilingualUpdate" annotates="source" priority="2">Please verify the translation’s accuracy as the source string was updated after it was translated.</note>
         </trans-unit>
         <trans-unit id="ConfigTab6Name" translate="yes" xml:space="preserve">
           <source>Other settings</source>
@@ -416,6 +417,10 @@
         <trans-unit id="TranslateTextsAgain" translate="yes" xml:space="preserve">
           <source>Translate again stored translated texts with the selected translation engine</source>
           <target state="translated" state-qualifier="mt-suggestion">Traduzir novamente os textos traduzidos armazenados com o mecanismo de tradução selecionado</target>
+        </trans-unit>
+        <trans-unit id="TranslateTalkSubtitleToggleLabel" translate="yes" xml:space="preserve">
+          <source>Translate Cutscene Subtitles</source>
+          <target state="new">Translate Cutscene Subtitles</target>
         </trans-unit>
       </group>
     </body>

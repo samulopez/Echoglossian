@@ -170,7 +170,7 @@ namespace Echoglossian.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tooltips settings.
+        ///   Looks up a localized string similar to TalkSubtitle settings.
         /// </summary>
         public static string ConfigTab5Name {
             get {
@@ -873,6 +873,15 @@ namespace Echoglossian.Properties {
         public static string TranslateScreenInfoToastToggleText {
             get {
                 return ResourceManager.GetString("TranslateScreenInfoToastToggleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translate Cutscene Subtitles.
+        /// </summary>
+        public static string TranslateTalkSubtitleToggleLabel {
+            get {
+                return ResourceManager.GetString("TranslateTalkSubtitleToggleLabel", resourceCulture);
             }
         }
         

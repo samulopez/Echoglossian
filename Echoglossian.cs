@@ -19,7 +19,6 @@ using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;
-using FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;
 
 namespace Echoglossian
 {
@@ -97,6 +96,7 @@ namespace Echoglossian
     private readonly SemaphoreSlim talkTranslationSemaphore;
     private readonly SemaphoreSlim nameTranslationSemaphore;
     private readonly SemaphoreSlim battleTalkTranslationSemaphore;
+    private readonly SemaphoreSlim talkSubtitleTranslationSemaphore;
     private readonly SemaphoreSlim senderTranslationSemaphore;
     private readonly SemaphoreSlim errorToastTranslationSemaphore;
     private readonly SemaphoreSlim classChangeToastTranslationSemaphore;
@@ -231,6 +231,7 @@ namespace Echoglossian
       this.nameTranslationSemaphore = new SemaphoreSlim(1, 1);
       this.battleTalkTranslationSemaphore = new SemaphoreSlim(1, 1);
       this.senderTranslationSemaphore = new SemaphoreSlim(1, 1);
+      this.talkSubtitleTranslationSemaphore = new SemaphoreSlim(1, 1);
 
       this.toastTranslationSemaphore = new SemaphoreSlim(1, 1);
       this.errorToastTranslationSemaphore = new SemaphoreSlim(1, 1);
@@ -255,6 +256,10 @@ namespace Echoglossian
        {
          this.ParseUi();
        }*/
+
+      // Disabling BattleTalk translation by default if the language is not supported by the game font while we fix the overlays
+      this.configuration.TranslateBattleTalk = this.configuration.OverlayOnlyLanguage ? false : true;
+      this.configuration.TranslateTalkSubtitle = false; // disabled so we can check in depth
     }
 
     /// <inheritdoc />
@@ -276,7 +281,7 @@ namespace Echoglossian
       this.talkTranslationSemaphore?.Dispose();
       this.battleTalkTranslationSemaphore?.Dispose();
       this.senderTranslationSemaphore?.Dispose();
-
+      this.talkSubtitleTranslationSemaphore?.Dispose();
       this.toastTranslationSemaphore?.Dispose();
       this.errorToastTranslationSemaphore?.Dispose();
       this.areaToastTranslationSemaphore?.Dispose();
@@ -297,9 +302,6 @@ namespace Echoglossian
 
       Framework.Update -= this.Tick;
 
-      /*PluginInterface.UiBuilder.BuildFonts -= this.LoadFont; // needs checking
-      PluginInterface.UiBuilder.BuildFonts -= this.LoadLanguageComboFont; // needs checking
-      this.glyphRangeMainText?.Free();*/
       this.glyphRangeConfigText?.Free();
       this.glyphRangeMainText = null;
       this.glyphRangeConfigText = null;
@@ -328,12 +330,9 @@ namespace Echoglossian
             {
               case true:
                 this.TextErrorToastHandler("_TextError", 1);
-
                 this.ToastHandler("_WideText", 1);
-
                 this.ToastHandler("_TextClassChange", 1);
                 this.ToastHandler("_AreaText", 1);
-
                 break;
             }
 
@@ -354,19 +353,6 @@ namespace Echoglossian
         return;
       }
 
-      /*
-            if (!this.LanguageComboFontLoaded && !this.LanguageComboFontLoadFailed)
-            {
-              PluginInterface.UiBuilder.RebuildFonts();
-              return;
-            }
-
-            if (!this.FontLoaded && !this.FontLoadFailed)
-            {
-              PluginInterface.UiBuilder.RebuildFonts();
-              return;
-            }
-      */
       if (this.config)
       {
         this.EchoglossianConfigUi();
@@ -392,25 +378,26 @@ namespace Echoglossian
       {
         this.DrawTranslatedBattleDialogueWindow();
 #if DEBUG
-        // PluginLog.Verbose("Showing BattleTalk Translation Overlay.");
+        // PluginLog.Debug("Showing BattleTalk Translation Overlay.");
 #endif
       }
 
       if (this.configuration.UseImGuiForTalk && this.configuration.TranslateTalk && this.talkDisplayTranslation)
       {
-
         this.DrawTranslatedDialogueWindow();
 #if DEBUG
-        // PluginLog.Verbose("Showing Talk Translation Overlay.");
+        // PluginLog.Debug("Showing Talk Translation Overlay.");
 #endif
       }
 
+      if (this.configuration.UseImGuiForTalkSubtitle && this.configuration.TranslateTalkSubtitle && this.talkSubtitleDisplayTranslation)
+      {
+        this.DrawTranslatedTalkSubtitleWindow();
 #if DEBUG
-      /* PluginLog.Warning($"Toast Draw Vars: !UseImGuiForToasts - {!this.configuration.UseImGuiForToasts}" +
-                    $", TranslateErrorToast - {this.configuration.TranslateErrorToast}" +
-                    $", errorToastDisplayTranslation - {this.errorToastDisplayTranslation}" +
-                    $" equals? {!this.configuration.UseImGuiForToasts && this.configuration.TranslateErrorToast && this.errorToastDisplayTranslation}");*/
+        // PluginLog.Debug("Showing TalkSubtitle Translation Overlay.");
 #endif
+      }
+
       if (this.configuration.UseImGuiForToasts && this.configuration.TranslateErrorToast && this.errorToastDisplayTranslation)
       {
         this.DrawTranslatedErrorToastWindow();
@@ -426,14 +413,6 @@ namespace Echoglossian
         // PluginLog.Warning("Showing Error Toast Translation Overlay.");
 #endif
       }
-
-      /*if (!this.configuration.UseImGuiForToasts && this.configuration.TranslateClassChangeToast && this.classChangeToastDisplayTranslation)
-      {
-        this.DrawTranslatedClassChangeToastWindow();
-        *//*#if DEBUG
-                PluginLog.Warning("Showing Error Toast Translation Overlay.");
-        #endif*//*
-      }*/
     }
 
     private void ConfigWindow()
@@ -459,7 +438,6 @@ namespace Echoglossian
         AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "Talk", this.UiTalkAsyncHandler);
         AddonLifecycle.RegisterListener(AddonEvent.PreDraw, "Talk", this.UiTalkAsyncHandler);
         AddonLifecycle.RegisterListener(AddonEvent.PreReceiveEvent, "Talk", this.UiTalkAsyncHandler);
-
       }
 
       if (this.configuration.TranslateBattleTalk)
@@ -471,11 +449,13 @@ namespace Echoglossian
         AddonLifecycle.RegisterListener(AddonEvent.PreReceiveEvent, "_BattleTalk", this.UiBattleTalkAsyncHandler);
       }
 
-      if (this.configuration.TranslateTalkSubtitle)
-      {
-        this.EgloNeutralAddonHandler("TalkSubtitle", new string[] {/* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/});
-      }
-
+      /*if (this.configuration.TranslateTalkSubtitle)
+      {*/
+      // this.EgloNeutralAddonHandler("TalkSubtitle", new string[] {/* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/});
+      /* AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
+       AddonLifecycle.RegisterListener(AddonEvent.PreDraw, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
+       AddonLifecycle.RegisterListener(AddonEvent.PreReceiveEvent, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
+     }*/
 
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalResult", this.UiJournalResultHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostReceiveEvent, "RecommendList", this.UiRecommendListHandler);
@@ -487,7 +467,6 @@ namespace Echoglossian
       AddonLifecycle.RegisterListener(AddonEvent.PreRequestedUpdate, "JournalDetail", this.UiJournalDetailHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
-
 
       /*"PreSetup","PostSetup", "PreUpdate", "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", "PreRefresh", "PostRefresh" */
     }

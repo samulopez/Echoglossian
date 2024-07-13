@@ -284,7 +284,7 @@
         </member>
         <member name="P:Echoglossian.Properties.Resources.ConfigTab5Name">
             <summary>
-              Looks up a localized string similar to Tooltips settings.
+              Looks up a localized string similar to TalkSubtitle settings.
             </summary>
         </member>
         <member name="P:Echoglossian.Properties.Resources.ConfigTab6Name">
@@ -670,6 +670,11 @@
         <member name="P:Echoglossian.Properties.Resources.TranslateScreenInfoToastToggleText">
             <summary>
               Looks up a localized string similar to Translate other in-game miscellaneous Toast Messages.
+            </summary>
+        </member>
+        <member name="P:Echoglossian.Properties.Resources.TranslateTalkSubtitleToggleLabel">
+            <summary>
+              Looks up a localized string similar to Translate Cutscene Subtitles.
             </summary>
         </member>
         <member name="P:Echoglossian.Properties.Resources.TranslateTalkToggleLabel">

@@ -155,7 +155,7 @@
     <value>Journal settings</value>
   </data>
   <data name="ConfigTab5Name" xml:space="preserve">
-    <value>Tooltips settings</value>
+    <value>TalkSubtitle settings</value>
   </data>
   <data name="ConfigTab6Name" xml:space="preserve">
     <value>Other settings</value>
@@ -426,5 +426,8 @@
   </data>
   <data name="TranslateTextsAgain" xml:space="preserve">
     <value>Translate again stored translated texts with the selected translation engine</value>
+  </data>
+  <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
+    <value>Translate Cutscene Subtitles</value>
   </data>
 </root>

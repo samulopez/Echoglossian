@@ -36,5 +36,11 @@ namespace Echoglossian
       return new QuestPlate(questName, questMessage, ClientState.ClientLanguage.Humanize(), string.Empty, string.Empty, string.Empty,
         this.languagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
     }
+
+    public TalkSubtitleMessage FormatTalkSubtitleMessage(string text)
+    {
+      return new TalkSubtitleMessage(text, ClientState.ClientLanguage.Humanize(), string.Empty,
+               this.languagesDictionary[this.configuration.Lang].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
+    }
   }
 }

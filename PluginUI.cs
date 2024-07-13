@@ -34,7 +34,7 @@ public partial class Echoglossian
       this.languageList.Add(l.Value.LanguageName);
     }
 
-    ImGui.SetNextWindowSizeConstraints(new Vector2(800, 700), new Vector2(1920, 1080));
+    ImGui.SetNextWindowSizeConstraints(new Vector2(900, 700), new Vector2(1920, 1080));
 
     ImGui.Begin($"{Resources.ConfigWindowTitle} - Plugin Version: {this.configuration.PluginVersion}", ref this.config);
 
@@ -243,16 +243,18 @@ public partial class Echoglossian
           ImGui.BeginGroup();
           if (this.configuration.OverlayOnlyLanguage)
           {
-            saveConfig |=
+            this.configuration.TranslateBattleTalk = false; // disabling so no texts are lost while we fix this
+            /*saveConfig |=
               AssignIfChanged(
                 ref this.configuration.UseImGuiForBattleTalk,
-                true);
+                true);*/
           }
           else
           {
-            saveConfig |= ImGui.Checkbox(
+            this.configuration.UseImGuiForBattleTalk = false; // disabling so no texts are lost while we fix this
+            /*saveConfig |= ImGui.Checkbox(
               Resources.OverlayToggleLabel,
-              ref this.configuration.UseImGuiForBattleTalk);
+              ref this.configuration.UseImGuiForBattleTalk);*/
           }
 
           saveConfig |= ImGui.Checkbox(
@@ -410,17 +412,111 @@ public partial class Echoglossian
         ImGui.EndTabItem();
       }
 
-      if (ImGui.BeginTabItem(
-        Resources.ConfigTab5Name,
-        ref this.configuration.TranslateTooltips))
+      /*if (ImGui.BeginTabItem(Resources.ConfigTab5Name))
       {
-        ImGui.Text("This is the Cucumber tab!\nblah blah blah blah blah");
-        ImGui.EndTabItem();
-      }
+        *//* - talk subtitle - *//*
+        if (this.configuration.Translate)
+        {
+          saveConfig |= ImGui.Checkbox(
+            Resources.TranslateTalkSubtitleToggleLabel,
+            ref this.configuration.TranslateTalkSubtitle);
 
-      if (ImGui.BeginTabItem(
-        Resources.ConfigTab6Name,
-        ref this.configuration.TranslateToDoList))
+          if (this.configuration.TranslateTalkSubtitle)
+          {
+            if (this.configuration.OverlayOnlyLanguage)
+            {
+              saveConfig |=
+                AssignIfChanged(ref this.configuration.UseImGuiForTalkSubtitle, true);
+              saveConfig |=
+                AssignIfChanged(
+                  ref this.configuration.SwapTextsUsingImGui,
+                  false);
+            }
+            else
+            {
+              saveConfig |= ImGui.Checkbox(
+                Resources.OverlayToggleLabel,
+                ref this.configuration.UseImGuiForTalkSubtitle);
+            }
+
+            ImGui.Spacing();
+            ImGui.Separator();
+
+            if (this.configuration.UseImGuiForTalkSubtitle)
+            {
+              ImGui.Text(Resources.ImguiAdjustmentsLabel);
+              if (ImGui.SliderFloat(
+                Resources.OverlayFontScaleLabel,
+                ref this.configuration.FontScale, -3f, 3f, "%.2f"))
+              {
+                saveConfig = true;
+                this.configuration.FontChangeTime = DateTime.Now.Ticks;
+              }
+
+              ImGui.SameLine();
+              ImGui.Text(Resources.HoverTooltipIndicator);
+              if (ImGui.IsItemHovered())
+              {
+                ImGui.SetTooltip(Resources.OverlayFontSizeOrientations);
+              }
+
+              ImGui.Text(Resources.FontColorSelectLabel);
+              ImGui.SameLine();
+              saveConfig |= ImGui.ColorEdit3(
+                Resources.OverlayColorSelectName,
+                ref this.configuration.OverlayTextColor,
+                ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoLabel);
+
+              ImGui.SameLine();
+              ImGui.Text(Resources.HoverTooltipIndicator);
+              if (ImGui.IsItemHovered())
+              {
+                ImGui.SetTooltip(Resources.OverlayFontColorOrientations);
+              }
+
+              ImGui.Spacing();
+              ImGui.Separator();
+              saveConfig |= ImGui.DragFloat(
+                Resources.OverlayWidthScrollLabel,
+                ref this.configuration.ImGuiTalkSubtitleWindowWidthMult, 0.001f, 0.01f,
+                3f);
+
+              ImGui.Separator();
+              saveConfig |= ImGui.DragFloat(
+                Resources.OverlayHeightScrollLabel,
+                ref this.configuration.ImGuiTalkSubtitleWindowHeightMult, 0.001f, 0.01f,
+                3f);
+
+              ImGui.Separator();
+              ImGui.Spacing();
+              saveConfig |= ImGui.DragFloat2(
+                Resources.OverlayPositionAdjustmentLabel,
+                ref this.configuration.ImGuiTalkSubtitleWindowPosCorrection);
+
+              ImGui.SameLine();
+              ImGui.Text(Resources.HoverTooltipIndicator);
+              if (ImGui.IsItemHovered())
+              {
+                ImGui.SetTooltip(Resources.OverlayAdjustmentOrientations);
+              }
+            }
+
+            ImGui.Spacing();
+            ImGui.Separator();
+            if (!this.configuration.OverlayOnlyLanguage &&
+                this.configuration.UseImGuiForTalkSubtitle)
+            {
+              saveConfig |= ImGui.Checkbox(
+                Resources.SwapTranslationTextToggle,
+                ref this.configuration.SwapTextsUsingImGui);
+            }
+          }
+        }
+
+        ImGui.EndTabItem();
+      }*/
+
+      if (ImGui.BeginTabItem(Resources.ConfigTab6Name))
       {
         ImGui.Text("This is the Onion tab!\nblah blah blah blah blah");
         ImGui.EndTabItem();

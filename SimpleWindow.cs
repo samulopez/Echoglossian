@@ -19,6 +19,7 @@ namespace Echoglossian
   {
     // TODO: add window position calculations based on the current addon
     // TODO: add window sizing calculations based on the current translation
+    // This is currently not in use yet!
     private bool disposedValue;
     private bool displayTranslation;
     private readonly SemaphoreSlim translationSemaphore;
@@ -80,7 +81,7 @@ namespace Echoglossian
     public override void Draw()
     {
 #if DEBUG
-      // PluginLog.Verbose("Inside DrawTranslatedDialogueWindow method!");
+      // PluginLog.Debug("Inside DrawTranslatedDialogueWindow method!");
 #endif
       ImGuiHelpers.SetNextWindowPosRelativeMainViewport(new Vector2(
           this.textPosition.X + (this.textDimensions.X / 2) - (this.textImguiSize.X / 2),
@@ -88,7 +89,7 @@ namespace Echoglossian
       if (this.fontLoaded)
       {
 #if DEBUG
-        // PluginLog.Verbose("Pushing font");
+        // PluginLog.Debug("Pushing font");
 #endif
 
         Echoglossian.UINewFontHandler.GeneralFontHandle.Push();
@@ -157,7 +158,7 @@ namespace Echoglossian
       if (this.fontLoaded)
       {
 #if DEBUG
-        // PluginLog.Verbose("Popping font!");
+        // PluginLog.Debug("Popping font!");
 #endif
         Echoglossian.UINewFontHandler.GeneralFontHandle.Pop();
       }

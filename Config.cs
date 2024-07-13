@@ -72,6 +72,8 @@ namespace Echoglossian
 
     public bool UseImGuiForToasts = false;
 
+    public bool UseImGuiForTalkSubtitle = false;
+
     public bool SwapTextsUsingImGui = false;
 
     public int ChosenTransEngine = 0;
@@ -84,6 +86,8 @@ namespace Echoglossian
 
     public Vector2 ImGuiBattleTalkWindowPosCorrection = new(0.0f, 0.0f);
 
+    public Vector2 ImGuiTalkSubtitleWindowPosCorrection = new(0.0f, 0.0f);
+
     public float ImGuiTalkWindowWidthMult = 1.5f;
 
     public float ImGuiTalkWindowHeightMult = 1f;
@@ -91,6 +95,10 @@ namespace Echoglossian
     public float ImGuiBattleTalkWindowWidthMult = 1.5f;
 
     public float ImGuiBattleTalkWindowHeightMult = 1f;
+
+    public float ImGuiTalkSubtitleWindowWidthMult = 1.5f;
+
+    public float ImGuiTalkSubtitleWindowHeightMult = 1f;
 
     public float ImGuiToastWindowWidthMult = 1.5f;
 

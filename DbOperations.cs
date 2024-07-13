@@ -24,6 +24,8 @@ namespace Echoglossian
 
     public static BattleTalkMessage FoundBattleTalkMessage { get; set; }
 
+    public static TalkSubtitleMessage FoundTalkSubtitleMessage { get; set; }
+
     public async void CreateOrUseDb()
     {
       using (EchoglossianDbContext context = new EchoglossianDbContext(this.configDir))
@@ -360,6 +362,75 @@ namespace Echoglossian
       }
     }
 
+    public TalkSubtitleMessage FindAndReturnTalkSubtitleMessage(TalkSubtitleMessage talkSubtitleMessage)
+    {
+      using EchoglossianDbContext context = new EchoglossianDbContext(this.configDir);
+      try
+      {
+        IQueryable<TalkSubtitleMessage> existingTalkSubtitleMessage =
+          context.TalkSubtitleMessage.Where(t =>
+                     t.OriginalTalkSubtitleMessage == talkSubtitleMessage.OriginalTalkSubtitleMessage &&
+                                t.TranslationLang == talkSubtitleMessage.TranslationLang);
+
+        if (this.configuration.TranslateAlreadyTranslatedTexts)
+        {
+          existingTalkSubtitleMessage = existingTalkSubtitleMessage.Where(t => t.TranslationEngine == talkSubtitleMessage.TranslationEngine);
+        }
+
+        TalkSubtitleMessage localFoundTalkSubtitleMessage = existingTalkSubtitleMessage.FirstOrDefault();
+        if (localFoundTalkSubtitleMessage == null ||
+                     localFoundTalkSubtitleMessage.OriginalTalkSubtitleMessage != talkSubtitleMessage.OriginalTalkSubtitleMessage)
+        {
+          return null;
+        }
+
+        return localFoundTalkSubtitleMessage;
+      }
+      catch (Exception e)
+      {
+        return null;
+      }
+    }
+
+    public static bool FindTalkSubtitleMessage(TalkSubtitleMessage talkSubtitleMessage)
+    {
+      using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+
+      PluginLog.Verbose($"TalkSubtitleMessage to be found in DB: {talkSubtitleMessage}");
+
+      var pluginConfig = PluginInterface.GetPluginConfig() as Config;
+
+      try
+      {
+        IQueryable<TalkSubtitleMessage> existingTalkSubtitleMessage =
+          context.TalkSubtitleMessage.Where(t =>
+                              t.OriginalTalkSubtitleMessage == talkSubtitleMessage.OriginalTalkSubtitleMessage &&
+                                                             t.TranslationLang == talkSubtitleMessage.TranslationLang);
+
+        if (pluginConfig.TranslateAlreadyTranslatedTexts)
+        {
+          existingTalkSubtitleMessage = existingTalkSubtitleMessage.Where(t => t.TranslationEngine == talkSubtitleMessage.TranslationEngine);
+        }
+
+        TalkSubtitleMessage localFoundTalkSubtitleMessage = existingTalkSubtitleMessage.FirstOrDefault();
+        if (existingTalkSubtitleMessage.FirstOrDefault() == null ||
+                              localFoundTalkSubtitleMessage?.OriginalTalkSubtitleMessage != talkSubtitleMessage.OriginalTalkSubtitleMessage)
+        {
+          FoundTalkSubtitleMessage = talkSubtitleMessage;
+          return false;
+        }
+
+        FoundTalkSubtitleMessage = localFoundTalkSubtitleMessage;
+
+        PluginLog.Verbose($"FoundTalkSubtitleMessage in DB: {FoundTalkMessage}");
+        return true;
+      }
+      catch (Exception e)
+      {
+        return false;
+      }
+    }
+
     public static string InsertTalkData(TalkMessage talkMessage)
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
@@ -383,28 +454,10 @@ namespace Echoglossian
           ImGui.SetClipboardText(talkMessage.ToString());
         }
 
-        // 1. Attach an entity to context with Added EntityState
         context.TalkMessage.Attach(talkMessage);
-        /*#if DEBUG
-                if (!this.configuration.UseImGuiForTalk)
-                {
-                  logStream.WriteLineAsync($"Inside Context: {context.TalkMessage.Local}");
-                }
-        #endif*/
 
-        // or the followings are also valid
-        // context.Students.Add(std);
-        // context.Entry<Student>(std).State = EntityState.Added;
-        // context.Attach<Student>(std);
-
-        // 2. Calling SaveChanges to insert a new record into table
         context.SaveChangesAsync();
-        /*#if DEBUG
-                if (!this.configuration.UseImGuiForTalk)
-                {
-                  logStream.WriteLineAsync($"After 'SaveChanges': {context.TalkMessage.Local}");
-                }
-        #endif*/
+
         return "Data inserted to TalkMessages table.";
       }
       catch (Exception e)
@@ -425,25 +478,43 @@ namespace Echoglossian
       try
       {
         context.BattleTalkMessage.Attach(battleTalkMessage);
-        /*#if DEBUG
-                if (!this.configuration.UseImGuiForBattleTalk)
-                {
-                  logStream.WriteLineAsync($"Inside Context: {context.BattleTalkMessage.Local}");
-                }
-        #endif*/
+
         if (pluginConfig.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(battleTalkMessage.ToString());
         }
 
         context.SaveChangesAsync();
-        /*#if DEBUG
-                if (!this.configuration.UseImGuiForBattleTalk)
-                {
-                  logStream.WriteLineAsync($"After 'SaveChanges': {context.BattleTalkMessage.Local}");
-                }
-        #endif*/
+
         return "Data inserted to BattleTalkMessages table.";
+      }
+      catch (Exception e)
+      {
+        return $"ErrorSavingData: {e}";
+      }
+    }
+
+    public static string InsertTalkSubtitleData(TalkSubtitleMessage talkSubtitleMessage)
+    {
+      using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
+      /*#if DEBUG
+       *            using StreamWriter logStream = new($"{this.configDir}DbInsertTalkSubtitleOperationsLog.txt", append: true);
+       *                 #endif*/
+
+      var pluginConfig = PluginInterface.GetPluginConfig() as Config;
+
+      try
+      {
+        context.TalkSubtitleMessage.Attach(talkSubtitleMessage);
+
+        if (pluginConfig.CopyTranslationToClipboard)
+        {
+          ImGui.SetClipboardText(talkSubtitleMessage.ToString());
+        }
+
+        context.SaveChangesAsync();
+
+        return "Data inserted to TalkSubtitleMessages table.";
       }
       catch (Exception e)
       {
@@ -485,20 +556,8 @@ namespace Echoglossian
         }
 
         context.ToastMessage.Attach(toastMessage);
-        /*#if DEBUG
-                logStream.WriteLineAsync($"Inside Context: {context.ToastMessage.Local}");
-        #endif*/
 
-        // or the followings are also valid
-        // context.Students.Add(std);
-        // context.Entry<Student>(std).State = EntityState.Added;
-        // context.Attach<Student>(std);
-
-        // 2. Calling SaveChanges to insert a new record into Students table
         context.SaveChangesAsync();
-        /*#if DEBUG
-                logStream.WriteLineAsync($"After 'SaveChanges': {context.ToastMessage.Local}");
-        #endif*/
 
         this.LoadAllErrorToasts();
 
@@ -544,20 +603,8 @@ namespace Echoglossian
         }
 
         context.ToastMessage.Attach(toastMessage);
-        /*#if DEBUG
-                logStream.WriteLineAsync($"Inside Context: {context.ToastMessage.Local}");
-        #endif*/
 
-        // or the followings are also valid
-        // context.Students.Add(std);
-        // context.Entry<Student>(std).State = EntityState.Added;
-        // context.Attach<Student>(std);
-
-        // 2. Calling SaveChanges to insert a new record into Students table
         context.SaveChangesAsync();
-        /*#if DEBUG
-                logStream.WriteLineAsync($"After 'SaveChanges': {context.ToastMessage.Local}");
-        #endif*/
 
         this.LoadAllOtherToasts();
 
