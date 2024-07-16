@@ -244,7 +244,7 @@ namespace Echoglossian
 
     private static bool IsValidTimeFormat(string time)
     {
-      string pattern = @"^(\d{1,3}):(\d{2})$";
+      string pattern = @"(\d{1,3}):(\d{2})";
       Match match = Regex.Match(time, pattern);
 
       if (match.Success)
