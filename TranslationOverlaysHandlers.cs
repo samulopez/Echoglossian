@@ -282,14 +282,14 @@ namespace Echoglossian
       ImGui.SetWindowFontScale(this.configuration.FontScale);
       if (this.talkTranslationSemaphore.Wait(0))
       {
-        if (this.configuration.Lang is 2)
-        {
-          ImGui.Image(
-            this.currentTalkTranslationTexture.ImGuiHandle,
-            new Vector2(
-              size,
-              this.talkTextDimensions.Y * this.configuration.ImGuiTalkWindowHeightMult));
-        }
+        /*        if (this.configuration.Lang is 2)
+                {
+                  ImGui.Image(
+                    this.currentTalkTranslationTexture.ImGuiHandle,
+                    new Vector2(
+                      size,
+                      this.talkTextDimensions.Y * this.configuration.ImGuiTalkWindowHeightMult));
+                }*/
 
         ImGui.TextWrapped(this.currentTalkTranslation);
 
@@ -321,9 +321,9 @@ namespace Echoglossian
       UINewFontHandler.GeneralFontHandle.Push();
 
       float size = Math.Min(
-          (this.talkSubtitleTextDimensions.X * this.configuration.ImGuiTalkWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
-          (ImGui.CalcTextSize(this.currentTalkTranslation).X * 1.25f) + (ImGui.GetStyle().WindowPadding.X * 2));
-      ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size, this.talkSubtitleTextDimensions.Y * this.configuration.ImGuiTalkWindowHeightMult));
+          (this.talkSubtitleTextDimensions.X * this.configuration.ImGuiTalkSubtitleWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
+          (ImGui.CalcTextSize(this.currentTalkSubtitleTranslation).X * 1.25f) + (ImGui.GetStyle().WindowPadding.X * 2));
+      ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size, this.talkSubtitleTextDimensions.Y * this.configuration.ImGuiTalkSubtitleWindowHeightMult));
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
 
 
@@ -340,16 +340,16 @@ namespace Echoglossian
       ImGui.SetWindowFontScale(this.configuration.FontScale);
       if (this.talkSubtitleTranslationSemaphore.Wait(0))
       {
-        if (this.configuration.Lang is 2)
+        /*if (this.configuration.Lang is 2)
         {
           ImGui.Image(
-            this.currentTalkTranslationTexture.ImGuiHandle,
+            this.currentTalkSubtitleTranslationTexture.ImGuiHandle,
             new Vector2(
               size,
-              this.talkSubtitleTextDimensions.Y * this.configuration.ImGuiTalkWindowHeightMult));
-        }
+              this.talkSubtitleTextDimensions.Y * this.configuration.ImGuiTalkSubtitleWindowHeightMult));
+        }*/
 
-        ImGui.TextWrapped(this.currentTalkTranslation);
+        ImGui.TextWrapped(this.currentTalkSubtitleTranslation);
 
         this.talkSubtitleTranslationSemaphore.Release();
       }

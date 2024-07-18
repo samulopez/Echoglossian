@@ -114,6 +114,8 @@ namespace Echoglossian
 
     private static Sanitizer sanitizer;
 
+    private AtkTextNodeBufferWrapper AtkTextNodeBufferWrapper;
+
     private UIAddonHandler uiBattleTalkAddonHandler;
     private UIAddonHandler uiTalkAddonHandler;
     private UIAddonHandler uiTalkSubtitleHandler;
@@ -126,6 +128,9 @@ namespace Echoglossian
 
     public List<ToastMessage> OtherToastsCache { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Echoglossian"/> class.
+    /// </summary>
     public Echoglossian()
     {
       this.configuration = PluginInterface.GetPluginConfig() as Config ?? new Config();
@@ -220,7 +225,7 @@ namespace Echoglossian
       transEngineName = t.ToString();
       this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
 
-
+      this.AtkTextNodeBufferWrapper = new AtkTextNodeBufferWrapper();
 
       this.LoadAllErrorToasts();
       this.LoadAllOtherToasts();

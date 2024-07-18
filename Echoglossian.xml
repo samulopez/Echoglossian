@@ -4,6 +4,11 @@
         <name>Echoglossian</name>
     </assembly>
     <members>
+        <member name="M:Echoglossian.Echoglossian.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Echoglossian.Echoglossian"/> class.
+            </summary>
+        </member>
         <member name="M:Echoglossian.Echoglossian.Dispose">
             <inheritdoc />
         </member>
@@ -58,6 +63,28 @@
             </summary>
             <param name="image">Image to be converted.</param>
             <returns>Byte array to be used elsewhere.</returns>
+        </member>
+        <member name="T:Echoglossian.AtkTextNodeBufferWrapper">
+            <summary>
+            Provides a wrapper for managing a UTF-8 encoded text buffer using unmanaged memory.
+            </summary>
+        </member>
+        <member name="P:Echoglossian.AtkTextNodeBufferWrapper.GetBuffer">
+            <summary>
+            Gets the buffer containing the UTF-8 encoded string.
+            </summary>
+        </member>
+        <member name="M:Echoglossian.AtkTextNodeBufferWrapper.SetBuffer(System.String)">
+            <summary>
+            Sets the buffer to the UTF-8 representation of the given string.
+            The buffer is reallocated if it doesn't already exist or is too small.
+            </summary>
+            <param name="text">The string to be encoded and stored in the buffer.</param>
+        </member>
+        <member name="M:Echoglossian.AtkTextNodeBufferWrapper.FreeBuffer">
+            <summary>
+            Frees the previously allocated buffer.
+            </summary>
         </member>
         <member name="M:Echoglossian.DeepLTranslator.FreeTranslateAsync(System.String,System.String,System.String)">
             <summary>
