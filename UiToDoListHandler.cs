@@ -91,7 +91,7 @@ namespace Echoglossian
             continue;
           }
 
-          if (nodeID > 60000 || (nodeID == 4 && childrenNodeID == 3))
+          if (nodeID > 60000 || (nodeID == 4 && childrenNodeID == 3) || (nodeID == 6 && childrenNodeID == 2))
           {
             questNamesToTranslate.Add(new ToDoItem(MemoryHelper.ReadSeStringAsString(out _, (nint)originalStep.StringPtr), i, j, nodeID));
           }
@@ -186,6 +186,12 @@ namespace Echoglossian
                 continue;
               }
 
+              if (IsValidTimeFormat(objective.Text))
+              {
+                PluginLog.Debug($"Skipping time format translation");
+                continue;
+              }
+
               if (foundQuestPlate.Objectives.TryGetValue(objective.Text, out var storedObjectiveText))
               {
 #if DEBUG
@@ -199,6 +205,7 @@ namespace Echoglossian
               var translatedQuestObjective = this.Translate(objective.Text);
               foundQuestPlate.Objectives.TryAdd(objective.Text, translatedQuestObjective);
               translatedStoredObjectives.Add(translatedQuestObjective);
+              PluginLog.Debug($"Objective translated: {objective.Text} {translatedQuestObjective}");
               string resultUpdate = this.UpdateQuestPlate(foundQuestPlate);
 #if DEBUG
               PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {resultUpdate}");
@@ -237,6 +244,12 @@ namespace Echoglossian
             {
               translatedObjectives.Add(EmptyObjective);
               // let's not store empty objectives on the database
+              continue;
+            }
+
+            if (IsValidTimeFormat(objective.Text))
+            {
+              PluginLog.Debug($"Skipping time format translation");
               continue;
             }
 
