@@ -388,6 +388,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
+        PluginLog.Debug($"FindAndReturnTalkSubtitleMessage exception {e}");
         return null;
       }
     }

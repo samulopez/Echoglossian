@@ -264,7 +264,6 @@ namespace Echoglossian
 
       // Disabling BattleTalk translation by default if the language is not supported by the game font while we fix the overlays
       this.configuration.TranslateBattleTalk = this.configuration.OverlayOnlyLanguage ? false : true;
-      this.configuration.TranslateTalkSubtitle = false; // disabled so we can check in depth
     }
 
     /// <inheritdoc />
@@ -454,13 +453,12 @@ namespace Echoglossian
         AddonLifecycle.RegisterListener(AddonEvent.PreReceiveEvent, "_BattleTalk", this.UiBattleTalkAsyncHandler);
       }
 
-      /*if (this.configuration.TranslateTalkSubtitle)
-      {*/
-      // this.EgloNeutralAddonHandler("TalkSubtitle", new string[] {/* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/});
-      /* AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
-       AddonLifecycle.RegisterListener(AddonEvent.PreDraw, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
-       AddonLifecycle.RegisterListener(AddonEvent.PreReceiveEvent, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
-     }*/
+      if (this.configuration.TranslateTalkSubtitle)
+      {
+        // this.EgloNeutralAddonHandler("TalkSubtitle", new string[] {/* "PreUpdate", "PostUpdate",*/ "PreDraw",/* "PostDraw",  "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate" ,*/ "PreRefresh",/* "PostRefresh"*/});
+        AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
+      }
 
       AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalResult", this.UiJournalResultHandler);
       AddonLifecycle.RegisterListener(AddonEvent.PostReceiveEvent, "RecommendList", this.UiRecommendListHandler);
