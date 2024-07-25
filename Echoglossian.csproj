@@ -13,7 +13,7 @@
     <Authors>lokinmodar</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <VersionMajor>3</VersionMajor>
-    <VersionMinor>8</VersionMinor>
+    <VersionMinor>9</VersionMinor>
     <VersionPatch Condition="'$(VersionPatch)' == ''">$([System.DateTime]::UtcNow.ToString("yyMM"))</VersionPatch>
     <VersionRevision Condition="'$(VersionRevision)' == ''">$([System.DateTime]::UtcNow.TimeOfDay.TotalMinutes.ToString("0"))</VersionRevision>
     <Version>$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionRevision)</Version>
@@ -92,6 +92,7 @@
     <None Remove="MultilingualResources\Echoglossian.de.xlf" />
     <None Remove="MultilingualResources\Echoglossian.el.xlf" />
     <None Remove="MultilingualResources\Echoglossian.es.xlf" />
+    <None Remove="MultilingualResources\Echoglossian.eu.xlf" />
     <None Remove="MultilingualResources\Echoglossian.fi.xlf" />
     <None Remove="MultilingualResources\Echoglossian.fil.xlf" />
     <None Remove="MultilingualResources\Echoglossian.fr.xlf" />
@@ -100,12 +101,14 @@
     <None Remove="MultilingualResources\Echoglossian.gu.xlf" />
     <None Remove="MultilingualResources\Echoglossian.hi.xlf" />
     <None Remove="MultilingualResources\Echoglossian.hu.xlf" />
+    <None Remove="MultilingualResources\Echoglossian.it.xlf" />
     <None Remove="MultilingualResources\Echoglossian.ja.xlf" />
     <None Remove="MultilingualResources\Echoglossian.ko.xlf" />
     <None Remove="MultilingualResources\Echoglossian.ms.xlf" />
     <None Remove="MultilingualResources\Echoglossian.pa-Guru.xlf" />
     <None Remove="MultilingualResources\Echoglossian.pl.xlf" />
     <None Remove="MultilingualResources\Echoglossian.pt-BR.xlf" />
+    <None Remove="MultilingualResources\Echoglossian.pt.xlf" />
     <None Remove="MultilingualResources\Echoglossian.ru.xlf" />
     <None Remove="MultilingualResources\Echoglossian.sd-Deva.xlf" />
     <None Remove="MultilingualResources\Echoglossian.ta.xlf" />
@@ -255,9 +258,14 @@
     </None>
     <XliffResource Include="MultilingualResources\Echoglossian.da.xlf" />
     <XliffResource Include="MultilingualResources\Echoglossian.de.xlf" />
+    <XliffResource Include="MultilingualResources\Echoglossian.el.xlf" />
     <XliffResource Include="MultilingualResources\Echoglossian.es.xlf" />
+    <XliffResource Include="MultilingualResources\Echoglossian.eu.xlf" />
     <XliffResource Include="MultilingualResources\Echoglossian.fr.xlf" />
+    <XliffResource Include="MultilingualResources\Echoglossian.it.xlf" />
     <XliffResource Include="MultilingualResources\Echoglossian.pt-BR.xlf" />
+    <XliffResource Include="MultilingualResources\Echoglossian.pt.xlf" />
+    <XliffResource Include="MultilingualResources\Echoglossian.ru.xlf" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="cu.cs">

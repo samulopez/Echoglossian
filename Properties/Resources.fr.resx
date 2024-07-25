@@ -321,4 +321,7 @@
   <data name="TranslateTextsAgain" xml:space="preserve">
     <value>Traduire à nouveau les textes traduits enregistrés avec le moteur de traduction sélectionné</value>
   </data>
+  <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
+    <value>Traduire les sous-titres de la cinématique</value>
+  </data>
 </root>

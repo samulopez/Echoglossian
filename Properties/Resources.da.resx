@@ -293,4 +293,7 @@
   <data name="TranslateTextsAgain" xml:space="preserve">
     <value>Oversæt igen gemte oversatte tekster med den valgte oversættelsesmotor</value>
   </data>
+  <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
+    <value>Oversæt cutscene undertekster</value>
+  </data>
 </root>

@@ -426,7 +426,7 @@
         </trans-unit>
         <trans-unit id="TranslateTalkSubtitleToggleLabel" translate="yes" xml:space="preserve">
           <source>Translate Cutscene Subtitles</source>
-          <target state="new">Translate Cutscene Subtitles</target>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Untertitel von Zwischensequenzen übersetzen</target>
         </trans-unit>
       </group>
     </body>

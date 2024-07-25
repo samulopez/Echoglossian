@@ -75,11 +75,6 @@ namespace Echoglossian
           this.sfc.MergeFont = tk.Font = tk.AddFontFromFile(Echoglossian.DummyFontFilePath, this.sfc);
           tk.AddFontFromFile(Echoglossian.SymbolsFontFilePath, this.sfc);
           tk.AddFontFromFile(Echoglossian.FontFilePath, this.sfc);
-          tk.AddFontFromFile(Echoglossian.ComplementaryFont3FilePath, this.sfc);
-          tk.AddFontFromFile(Echoglossian.ComplementaryFont4FilePath, this.sfc);
-          tk.AddFontFromFile(Echoglossian.ComplementaryFont5FilePath, this.sfc);
-          tk.AddFontFromFile(Echoglossian.ComplementaryFont6FilePath, this.sfc);
-          tk.AddFontFromFile(Echoglossian.ComplementaryFont7FilePath, this.sfc);
           if (!string.IsNullOrWhiteSpace(Echoglossian.SpecialFontFilePath))
           {
             tk.AddFontFromFile(Echoglossian.SpecialFontFilePath, this.sfc);

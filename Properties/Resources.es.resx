@@ -294,4 +294,7 @@
   <data name="TranslateTextsAgain" xml:space="preserve">
     <value>Vuelva a traducir textos traducidos almacenados con el motor de traducción seleccionado</value>
   </data>
+  <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
+    <value>Traducir subtítulos de escenas</value>
+  </data>
 </root>

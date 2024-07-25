@@ -1,0 +1,327 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AssetsCheckingPopupMsg" xml:space="preserve">
+    <value>Проверка активов плагина!</value>
+  </data>
+  <data name="AssetsDownloadComplete" xml:space="preserve">
+    <value>Загрузка ресурсов плагина завершена!</value>
+  </data>
+  <data name="AssetsDownloadError1stPart" xml:space="preserve">
+    <value>Ошибка при загрузке ресурсов плагина:</value>
+  </data>
+  <data name="AssetsDownloadError2ndPart" xml:space="preserve">
+    <value>. Пожалуйста, повторите попытку позже. Если проблема не устранена, обратитесь к разработчику плагина.</value>
+  </data>
+  <data name="AssetsPresentPopupMsg" xml:space="preserve">
+    <value>Все активы плагина присутствуют!</value>
+  </data>
+  <data name="choice" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\choice.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="CloseButtonLabel" xml:space="preserve">
+    <value>Закрывать</value>
+  </data>
+  <data name="ConfigTab0Name" xml:space="preserve">
+    <value>Что, когда и как</value>
+  </data>
+  <data name="ConfigTab1Name" xml:space="preserve">
+    <value>Настройки разговора</value>
+  </data>
+  <data name="ConfigTab2Name" xml:space="preserve">
+    <value>Настройки Battle Talk</value>
+  </data>
+  <data name="ConfigTab3Name" xml:space="preserve">
+    <value>Настройки всплывающих уведомлений</value>
+  </data>
+  <data name="ConfigTab4Name" xml:space="preserve">
+    <value>Настройки журнала</value>
+  </data>
+  <data name="ConfigTab5Name" xml:space="preserve">
+    <value>Обсуждение Настройки субтитров</value>
+  </data>
+  <data name="ConfigTab6Name" xml:space="preserve">
+    <value>Другие настройки</value>
+  </data>
+  <data name="ConfigTab7Name" xml:space="preserve">
+    <value>Настройки Переводческого Движка</value>
+  </data>
+  <data name="ConfigTabAbout" xml:space="preserve">
+    <value>О компании Echoglossian</value>
+  </data>
+  <data name="ConfigWindowTitle" xml:space="preserve">
+    <value>Эхоглоссионная конфигурация</value>
+    <comment>Config Window title bar</comment>
+  </data>
+  <data name="ContribText" xml:space="preserve">
+    <value>Пожалуйста, поддержите нас, внося свой вклад в развитие проекта, отправляя вопросы или помогая нам с кофе.</value>
+  </data>
+  <data name="cutscenechoice" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\cutscenechoice.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="DisclaimerText1" xml:space="preserve">
+    <value>Этот плагин направлен на решение одной из самых больших проблем для аудитории, которая не говорит ни на английском, ни на немецком, ни на французском, ни на японском языках: понимание диалогов и других элементов игрового интерфейса.</value>
+  </data>
+  <data name="DisclaimerText2" xml:space="preserve">
+    <value>На данный момент мы делаем только автопереводы через Google Translate API, но в будущем мы планируем поддерживать и другие системы ML-перевода. У нас даже есть идеи по краудсорсинговым переводам, курируемым сообществом.</value>
+  </data>
+  <data name="DisclaimerTitle" xml:space="preserve">
+    <value>О компании Echoglossian:</value>
+  </data>
+  <data name="DownloadingAssetsPopupMsg" xml:space="preserve">
+    <value>Загрузка дополнительных ресурсов плагина в фоновом режиме. Пожалуйста, дождитесь окончания загрузки, прежде чем открывать настройки!</value>
+  </data>
+  <data name="EchoglossianPathModal" xml:space="preserve">
+    <value>Внимание!</value>
+  </data>
+  <data name="EnableTranslation" xml:space="preserve">
+    <value>Активируйте перевод игрового текста в реальном времени</value>
+  </data>
+  <data name="FontColorSelectLabel" xml:space="preserve">
+    <value>Цвет шрифта наложения:</value>
+  </data>
+  <data name="HelpMessage" xml:space="preserve">
+    <value>Открывает окно конфигурации Echoglossian</value>
+    <comment>Shown in plugin install window</comment>
+  </data>
+  <data name="HoverTooltipIndicator" xml:space="preserve">
+    <value>(?)</value>
+  </data>
+  <data name="ImguiAdjustmentsLabel" xml:space="preserve">
+    <value>Настройте параметры, связанные с наложением перевода:</value>
+  </data>
+  <data name="LangIdentError" xml:space="preserve">
+    <value>Язык не может быть идентифицирован с приемлемой степенью достоверности</value>
+  </data>
+  <data name="LanguageNotSupportedText" xml:space="preserve">
+    <value>Выбранный язык не поддерживается доступным в данный момент бэкендом перевода</value>
+  </data>
+  <data name="LanguageOnlySupportedUsingOverlay" xml:space="preserve">
+    <value>Выбранный язык поддерживается только с помощью оверлеев плагина из-за ограничений нативного игрового шрифта Font</value>
+  </data>
+  <data name="LanguageSelectionTooltip" xml:space="preserve">
+    <value>На какой язык переводить диалоговые окна в игре.</value>
+  </data>
+  <data name="LanguageSelectLabelText" xml:space="preserve">
+    <value>Язык для перевода</value>
+  </data>
+  <data name="logo" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\logo.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="minfilia" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\minfilia.ico;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Эхоглоссия</value>
+  </data>
+  <data name="NEListText" xml:space="preserve">
+    <value>Неполный список вопросов и TODO доступен по ссылке ниже:</value>
+  </data>
+  <data name="OverlayAdjustmentOrientations" xml:space="preserve">
+    <value>Пожалуйста, отрегулируйте положение, если ваше наложение не центрировано относительно текстового поля пользовательского интерфейса игры.</value>
+  </data>
+  <data name="OverlayColorSelectName" xml:space="preserve">
+    <value>OverlayColorSelect (НаложениеColorSelect)</value>
+  </data>
+  <data name="OverlayFontColorOrientations" xml:space="preserve">
+    <value>Нажмите, чтобы выбрать цвет шрифта наложения</value>
+  </data>
+  <data name="OverlayFontScaleLabel" xml:space="preserve">
+    <value>Настройка масштаба шрифта Наложение</value>
+  </data>
+  <data name="OverlayFontSizeLabel" xml:space="preserve">
+    <value>Размер наложенного шрифта</value>
+  </data>
+  <data name="OverlayFontSizeOrientations" xml:space="preserve">
+    <value>Выберите размер шрифта для наложения текста</value>
+  </data>
+  <data name="OverlayHeightScrollLabel" xml:space="preserve">
+    <value>Множитель высоты наложения перевода</value>
+  </data>
+  <data name="OverlayName" xml:space="preserve">
+    <value>Перевод разговора о битве (диалоговые строки Энениса)</value>
+    <comment>Translation overlay window name</comment>
+  </data>
+  <data name="OverlayPositionAdjustmentLabel" xml:space="preserve">
+    <value>Регулировка положения</value>
+  </data>
+  <data name="OverlayToggleLabel" xml:space="preserve">
+    <value>Отображение наложения переведенного текста над текстовым полем игрового интерфейса вместо замены его текста переводом</value>
+  </data>
+  <data name="OverlayWidthMultiplierOrientations" xml:space="preserve">
+    <value>Настройка ширины наложения перевода</value>
+  </data>
+  <data name="OverlayWidthScrollLabel" xml:space="preserve">
+    <value>Множитель ширины наложения перевода</value>
+  </data>
+  <data name="PathInputInstructions" xml:space="preserve">
+    <value>Абсолютный путь к папке Echoglossian (внутри XIVLauncher -&gt; папка pluginConfigs)</value>
+  </data>
+  <data name="PathTypeInstructions" xml:space="preserve">
+    <value>Пожалуйста, введите путь и сохраните, чтобы плагин мог работать правильно!</value>
+  </data>
+  <data name="PatronButtonLabel" xml:space="preserve">
+    <value>Купить локинмодар кофе</value>
+  </data>
+  <data name="pix" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\pix.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="PixQrWindowLabel" xml:space="preserve">
+    <value>QR-код PIX</value>
+  </data>
+  <data name="PixText" xml:space="preserve">
+    <value>Отсканируйте QR-код, чтобы отправить мне PIX - действительно только в Бразилии</value>
+  </data>
+  <data name="PluginInterfaceLanguage" xml:space="preserve">
+    <value>Выбор языка для окна настройки плагина</value>
+  </data>
+  <data name="PluginInterfaceLanguageSelectorText" xml:space="preserve">
+    <value>Конфигурационное окно LanguageInfo:</value>
+  </data>
+  <data name="prttws" xml:space="preserve" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\images\prttws.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="QRCodeInstructionsText" xml:space="preserve">
+    <value>Отсканируйте QR-код, чтобы отправить мне PIX - действительно только в Бразилии</value>
+  </data>
+  <data name="ResetConfigsButton" xml:space="preserve">
+    <value>Сброс настроек</value>
+  </data>
+  <data name="SaveCloseButtonLabel" xml:space="preserve">
+    <value>Сохранить и закрыть окно конфигурации</value>
+  </data>
+  <data name="SendPixButton" xml:space="preserve">
+    <value>Отправьте мне пожертвование PIX!</value>
+  </data>
+  <data name="SettingsForGTransText" xml:space="preserve">
+    <value>Настройки для Google Translate:</value>
+  </data>
+  <data name="SettingsReset" xml:space="preserve">
+    <value>Настройки Echoglossian успешно сброшены до значений по умолчанию!</value>
+  </data>
+  <data name="SwapTranslationTextToggle" xml:space="preserve">
+    <value>Показать исходный текст диалога в оверлее и переведенный в диалоговом окне пользовательского интерфейса игры</value>
+  </data>
+  <data name="ToastOverlayWidthMultiplierOrientations" xml:space="preserve">
+    <value>Настройка ширины наложения перевода всплывающих уведомлений</value>
+  </data>
+  <data name="ToastOverlayWidthScrollLabel" xml:space="preserve">
+    <value>Множитель ширины наложения тоста</value>
+  </data>
+  <data name="TodoUrl" xml:space="preserve">
+    <value>Список TODO на Github</value>
+  </data>
+  <data name="TranslateAreaToastToggleText" xml:space="preserve">
+    <value>Перевод названий игровых областей Всплывающие сообщения</value>
+  </data>
+  <data name="TransLateBattletalkToggle" xml:space="preserve">
+    <value>Перевод разговора о битве</value>
+  </data>
+  <data name="TranslateClassChangeToastToggleText" xml:space="preserve">
+    <value>Перевод всплывающих сообщений о смене класса/профессии в игре</value>
+  </data>
+  <data name="TranslateErrorToastToggleText" xml:space="preserve">
+    <value>Перевод всплывающих уведомлений об ошибках в игре</value>
+  </data>
+  <data name="TranslateNpcNamesToggle" xml:space="preserve">
+    <value>Перевод имен NPC в диалоговых окнах</value>
+  </data>
+  <data name="TranslateQuestToastToggleText" xml:space="preserve">
+    <value>Перевод внутриигровых всплывающих уведомлений о заданиях</value>
+  </data>
+  <data name="TranslateScreenInfoToastToggleText" xml:space="preserve">
+    <value>Переводите другие внутриигровые всплывающие сообщения</value>
+  </data>
+  <data name="TranslateTalkToggleLabel" xml:space="preserve">
+    <value>Переводите внутриигровые диалоги</value>
+  </data>
+  <data name="TranslateToastToggleText" xml:space="preserve">
+    <value>Перевод всплывающих сообщений в игре</value>
+  </data>
+  <data name="TranslationDisabled" xml:space="preserve">
+    <value>Переводы отключены!</value>
+  </data>
+  <data name="TranslationEnabled" xml:space="preserve">
+    <value>Переводы включены!</value>
+  </data>
+  <data name="TranslationEngineSettingsNotRequired" xml:space="preserve">
+    <value>Данный движок перевода не требует каких-либо специальных настроек.</value>
+  </data>
+  <data name="TranslationsEnabled" xml:space="preserve">
+    <value>Переводы включены!</value>
+  </data>
+  <data name="UseImGuiForToastsToggle" xml:space="preserve">
+    <value>Использование наложения для отображения переводов всплывающих уведомлений (WIP)</value>
+  </data>
+  <data name="WaitingForTranslation" xml:space="preserve">
+    <value>В ожидании перевода...</value>
+  </data>
+  <data name="WhatToTranslateText" xml:space="preserve">
+    <value>Выберите, какой текст вы хотите перевести, в соответствующей вкладке ниже!</value>
+  </data>
+  <data name="WhichToastsToTranslate" xml:space="preserve">
+    <value>Выбор типа всплывающих уведомлений в игре для перевода</value>
+  </data>
+  <data name="ConfigTab8Name" xml:space="preserve">
+    <value>Устранение неполадок</value>
+  </data>
+  <data name="PluginAssetsDownloadedText" xml:space="preserve">
+    <value>Ресурсы плагина загружены!</value>
+  </data>
+  <data name="PluginAssetsNotDownloadedText" xml:space="preserve">
+    <value>Если вы видите искаженный текст или недопустимые символы в окне перевода\nit - это признак того, что некоторые шрифты ассетов плагина могут отсутствовать или повреждены.\n\n Нажатие на кнопку ниже запускает проверку ассетов и их повторная загрузка.</value>
+  </data>
+  <data name="DownloadPluginAssetsButtonText" xml:space="preserve">
+    <value>Принудительная повторная загрузка ресурсов плагина</value>
+  </data>
+  <data name="CurrentPluginAssetsStatus" xml:space="preserve">
+    <value>Загружены ли ресурсы плагина?</value>
+  </data>
+  <data name="ConfigTab9Name" xml:space="preserve">
+    <value>Прочие настройки</value>
+  </data>
+  <data name="ConfigTab9Text" xml:space="preserve">
+    <value>Различные опции и настройки плагина</value>
+  </data>
+  <data name="ConfigTab9CheckboxClipboardText" xml:space="preserve">
+    <value>Автоматическое копирование последнего перевода в буфер обмена плагинов</value>
+  </data>
+  <data name="ConfigTab9CheckboxClipboardTooltipText" xml:space="preserve">
+    <value>Эта настройка копирует последний перевод и исходный текст в буфер обмена (Работает с Talk и BattleTalk)</value>
+  </data>
+  <data name="TranslateJournalToggle" xml:space="preserve">
+    <value>Перевод названия, описания и целей задания (WIP)</value>
+  </data>
+  <data name="DeeplTranslatorApiKey" xml:space="preserve">
+    <value>Добавьте свой ключ API DeepL</value>
+  </data>
+  <data name="DeepLTranslatorAPIKeyLink" xml:space="preserve">
+    <value>Нажмите здесь, чтобы создать ключ DeepL API</value>
+  </data>
+  <data name="SettingsForDeepLTransText" xml:space="preserve">
+    <value>Дополнительные настройки для DeepL:</value>
+  </data>
+  <data name="TranslationEngineChoose" xml:space="preserve">
+    <value>Выберите движок перевода</value>
+  </data>
+  <data name="DeepLTransAPIKey" xml:space="preserve">
+    <value>Используйте ключ API (рекомендуется)</value>
+  </data>
+  <data name="TranslateTextsAgain" xml:space="preserve">
+    <value>Переведите снова сохраненные переведенные тексты с помощью выбранного движка перевода</value>
+  </data>
+  <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
+    <value>Перевод субтитров к кат-сценам</value>
+  </data>
+</root>

@@ -294,4 +294,7 @@
   <data name="TranslateTextsAgain" xml:space="preserve">
     <value>Traduzir novamente os textos traduzidos armazenados com o mecanismo de tradução selecionado</value>
   </data>
+  <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
+    <value>Traduzir legendas de cutscene</value>
+  </data>
 </root>
