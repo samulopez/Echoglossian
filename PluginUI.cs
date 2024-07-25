@@ -413,9 +413,9 @@ public partial class Echoglossian
         ImGui.EndTabItem();
       }
 
-      /*if (ImGui.BeginTabItem(Resources.ConfigTab5Name))
+      if (ImGui.BeginTabItem(Resources.ConfigTab5Name))
       {
-        *//* - talk subtitle - *//*
+        /* - talk subtitle - */
         if (this.configuration.Translate)
         {
           saveConfig |= ImGui.Checkbox(
@@ -515,7 +515,7 @@ public partial class Echoglossian
         }
 
         ImGui.EndTabItem();
-      }*/
+      }
 
       if (ImGui.BeginTabItem(Resources.ConfigTab6Name))
       {

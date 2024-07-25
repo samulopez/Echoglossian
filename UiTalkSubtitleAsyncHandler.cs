@@ -18,8 +18,6 @@ namespace Echoglossian
 {
   public partial class Echoglossian
   {
-    private string translatedTalkSubtitleText = string.Empty;
-
     private unsafe void TranslateTalkSubtitle(string textToTranslate)
     {
       PluginLog.Debug("Translating Talk Subtitle: " + textToTranslate);
@@ -29,10 +27,11 @@ namespace Echoglossian
         {
           TalkSubtitleMessage talkSubtitleMessage = this.FormatTalkSubtitleMessage(textToTranslate);
           TalkSubtitleMessage foundTalkSubtitleMessage = this.FindAndReturnTalkSubtitleMessage(talkSubtitleMessage);
+          string translatedSubtitle = string.Empty;
 
           if (foundTalkSubtitleMessage != null)
           {
-            this.translatedTalkSubtitleText = foundTalkSubtitleMessage.TranslatedTalkSubtitleMessage;
+            translatedSubtitle = foundTalkSubtitleMessage.TranslatedTalkSubtitleMessage;
           }
           else
           {
@@ -43,6 +42,16 @@ namespace Echoglossian
 
             string result = InsertTalkSubtitleData(translatedTalkSubtitleData);
             PluginLog.Debug("TalkSubtitle Insert Result: " + result);
+            translatedSubtitle = textTranslation;
+          }
+
+          if (this.configuration.UseImGuiForTalkSubtitle)
+          {
+            this.TranslateTalkSubtitleUsingImGui(textToTranslate, translatedSubtitle);
+          }
+          else
+          {
+            this.TranslateTalkSubtitleReplacing(translatedSubtitle);
           }
         }
         catch (Exception ex)
@@ -52,7 +61,7 @@ namespace Echoglossian
       });
     }
 
-    public unsafe void TranslateTalkSubtitleReplacing()
+    public unsafe void TranslateTalkSubtitleReplacing(string translatedTalkSubtitleText)
     {
       PluginLog.Debug("TranslateTalkSubtitleReplacing");
 
@@ -88,10 +97,9 @@ namespace Echoglossian
           return;
         }
 
-        textNode->SetText(this.translatedTalkSubtitleText);
-        textNode3->SetText(this.translatedTalkSubtitleText);
-        textNode4->SetText(this.translatedTalkSubtitleText);
-
+        textNode->SetText(translatedTalkSubtitleText);
+        textNode3->SetText(translatedTalkSubtitleText);
+        textNode4->SetText(translatedTalkSubtitleText);
       }
       catch (Exception ex)
       {
@@ -99,227 +107,132 @@ namespace Echoglossian
       }
     }
 
-    private unsafe void TranslateTalkSubtitleUsingImGuiAndSwapping(string textToTranslate)
+    private unsafe void TranslateTalkSubtitleUsingImGuiAndSwapping(string textToTranslate, string translatedSubtitle)
     {
-      PluginLog.Debug($"TranslateTalkSubtitleUsingImGuiAndSwapping: {textToTranslate}");
+      PluginLog.Debug($"TranslateTalkSubtitleUsingImGuiAndSwapping: {translatedSubtitle}");
 
-      Task.Run(() =>
+      try
       {
-        try
+        this.TranslateTalkSubtitleReplacing(translatedSubtitle);
+
+        this.currentTalkSubtitleTranslationId = Environment.TickCount;
+        this.currentTalkSubtitleTranslation = Resources.WaitingForTranslation;
+        int id = this.currentTalkSubtitleTranslationId;
+        this.talkSubtitleTranslationSemaphore.Wait();
+        if (id == this.currentTalkSubtitleTranslationId)
         {
-          TalkSubtitleMessage talkMessage = this.FormatTalkSubtitleMessage(textToTranslate);
-          TalkSubtitleMessage foundTalkSubtitleMessage = this.FindAndReturnTalkSubtitleMessage(talkMessage);
-
-          if (foundTalkSubtitleMessage == null)
-          {
-            PluginLog.Debug("Using Swap text for translation");
-
-            string textTranslation = this.Translate(textToTranslate);
-
-            this.translatedText = textTranslation;
-
-            this.currentTalkSubtitleTranslationId = Environment.TickCount;
-            this.currentTalkSubtitleTranslation = Resources.WaitingForTranslation;
-
-            int translationId = this.currentTalkSubtitleTranslationId;
-            this.talkSubtitleTranslationSemaphore.Wait();
-            if (translationId == this.currentTalkSubtitleTranslationId)
-            {
-              this.currentTalkSubtitleTranslation = textToTranslate;
-            }
-
-            this.talkSubtitleTranslationSemaphore.Release();
-
-            this.TalkSubtitleHandler("TalkSubtitle", 1);
-
-            TalkSubtitleMessage translatedTalkSubtitleData = new TalkSubtitleMessage(
-               textToTranslate,
-               ClientState.ClientLanguage.Humanize(),
-               textTranslation,
-               langDict[languageInt].Code,
-               this.configuration.ChosenTransEngine,
-               DateTime.Now,
-               DateTime.Now);
-
-            string result = InsertTalkSubtitleData(translatedTalkSubtitleData);
-            PluginLog.Debug($"TalkSubtitle Message DB Insert operation result: {result}");
-
-            return;
-          }
-
-          PluginLog.Debug($"From database - Message: {foundTalkSubtitleMessage.TranslatedTalkSubtitleMessage}");
-
-          this.currentTalkSubtitleTranslationId = Environment.TickCount;
-          this.currentTalkSubtitleTranslation = Resources.WaitingForTranslation;
-          int id = this.currentTalkSubtitleTranslationId;
-          string translatedTalkSubtitleMessage = foundTalkSubtitleMessage.OriginalTalkSubtitleMessage;
-          this.talkSubtitleTranslationSemaphore.Wait();
-          if (id == this.currentTalkSubtitleTranslationId)
-          {
-            this.currentTalkSubtitleTranslation = translatedTalkSubtitleMessage;
-          }
-
-          this.talkSubtitleTranslationSemaphore.Release();
-          this.translatedText = foundTalkSubtitleMessage.TranslatedTalkSubtitleMessage;
-          this.TalkSubtitleHandler("TalkSubtitle", 1);
+          this.currentTalkSubtitleTranslation = textToTranslate;
         }
-        catch (Exception e)
-        {
-          PluginLog.Warning("TranslateTalkSubtitleUsingImGuiAndSwapping Exception: " + e);
-        }
-      });
+
+        this.talkSubtitleTranslationSemaphore.Release();
+
+        this.TalkSubtitleHandler("TalkSubtitle", 1);
+      }
+      catch (Exception e)
+      {
+        PluginLog.Warning("TranslateTalkSubtitleUsingImGuiAndSwapping Exception: " + e);
+      }
     }
 
-    private unsafe void TranslateTalkSubtitleUsingImGuiWithoutSwapping(string textToTranslate)
+    private unsafe void TranslateTalkSubtitleUsingImGuiWithoutSwapping(string translatedSubtitle)
     {
-      PluginLog.Debug($"TranslateTalkSubtitleUsingImGuiWithoutSwapping:{textToTranslate}");
+      PluginLog.Debug($"TranslateTalkSubtitleUsingImGuiWithoutSwapping: {translatedSubtitle}");
 
-      Task.Run(() =>
+      try
+      {
+        this.currentTalkSubtitleTranslationId = Environment.TickCount;
+        this.currentTalkSubtitleTranslation = Resources.WaitingForTranslation;
+        int id = this.currentTalkSubtitleTranslationId;
+        string translatedTalkSubtitleMessage = translatedSubtitle;
+        this.talkSubtitleTranslationSemaphore.Wait();
+        if (id == this.currentTalkSubtitleTranslationId)
         {
-          try
-          {
-            TalkSubtitleMessage talkMessage = this.FormatTalkSubtitleMessage(textToTranslate);
-            TalkSubtitleMessage foundTalkSubtitleMessage = this.FindAndReturnTalkSubtitleMessage(talkMessage);
+          this.currentTalkSubtitleTranslation = translatedTalkSubtitleMessage;
+        }
 
-            if (foundTalkSubtitleMessage == null)
-            {
-              this.currentTalkSubtitleTranslationId = Environment.TickCount;
-              this.currentTalkSubtitleTranslation = Resources.WaitingForTranslation;
-              int translationId = this.currentTalkSubtitleTranslationId;
-              string translation = this.Translate(textToTranslate);
-              this.talkSubtitleTranslationSemaphore.Wait();
-              if (translationId == this.currentTalkSubtitleTranslationId)
-              {
-                this.currentTalkSubtitleTranslation = translation;
-              }
-
-              this.talkSubtitleTranslationSemaphore.Release();
-
-              this.TalkSubtitleHandler("TalkSubtitle", 1);
-
-              PluginLog.Debug($"Before if talk translation: {this.currentTalkSubtitleTranslation}");
-              if (this.currentNameTranslation != Resources.WaitingForTranslation &&
-                  this.currentTalkSubtitleTranslation != Resources.WaitingForTranslation)
-              {
-                TalkSubtitleMessage translatedTalkSubtitleData = new TalkSubtitleMessage(
-                  textToTranslate,
-                  ClientState.ClientLanguage.Humanize(),
-                  this.currentTalkSubtitleTranslation,
-                  langDict[languageInt].Code,
-                  this.configuration.ChosenTransEngine,
-                  DateTime.Now,
-                  DateTime.Now);
-                string result = InsertTalkSubtitleData(translatedTalkSubtitleData);
-                PluginLog.Debug($"TalkSubtitle Message DB Insert operation result: {result}");
-              }
-
-              return;
-            }
-
-            this.currentTalkSubtitleTranslationId = Environment.TickCount;
-            this.currentTalkSubtitleTranslation = Resources.WaitingForTranslation;
-            int id = this.currentTalkSubtitleTranslationId;
-            string translatedTalkSubtitleMessage = foundTalkSubtitleMessage.TranslatedTalkSubtitleMessage;
-            this.talkSubtitleTranslationSemaphore.Wait();
-            if (id == this.currentTalkSubtitleTranslationId)
-            {
-              this.currentTalkSubtitleTranslation = translatedTalkSubtitleMessage;
-            }
-
-            this.talkSubtitleTranslationSemaphore.Release();
-            this.TalkSubtitleHandler("TalkSubtitle", 1);
-          }
-          catch (Exception e)
-          {
-            PluginLog.Warning("TranslateTalkSubtitleUsingImGuiWithoutSwapping Exception: " + e);
-          }
-        });
+        this.talkSubtitleTranslationSemaphore.Release();
+        this.TalkSubtitleHandler("TalkSubtitle", 1);
+      }
+      catch (Exception e)
+      {
+        PluginLog.Warning("TranslateTalkSubtitleUsingImGuiWithoutSwapping Exception: " + e);
+      }
     }
 
-    private unsafe void TranslateTalkSubtitleUsingImGui(string textToTranslate)
+    private unsafe void TranslateTalkSubtitleUsingImGui(string textToTranslate, string translatedSubtitle)
     {
-      PluginLog.Debug($"TranslateTalkSubtitleUsingImGui: {textToTranslate}");
+      PluginLog.Debug($"TranslateTalkSubtitleUsingImGui: {translatedSubtitle}");
 
       if (this.configuration.SwapTextsUsingImGui)
       {
-        this.translatedText = string.Empty;
-        this.TranslateTalkSubtitleUsingImGuiAndSwapping(textToTranslate);
+        this.TranslateTalkSubtitleUsingImGuiAndSwapping(textToTranslate, translatedSubtitle);
         return;
       }
 
-      this.TranslateTalkSubtitleUsingImGuiWithoutSwapping(textToTranslate);
+      this.TranslateTalkSubtitleUsingImGuiWithoutSwapping(translatedSubtitle);
     }
 
     private unsafe void UiTalkSubtitleAsyncHandler(AddonEvent type, AddonArgs args)
     {
-      PluginLog.Debug($"UiTalkSubtitleAsyncHandler: {type} {args.AddonName}");
-
       if (!this.configuration.TranslateTalkSubtitle)
       {
         return;
       }
 
-      switch (type)
+      PluginLog.Debug($"UiTalkSubtitleAsyncHandler: {type} {args.AddonName}");
+
+      switch (args)
       {
-        case AddonEvent.PreReceiveEvent:
-          // to be sure we don't show the same text twice
-
-          var addon = GameGui.GetAddonByName("TalkSubtitle");
-          var talkSubtitleAddon = (AtkUnitBase*)addon;
-          if (talkSubtitleAddon == null || !talkSubtitleAddon->IsVisible)
-          { return; }
-
-          var nameNode = talkSubtitleAddon->GetTextNodeById(2);
-          var textNode = talkSubtitleAddon->GetTextNodeById(3);
-          if (textNode == null || textNode->NodeText.IsEmpty)
-          { return; }
-
-          var textNodeText = MemoryHelper.ReadSeStringAsString(out _, (nint)textNode->NodeText.StringPtr);
-          if (textNodeText == this.translatedText)
+        case AddonSetupArgs setupArgs:
+          var setupAtkValues = (AtkValue*)setupArgs.AtkValues;
+          if (setupAtkValues == null)
           {
-            this.translatedName = string.Empty;
-            this.translatedText = string.Empty;
+            return;
           }
 
+          if (setupAtkValues[0].Type != FFXIVClientStructs.FFXIV.Component.GUI.ValueType.String || setupAtkValues[0].String == null)
+          {
+            return;
+          }
+
+          var textToTranslate = MemoryHelper.ReadSeStringAsString(out _, (nint)setupAtkValues[0].String);
+          if (textToTranslate == string.Empty)
+          {
+            return;
+          }
+
+          if (!this.configuration.UseImGuiForTalkSubtitle || this.configuration.SwapTextsUsingImGui)
+          {
+            setupAtkValues[0].SetManagedString(string.Empty);
+          }
+
+          this.TranslateTalkSubtitle(textToTranslate);
           return;
-        case AddonEvent.PreDraw:
-          this.TranslateTalkSubtitleReplacing();
+        case AddonRefreshArgs refreshArgs:
+          var refreshAtkValues = (AtkValue*)refreshArgs.AtkValues;
+          if (refreshAtkValues == null)
+          {
+            return;
+          }
+
+          if (refreshAtkValues[0].Type != FFXIVClientStructs.FFXIV.Component.GUI.ValueType.String || refreshAtkValues[0].String == null)
+          {
+            return;
+          }
+
+          var refreshTextToTranslate = MemoryHelper.ReadSeStringAsString(out _, (nint)refreshAtkValues[0].String);
+          if (refreshTextToTranslate == string.Empty)
+          {
+            return;
+          }
+
+          if (!this.configuration.UseImGuiForTalkSubtitle || this.configuration.SwapTextsUsingImGui)
+          {
+            refreshAtkValues[0].SetManagedString(string.Empty);
+          }
+
+          this.TranslateTalkSubtitle(refreshTextToTranslate);
           return;
-      }
-
-      if (args is not AddonRefreshArgs refreshArgs)
-      {
-        return;
-      }
-
-      var updateAtkValues = (AtkValue*)refreshArgs.AtkValues;
-      if (updateAtkValues == null)
-      {
-        return;
-      }
-
-      try
-      {
-        string textToTranslate = MemoryHelper.ReadSeStringAsString(out _, (nint)updateAtkValues[0].String);
-
-
-        PluginLog.Debug($"TalkSubtitle to translate: {textToTranslate}");
-
-        if (this.configuration.UseImGuiForTalkSubtitle)
-        {
-          this.TranslateTalkSubtitleUsingImGui(textToTranslate);
-          return;
-        }
-
-        // to be sure we don't show text without translating it for a few milliseconds
-        this.translatedName = string.Empty;
-        this.translatedText = string.Empty;
-        PluginLog.Debug($"TalkSubtitle to translate: {textToTranslate}");
-        this.TranslateTalkSubtitle(textToTranslate);
-      }
-      catch (Exception e)
-      {
-        PluginLog.Warning("UiTalkSubtitleAsyncHandler Exception: " + e);
       }
     }
 
