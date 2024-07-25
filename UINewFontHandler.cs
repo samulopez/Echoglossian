@@ -30,24 +30,7 @@ namespace Echoglossian
             .With(Echoglossian.ScriptCharList.AsSpan())
             .With(Echoglossian.PuaCharCodes.AsSpan())
             .With(Echoglossian.PuaChars.AsSpan())
-            .With(UnicodeRanges.BasicLatin)
-            .With(UnicodeRanges.Latin1Supplement)
-            .With(UnicodeRanges.LatinExtendedA)
-            .With(UnicodeRanges.LatinExtendedB)
-            .With(UnicodeRanges.LatinExtendedAdditional)
-            .With(UnicodeRanges.LatinExtendedC)
-            .With(UnicodeRanges.LatinExtendedD)
-            .With(UnicodeRanges.LatinExtendedE)
-            .With(UnicodeRanges.LatinExtendedAdditional)
-            .With(UnicodeRanges.Arrows)
-            .With(UnicodeRanges.BoxDrawing)
-            .With(UnicodeRanges.CjkCompatibility)
-            .With(UnicodeRanges.TaiViet)
-            .With(UnicodeRanges.Cyrillic)
-            .With(UnicodeRanges.CyrillicSupplement)
-            .With(UnicodeRanges.CyrillicExtendedA)
-            .With(UnicodeRanges.CyrillicExtendedB)
-            .With(UnicodeRanges.CyrillicExtendedC)
+            .With(UnicodeRanges.All)
             .With(Echoglossian.LangComboItems.AsSpan());
 
           // more ranges here
@@ -57,9 +40,14 @@ namespace Echoglossian
             SizePx = this.configuration.FontSize,
             GlyphRanges = rangeBuilder.Build(),
           };
-          this.sfc.MergeFont = tk.Font = tk.AddFontFromFile(Echoglossian.DummyFontFilePath, this.sfc);
+          this.sfc.MergeFont = tk.Font = tk.AddFontFromFile(Echoglossian.LangComboFontFilePath, this.sfc);
           tk.AddFontFromFile(Echoglossian.SymbolsFontFilePath, this.sfc);
           tk.AddFontFromFile(Echoglossian.FontFilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont3FilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont4FilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont5FilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont6FilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont7FilePath, this.sfc);
           if (!string.IsNullOrWhiteSpace(Echoglossian.SpecialFontFilePath))
           {
             tk.AddFontFromFile(Echoglossian.SpecialFontFilePath, this.sfc);
@@ -74,24 +62,7 @@ namespace Echoglossian
             .With(Echoglossian.ScriptCharList.AsSpan())
             .With(Echoglossian.PuaCharCodes.AsSpan())
             .With(Echoglossian.PuaChars.AsSpan())
-            .With(UnicodeRanges.BasicLatin)
-            .With(UnicodeRanges.Latin1Supplement)
-            .With(UnicodeRanges.LatinExtendedA)
-            .With(UnicodeRanges.LatinExtendedB)
-            .With(UnicodeRanges.LatinExtendedAdditional)
-            .With(UnicodeRanges.LatinExtendedC)
-            .With(UnicodeRanges.LatinExtendedD)
-            .With(UnicodeRanges.LatinExtendedE)
-            .With(UnicodeRanges.LatinExtendedAdditional)
-            .With(UnicodeRanges.Arrows)
-            .With(UnicodeRanges.BoxDrawing)
-            .With(UnicodeRanges.CjkCompatibility)
-            .With(UnicodeRanges.TaiViet)
-            .With(UnicodeRanges.Cyrillic)
-            .With(UnicodeRanges.CyrillicSupplement)
-            .With(UnicodeRanges.CyrillicExtendedA)
-            .With(UnicodeRanges.CyrillicExtendedB)
-            .With(UnicodeRanges.CyrillicExtendedC)
+            .With(UnicodeRanges.All)
             .With(Echoglossian.SelectedLanguage.ExclusiveCharsToAdd.AsSpan());
 
           // more ranges here
@@ -104,6 +75,11 @@ namespace Echoglossian
           this.sfc.MergeFont = tk.Font = tk.AddFontFromFile(Echoglossian.DummyFontFilePath, this.sfc);
           tk.AddFontFromFile(Echoglossian.SymbolsFontFilePath, this.sfc);
           tk.AddFontFromFile(Echoglossian.FontFilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont3FilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont4FilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont5FilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont6FilePath, this.sfc);
+          tk.AddFontFromFile(Echoglossian.ComplementaryFont7FilePath, this.sfc);
           if (!string.IsNullOrWhiteSpace(Echoglossian.SpecialFontFilePath))
           {
             tk.AddFontFromFile(Echoglossian.SpecialFontFilePath, this.sfc);

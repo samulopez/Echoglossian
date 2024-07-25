@@ -51,7 +51,7 @@ namespace Echoglossian
 #endif
           this.MissingAssetFiles.Add(f);
 #if DEBUG
-          PluginLog.Verbose($"missing files list: {this.MissingAssetFiles.ToArray()}");
+          PluginLog.Debug($"missing files list: {this.MissingAssetFiles.ToArray()}");
 #endif
         }
       }
@@ -164,7 +164,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Verbose($"Error downloading plugin assets: {e}");
+        PluginLog.Debug($"Error downloading plugin assets: {e}");
 
         var assetsErrorNotification = new Notification
         {

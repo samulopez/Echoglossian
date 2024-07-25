@@ -30,22 +30,22 @@ namespace Echoglossian
     {
       using (EchoglossianDbContext context = new EchoglossianDbContext(this.configDir))
       {
-        PluginLog.Verbose($"Config dir path: {this.configDir}");
+        PluginLog.Debug($"Config dir path: {this.configDir}");
         try
         {
-          PluginLog.Verbose($"Config dir path: {this.configDir}");
+          PluginLog.Debug($"Config dir path: {this.configDir}");
 
           var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
 
           if (pendingMigrations.Any())
           {
-            PluginLog.Verbose($"Pending migrations: {pendingMigrations.Count()}");
+            PluginLog.Debug($"Pending migrations: {pendingMigrations.Count()}");
             await context.Database.MigrateAsync();
           }
 
           var lastAppliedMigration = (await context.Database.GetAppliedMigrationsAsync()).Last();
 
-          PluginLog.Verbose($"Last applied migration: {lastAppliedMigration}");
+          PluginLog.Debug($"Last applied migration: {lastAppliedMigration}");
         }
         catch (Exception e)
         {
@@ -53,7 +53,7 @@ namespace Echoglossian
         }
         finally
         {
-          PluginLog.Verbose($"Db created or used successfully");
+          PluginLog.Debug($"Db created or used successfully");
         }
       }
     }
@@ -95,7 +95,7 @@ namespace Echoglossian
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
 
-      PluginLog.Verbose($"TalkMessage to be found in DB: {talkMessage}");
+      PluginLog.Debug($"TalkMessage to be found in DB: {talkMessage}");
 
       var pluginConfig = PluginInterface.GetPluginConfig() as Config;
 
@@ -121,7 +121,7 @@ namespace Echoglossian
 
         FoundTalkMessage = localFoundTalkMessage;
 
-        PluginLog.Verbose($"FoundTalkMessage in DB: {FoundTalkMessage}");
+        PluginLog.Debug($"FoundTalkMessage in DB: {FoundTalkMessage}");
 
         return true;
       }
@@ -159,7 +159,7 @@ namespace Echoglossian
 
         ToastMessage localFoundToastMessage = existingToastMessage.FirstOrDefault();
 
-        PluginLog.Verbose($"localFoundToasMessage: {localFoundToastMessage}");
+        PluginLog.Debug($"localFoundToasMessage: {localFoundToastMessage}");
 
         if (localFoundToastMessage == null ||
             localFoundToastMessage.OriginalToastMessage != toastMessage.OriginalToastMessage)
@@ -264,7 +264,7 @@ namespace Echoglossian
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
 
-      PluginLog.Verbose($"BattleTalkMessage to be found in DB: {battleTalkMessage}");
+      PluginLog.Debug($"BattleTalkMessage to be found in DB: {battleTalkMessage}");
 
       var pluginConfig = PluginInterface.GetPluginConfig() as Config;
 
@@ -291,7 +291,7 @@ namespace Echoglossian
 
         FoundBattleTalkMessage = localFoundBattleTalkMessage;
 
-        PluginLog.Verbose($"FoundBattleTalkMessage in DB: {FoundBattleTalkMessage}");
+        PluginLog.Debug($"FoundBattleTalkMessage in DB: {FoundBattleTalkMessage}");
         return true;
       }
       catch (Exception e)
@@ -397,7 +397,7 @@ namespace Echoglossian
     {
       using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
 
-      PluginLog.Verbose($"TalkSubtitleMessage to be found in DB: {talkSubtitleMessage}");
+      PluginLog.Debug($"TalkSubtitleMessage to be found in DB: {talkSubtitleMessage}");
 
       var pluginConfig = PluginInterface.GetPluginConfig() as Config;
 
@@ -423,7 +423,7 @@ namespace Echoglossian
 
         FoundTalkSubtitleMessage = localFoundTalkSubtitleMessage;
 
-        PluginLog.Verbose($"FoundTalkSubtitleMessage in DB: {FoundTalkMessage}");
+        PluginLog.Debug($"FoundTalkSubtitleMessage in DB: {FoundTalkMessage}");
         return true;
       }
       catch (Exception e)
@@ -437,19 +437,13 @@ namespace Echoglossian
       using EchoglossianDbContext context = new EchoglossianDbContext(PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar);
 #if DEBUG
       // using StreamWriter logStream = new($"{this.configDir}DbInsertTalkOperationsLog.txt", append: true);
-      PluginLog.Verbose($"TalkMessage to be saved in DB: {talkMessage}");
+      PluginLog.Debug($"TalkMessage to be saved in DB: {talkMessage}");
 #endif
 
       var pluginConfig = PluginInterface.GetPluginConfig() as Config;
 
       try
       {
-        /*#if DEBUG
-                if (!this.configuration.UseImGuiForTalk)
-                {
-                  logStream.WriteLineAsync($"Before SaveChanges: {talkMessage}");
-                }
-        #endif*/
         if (pluginConfig.CopyTranslationToClipboard)
         {
           ImGui.SetClipboardText(talkMessage.ToString());
@@ -535,10 +529,10 @@ namespace Echoglossian
         if (this.ErrorToastsCache != null && this.ErrorToastsCache.Count > 0)
         {
 #if DEBUG
-          PluginLog.Verbose($"Total ErrorToasts in cache: {this.ErrorToastsCache.Count}");
+          PluginLog.Debug($"Total ErrorToasts in cache: {this.ErrorToastsCache.Count}");
           /* foreach (ToastMessage t in this.ErrorToastsCache)
            {
-             PluginLog.Verbose($"{this.ErrorToastsCache.GetEnumerator().Current} :{t}");
+             PluginLog.Debug($"{this.ErrorToastsCache.GetEnumerator().Current} :{t}");
            }*/
 #endif
           isInThere = this.ErrorToastsCache.Exists(t => toastMessage.ToastType == t.ToastType &&
@@ -582,10 +576,10 @@ namespace Echoglossian
         if (this.OtherToastsCache != null && this.OtherToastsCache.Count > 0)
         {
 #if DEBUG
-          PluginLog.Verbose($"Total ErrorToasts in cache: {this.OtherToastsCache.Count}");
+          PluginLog.Debug($"Total ErrorToasts in cache: {this.OtherToastsCache.Count}");
           /* foreach (ToastMessage t in this.OtherToastsCache)
            {
-             PluginLog.Verbose($"{this.OtherToastsCache.GetEnumerator().Current} :{t}");
+             PluginLog.Debug($"{this.OtherToastsCache.GetEnumerator().Current} :{t}");
            }*/
 #endif
           isInThere = this.OtherToastsCache.Exists(t => toastMessage.ToastType == t.ToastType &&
@@ -704,7 +698,7 @@ namespace Echoglossian
         /*#if DEBUG
                 logStream.WriteLineAsync($"Query operation error: {e}");
         #endif*/
-        PluginLog.Warning("Could not find any Error Toasts in Database");
+        PluginLog.Debug("Could not find any Error Toasts in Database");
       }
     }
 
@@ -735,7 +729,7 @@ namespace Echoglossian
         /*#if DEBUG
                 logStream.WriteLineAsync($"Query operation error: {e}");
         #endif*/
-        PluginLog.Warning("Could not find any Other Toasts in Database");
+        PluginLog.Debug("Could not find any Other Toasts in Database");
       }
     }
   }

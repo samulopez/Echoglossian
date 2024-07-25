@@ -246,7 +246,7 @@ namespace Echoglossian
       switch (source)
       {
         case "en":
-          return "EN-GB";
+          return "EN-US";
         case "no":
           return "NB";
         case "pt":
@@ -255,6 +255,8 @@ namespace Echoglossian
           return "ZH";
         case "pt-PT":
           return "PT-PT";
+        case "it":
+          return "IT";
         default:
           return source.ToUpper();
       }
@@ -265,7 +267,7 @@ namespace Echoglossian
       switch (source)
       {
         case "en":
-          return "EN";
+          return "EN-US";
         case "no":
           return "NB";
         case "pt":
@@ -274,6 +276,8 @@ namespace Echoglossian
           return "ZH";
         case "pt-PT":
           return "PT-PT";
+        case "it":
+          return "IT";
         default:
           return source.ToUpper();
       }

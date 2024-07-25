@@ -70,7 +70,7 @@ namespace Echoglossian
             string translatedBattleTalkMessage = this.Translate(battleTextToTranslate);
             string senderTranslation = this.Translate(senderToTranslate);
 #if DEBUG
-            PluginLog.Warning(translatedBattleTalkMessage);
+            PluginLog.Debug(translatedBattleTalkMessage);
 #endif
             if (this.configuration.TranslateNpcNames)
             {
@@ -166,7 +166,7 @@ namespace Echoglossian
             string translatedBattleMessage = FoundBattleTalkMessage.TranslatedBattleTalkMessage;
             string senderTranslation = FoundBattleTalkMessage.TranslatedSenderName;
 #if DEBUG
-            PluginLog.Warning($"From database - Name: {senderTranslation}, Message: {translatedBattleMessage}");
+            PluginLog.Debug($"From database - Name: {senderTranslation}, Message: {translatedBattleMessage}");
 #endif
             if (this.configuration.TranslateNpcNames)
             {

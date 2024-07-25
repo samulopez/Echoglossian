@@ -230,7 +230,7 @@ namespace Echoglossian
         {
           case "Talk":
 
-            PluginLog.Warning($"AddonName in HandleDrawArgs pre: {args.AddonName}");
+            PluginLog.Debug($"AddonName in HandleDrawArgs pre: {args.AddonName}");
 
             this.uiTalkAddonHandler.EgloAddonHandler(args.AddonName, args);
             // this.uiTalkAddonHandler.SetTranslationToAddon();
@@ -323,7 +323,7 @@ namespace Echoglossian
         {
           case "Talk":
             // this.uiTalkAddonHandler.EgloAddonHandler("Talk", args);
-            PluginLog.Warning($"AddonName in HandleRefreshArgs pre: {args.AddonName}");
+            PluginLog.Debug($"AddonName in HandleRefreshArgs pre: {args.AddonName}");
 
             this.uiTalkAddonHandler.SetTranslationToAddonViaAddonRefreshArgs(args);
             break;

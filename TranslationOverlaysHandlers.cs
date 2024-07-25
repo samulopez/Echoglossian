@@ -149,6 +149,10 @@ namespace Echoglossian
 
     private void DrawTranslatedBattleDialogueWindow()
     {
+      PluginLog.Debug("Inside DrawTranslatedBattleDialogueWindow method!");
+      PluginLog.Debug($"BattleTalkDisplayTranslation: {this.battleTalkDisplayTranslation}");
+      PluginLog.Debug($"{this.currentBattleTalkTranslation}");
+
       ImGuiHelpers.SetNextWindowPosRelativeMainViewport(new Vector2(
   this.battleTalkTextPosition.X + (this.battleTalkTextDimensions.X / 2) - (this.battleTalkTextImguiSize.X / 2),
   this.battleTalkTextPosition.Y - this.battleTalkTextImguiSize.Y - 20) + this.configuration.ImGuiWindowPosCorrection);
@@ -165,7 +169,7 @@ namespace Echoglossian
       ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size, this.battleTalkTextDimensions.Y * 2.5f * this.configuration.ImGuiBattleTalkWindowHeightMult));
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayBattleTalkTextColor, 255));
 
-      UINewFontHandler.GeneralFontHandle.Push();
+      UINewFontHandler.LanguageFontHandle.Push();
 
       if (this.configuration.TranslateNpcNames)
       {
@@ -222,7 +226,7 @@ namespace Echoglossian
 
       ImGui.End();
 
-      UINewFontHandler.GeneralFontHandle.Pop();
+      UINewFontHandler.LanguageFontHandle.Pop();
     }
 
     private void DrawTranslatedDialogueWindow()
@@ -234,7 +238,7 @@ namespace Echoglossian
           this.talkTextPosition.X + (this.talkTextDimensions.X / 2) - (this.talkTextImguiSize.X / 2),
           this.talkTextPosition.Y - this.talkTextImguiSize.Y - 20) + this.configuration.ImGuiWindowPosCorrection);
 
-      UINewFontHandler.GeneralFontHandle.Push();
+      UINewFontHandler.LanguageFontHandle.Push();
 
       float size = Math.Min(
           (this.talkTextDimensions.X * this.configuration.ImGuiTalkWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
@@ -306,7 +310,7 @@ namespace Echoglossian
 
       ImGui.End();
 
-      UINewFontHandler.GeneralFontHandle.Pop();
+      UINewFontHandler.LanguageFontHandle.Pop();
     }
 
     private void DrawTranslatedTalkSubtitleWindow()
@@ -318,7 +322,7 @@ namespace Echoglossian
           this.talkSubtitleTextPosition.X + (this.talkSubtitleTextDimensions.X / 2) - (this.talkSubtitleTextImguiSize.X / 2),
           this.talkSubtitleTextPosition.Y - this.talkSubtitleTextImguiSize.Y - 20) + this.configuration.ImGuiWindowPosCorrection);
 
-      UINewFontHandler.GeneralFontHandle.Push();
+      UINewFontHandler.LanguageFontHandle.Push();
 
       float size = Math.Min(
           (this.talkSubtitleTextDimensions.X * this.configuration.ImGuiTalkSubtitleWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
@@ -364,7 +368,7 @@ namespace Echoglossian
 
       ImGui.End();
 
-      UINewFontHandler.GeneralFontHandle.Pop();
+      UINewFontHandler.LanguageFontHandle.Pop();
     }
 
     private void DrawTranslatedToastWindow()
@@ -380,7 +384,7 @@ namespace Echoglossian
         ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size * 4f, this.toastTranslationTextDimensions.Y * 2));
         ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
 
-        UINewFontHandler.GeneralFontHandle.Push();
+        UINewFontHandler.LanguageFontHandle.Push();
 
         ImGui.Begin(
           "Toast Translation",
@@ -403,14 +407,14 @@ namespace Echoglossian
         this.toastTranslationTextImguiSize = ImGui.GetWindowSize();
         ImGui.PopStyleColor(1);
         ImGui.End();
-        UINewFontHandler.GeneralFontHandle.Pop();
+        UINewFontHandler.LanguageFontHandle.Pop();
       }
     }
 
     private void DrawTranslatedErrorToastWindow()
     {
 #if DEBUG
-      // PluginLog.Warning("Using Toast Overlay - inside Draw Error toast Overlay");
+      // PluginLog.Debug("Using Toast Overlay - inside Draw Error toast Overlay");
 #endif
       ImGuiHelpers.SetNextWindowPosRelativeMainViewport(new Vector2(
         this.errorToastTranslationTextPosition.X + (this.errorToastTranslationTextDimensions.X / 2) - (this.errorToastTranslationTextImguiSize.X / 2),
@@ -419,15 +423,15 @@ namespace Echoglossian
         this.errorToastTranslationTextDimensions.X * this.configuration.ImGuiToastWindowWidthMult,
         ImGui.CalcTextSize(this.currentErrorToastTranslation).X + ImGui.GetStyle().WindowPadding.X);
 #if DEBUG
-      // PluginLog.Warning($"size: {size}");
+      // PluginLog.Debug($"size: {size}");
 #endif
       ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size * 4, this.errorToastTranslationTextDimensions.Y * 2));
 #if DEBUG
-      // PluginLog.Warning($"size min: {new Vector2(size, 0)}, Size max: {new Vector2(size * 4, this.errorToastTranslationTextDimensions.Y * 2)}");
+      // PluginLog.Debug($"size min: {new Vector2(size, 0)}, Size max: {new Vector2(size * 4, this.errorToastTranslationTextDimensions.Y * 2)}");
 #endif
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
 
-      UINewFontHandler.GeneralFontHandle.Push();
+      UINewFontHandler.LanguageFontHandle.Push();
 
       ImGui.Begin(
         "Error Toast Translation",
@@ -453,13 +457,13 @@ namespace Echoglossian
       ImGui.PopStyleColor(1);
       ImGui.End();
 
-      UINewFontHandler.GeneralFontHandle.Pop();
+      UINewFontHandler.LanguageFontHandle.Pop();
     }
 
     private void DrawTranslatedClassChangeToastWindow()
     {
 #if DEBUG
-      // PluginLog.Warning("Using Toast Overlay - inside Draw Class change toast Overlay");
+      // PluginLog.Debug("Using Toast Overlay - inside Draw Class change toast Overlay");
 #endif
       ImGuiHelpers.SetNextWindowPosRelativeMainViewport(new Vector2(
         this.classChangeToastTranslationTextPosition.X + (this.classChangeToastTranslationTextDimensions.X / 2) - (this.classChangeToastTranslationTextImguiSize.X / 2),
@@ -468,15 +472,15 @@ namespace Echoglossian
         this.classChangeToastTranslationTextDimensions.X * this.configuration.ImGuiToastWindowWidthMult,
         ImGui.CalcTextSize(this.currentClassChangeToastTranslation).X + ImGui.GetStyle().WindowPadding.X);
 #if DEBUG
-      PluginLog.Warning($"size: {size}");
+      PluginLog.Debug($"size: {size}");
 #endif
       ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size * 4, this.classChangeToastTranslationTextDimensions.Y * 2));
 #if DEBUG
-      PluginLog.Warning($"size min: {new Vector2(size, 0)}, Size max: {new Vector2(size * 4, this.classChangeToastTranslationTextDimensions.Y * 2)}");
+      PluginLog.Debug($"size min: {new Vector2(size, 0)}, Size max: {new Vector2(size * 4, this.classChangeToastTranslationTextDimensions.Y * 2)}");
 #endif
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
 
-      UINewFontHandler.GeneralFontHandle.Push();
+      UINewFontHandler.LanguageFontHandle.Push();
 
       ImGui.Begin(
         "Error Toast Translation",
@@ -502,7 +506,7 @@ namespace Echoglossian
       ImGui.PopStyleColor(1);
       ImGui.End();
 
-      UINewFontHandler.GeneralFontHandle.Pop();
+      UINewFontHandler.LanguageFontHandle.Pop();
     }
   }
 }

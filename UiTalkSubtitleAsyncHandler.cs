@@ -130,7 +130,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning("TranslateTalkSubtitleUsingImGuiAndSwapping Exception: " + e);
+        PluginLog.Debug("TranslateTalkSubtitleUsingImGuiAndSwapping Exception: " + e);
       }
     }
 
@@ -155,7 +155,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning("TranslateTalkSubtitleUsingImGuiWithoutSwapping Exception: " + e);
+        PluginLog.Debug("TranslateTalkSubtitleUsingImGuiWithoutSwapping Exception: " + e);
       }
     }
 

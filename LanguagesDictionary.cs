@@ -374,16 +374,11 @@ public partial class Echoglossian
       string exclusiveCharsToAdd,
       int[] supportedEngines)
     {
-      this.Code = code ?? throw new ArgumentNullException(nameof(code));
-      this.LanguageName = languageName ??
-                     throw new ArgumentNullException(nameof(languageName));
-      this.FontName = fontName ?? throw new ArgumentNullException(nameof(fontName));
-      this.ExclusiveCharsToAdd = exclusiveCharsToAdd ??
-                            throw new ArgumentNullException(
-                              nameof(exclusiveCharsToAdd));
-      this.SupportedEngines = supportedEngines ??
-                         throw new ArgumentNullException(
-                           nameof(supportedEngines));
+      this.Code = code ?? string.Empty;
+      this.LanguageName = languageName ?? string.Empty;
+      this.FontName = fontName ?? string.Empty;
+      this.ExclusiveCharsToAdd = exclusiveCharsToAdd ?? string.Empty;
+      this.SupportedEngines = supportedEngines ?? null;
     }
 
     public string Code { get; set; }
@@ -395,5 +390,10 @@ public partial class Echoglossian
     public string ExclusiveCharsToAdd { get; set; }
 
     public int[] SupportedEngines { get; set; }
+
+    public override string ToString()
+    {
+      return $"Code: {this.Code},\n LanguageName: {this.LanguageName},\n FontName: {this.FontName},\n ExclusiveCharsToAdd: {this.ExclusiveCharsToAdd},\n SupportedEngines: {this.SupportedEngines}";
+    }
   }
 }

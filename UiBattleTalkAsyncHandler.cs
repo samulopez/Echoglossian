@@ -147,7 +147,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning("TranslateBattleTalkReplacing Exception: " + e);
+        PluginLog.Debug("TranslateBattleTalkReplacing Exception: " + e);
       }
     }
 
@@ -232,6 +232,7 @@ namespace Echoglossian
         this.currentSenderTranslation = Resources.WaitingForTranslation;
         Task.Run(() =>
         {
+          PluginLog.Debug($"TranslateBattleTalkUsingImGuiAndSwapping SenderName task");
           int nameId = this.currentSenderTranslationId;
           string senderTranslation = nameToTranslate;
           this.senderTranslationSemaphore.Wait();
@@ -247,6 +248,7 @@ namespace Echoglossian
         this.currentBattleTalkTranslation = textToTranslate;
         Task.Run(() =>
         {
+          PluginLog.Debug($"TranslateBattleTalkUsingImGuiAndSwapping BattleTalk task");
           int id = this.currentBattleTalkTranslationId;
           string translation = textToTranslate;
           this.battleTalkTranslationSemaphore.Wait();
@@ -256,13 +258,18 @@ namespace Echoglossian
           }
 
           this.battleTalkTranslationSemaphore.Release();
+
+          // this.BattleTalkHandler("_BattleTalk", 1);
+        }).ContinueWith(task =>
+        {
+          this.BattleTalkHandler("_BattleTalk", 1);
         });
 
-        this.BattleTalkHandler("_BattleTalk", 1);
+        // this.BattleTalkHandler("_BattleTalk", 1); here it freezes the game and only sound goes on
       }
       catch (Exception e)
       {
-        PluginLog.Warning("TranslateBattleTalkUsingImGuiAndSwapping Exception: " + e);
+        PluginLog.Debug("TranslateBattleTalkUsingImGuiAndSwapping Exception: " + e);
       }
     }
 
@@ -308,6 +315,7 @@ namespace Echoglossian
 
         Task.Run(() =>
         {
+          PluginLog.Debug($"TranslateBattleTalkUsingImGuiWithoutSwapping task");
           var textTranslation = this.lastBattleTalkMessage.TranslatedBattleTalkMessage;
           var nameTranslation = this.configuration.TranslateNpcNames ? (nameToTranslate.IsNullOrEmpty() ? string.Empty : this.lastBattleTalkMessage.TranslatedSenderName) : nameToTranslate;
 
@@ -343,12 +351,18 @@ namespace Echoglossian
           }
 
           this.battleTalkTranslationSemaphore.Release();
+
+          // this.BattleTalkHandler("_BattleTalk", 1);
+        }).ContinueWith(task =>
+        {
           this.BattleTalkHandler("_BattleTalk", 1);
         });
+
+        // this.BattleTalkHandler("_BattleTalk", 1); here it freezes the game and only sound goes on
       }
       catch (Exception e)
       {
-        PluginLog.Warning("TranslateBattleTalkUsingImGuiWithoutSwapping Exception: " + e);
+        PluginLog.Debug("TranslateBattleTalkUsingImGuiWithoutSwapping Exception: " + e);
       }
     }
 
@@ -394,7 +408,7 @@ namespace Echoglossian
         case AddonEvent.PreDraw:
           if (this.configuration.UseImGuiForBattleTalk)
           {
-            // this.TranslateBattleTalkUsingImGui(); disabled due to concurrency issues for now
+            this.TranslateBattleTalkUsingImGui(); // had disabled due to concurrency issues for now
           }
           else
           {
@@ -411,7 +425,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning("UiTalkAsyncHandler Exception: " + e);
+        PluginLog.Debug("UiTalkAsyncHandler Exception: " + e);
       }
     }
   }

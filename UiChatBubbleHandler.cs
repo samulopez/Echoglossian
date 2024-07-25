@@ -12,7 +12,7 @@ namespace Echoglossian
   {
     private void ChatBubblesOnChatBubble(ref GameObject gameObject, ref SeString text)
     {
-      PluginLog.Warning($"Chat Bubble text: {text.TextValue}");
+      PluginLog.Debug($"Chat Bubble text: {text.TextValue}");
     }
   }
 }

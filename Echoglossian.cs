@@ -80,6 +80,18 @@ namespace Echoglossian
 
     public static string DummyFontFilePath { get; set; }
 
+    public static string LangComboFontFilePath { get; set; }
+
+    public static string ComplementaryFont3FilePath { get; set; }
+
+    public static string ComplementaryFont4FilePath { get; set; }
+
+    public static string ComplementaryFont5FilePath { get; set; }
+
+    public static string ComplementaryFont6FilePath { get; set; }
+
+    public static string ComplementaryFont7FilePath { get; set; }
+
     public string LangToTranslateTo = string.Empty;
 
     private bool pluginAssetsState;
@@ -173,8 +185,15 @@ namespace Echoglossian
       this.AssetFiles.Add("NotoSansCJKsc-Regular.otf");
       this.AssetFiles.Add("NotoSansCJKtc-Regular.otf");
 
+      ComplementaryFont3FilePath = $"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSansJP-VF-3.ttf";
+      ComplementaryFont4FilePath = $"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSansJP-VF-4.ttf";
+      ComplementaryFont5FilePath = $"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSansJP-VF-5.ttf";
+      ComplementaryFont6FilePath = $"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSansJP-VF-6.ttf";
+      ComplementaryFont7FilePath = $"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSansJP-VF-7.ttf";
+
+
 #if DEBUG
-      // PluginLog.Warning($"Assets state config: {JsonConvert.SerializeObject(this.configuration, Formatting.Indented)}");
+      // PluginLog.Debug($"Assets state config: {JsonConvert.SerializeObject(this.configuration, Formatting.Indented)}");
 #endif
       this.configuration.PluginVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
       if (this.configuration.Version < 5)
@@ -184,8 +203,8 @@ namespace Echoglossian
 
       this.pluginAssetsState = this.configuration.PluginAssetsDownloaded;
 #if DEBUG
-      PluginLog.Warning($"Assets state config: {this.configuration.PluginAssetsDownloaded}");
-      PluginLog.Warning($"Assets state var: {this.pluginAssetsState}");
+      PluginLog.Debug($"Assets state config: {this.configuration.PluginAssetsDownloaded}");
+      PluginLog.Debug($"Assets state var: {this.pluginAssetsState}");
 #endif
       if (!this.pluginAssetsState)
       {
@@ -194,10 +213,6 @@ namespace Echoglossian
 
       SelectedLanguage = this.languagesDictionary[this.configuration.Lang];
 
-      /*
-            PluginInterface.UiBuilder.BuildFonts += this.LoadLanguageComboFont; // needs checking
-            PluginInterface.UiBuilder.BuildFonts += this.LoadFont; // needs checking
-      */
       // this.ListCultureInfos();
       this.pixImage = TextureProvider.CreateFromImageAsync(Resources.pix).Result; // needs checking
       this.choiceImage = TextureProvider.CreateFromImageAsync(Resources.choice).Result;
@@ -304,11 +319,45 @@ namespace Echoglossian
       this.talkImage?.Dispose();
       this.logo?.Dispose();
 
+      if (this.configuration.TranslateTalk)
+      {
+        AddonLifecycle.UnregisterListener(AddonEvent.PreRefresh, "Talk", this.UiTalkAsyncHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreDraw, "Talk", this.UiTalkAsyncHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreReceiveEvent, "Talk", this.UiTalkAsyncHandler);
+      }
+
+      if (this.configuration.TranslateBattleTalk)
+      {
+        AddonLifecycle.UnregisterListener(AddonEvent.PreRefresh, "_BattleTalk", this.UiBattleTalkAsyncHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreDraw, "_BattleTalk", this.UiBattleTalkAsyncHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreReceiveEvent, "_BattleTalk", this.UiBattleTalkAsyncHandler);
+      }
+
+      if (this.configuration.TranslateTalkSubtitle)
+      {
+        AddonLifecycle.UnregisterListener(AddonEvent.PreSetup, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreRefresh, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
+      }
+
+      if (this.configuration.TranslateJournal)
+      {
+        AddonLifecycle.UnregisterListener(AddonEvent.PreSetup, "JournalResult", this.UiJournalResultHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PostReceiveEvent, "RecommendList", this.UiRecommendListHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "RecommendList", this.UiRecommendListHandlerAsync);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreRefresh, "AreaMap", this.UiAreaMapHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreRefresh, "ScenarioTree", this.UiScenarioTreeHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreUpdate, "Journal", this.UiJournalQuestHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "Journal", this.UiJournalDetailHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreRequestedUpdate, "JournalDetail", this.UiJournalDetailHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
+        AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
+      }
+
       Framework.Update -= this.Tick;
 
-      this.glyphRangeConfigText?.Free();
-      this.glyphRangeMainText = null;
-      this.glyphRangeConfigText = null;
+      this.GlyphRangeConfigText?.Free();
+      this.GlyphRangeMainText = null;
+      this.GlyphRangeConfigText = null;
 
       CommandManager.RemoveHandler(SlashCommand);
     }
@@ -378,8 +427,10 @@ namespace Echoglossian
         return;
       }
 
+
       if (this.configuration.UseImGuiForBattleTalk && this.configuration.TranslateBattleTalk && this.battleTalkDisplayTranslation)
       {
+        PluginLog.Debug($"{this.configuration.TranslateBattleTalk} {this.battleTalkDisplayTranslation} {this.battleTalkDisplayTranslation}");
         this.DrawTranslatedBattleDialogueWindow();
 #if DEBUG
         // PluginLog.Debug("Showing BattleTalk Translation Overlay.");
@@ -406,7 +457,7 @@ namespace Echoglossian
       {
         this.DrawTranslatedErrorToastWindow();
 #if DEBUG
-        // PluginLog.Warning("Showing Error Toast Translation Overlay.");
+        // PluginLog.Debug("Showing Error Toast Translation Overlay.");
 #endif
       }
 
@@ -414,7 +465,7 @@ namespace Echoglossian
       {
         this.DrawTranslatedToastWindow();
 #if DEBUG
-        // PluginLog.Warning("Showing Error Toast Translation Overlay.");
+        // PluginLog.Debug("Showing Error Toast Translation Overlay.");
 #endif
       }
     }
@@ -460,16 +511,19 @@ namespace Echoglossian
         AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "TalkSubtitle", this.UiTalkSubtitleAsyncHandler);
       }
 
-      AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalResult", this.UiJournalResultHandler);
-      AddonLifecycle.RegisterListener(AddonEvent.PostReceiveEvent, "RecommendList", this.UiRecommendListHandler);
-      AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "RecommendList", this.UiRecommendListHandlerAsync);
-      AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "AreaMap", this.UiAreaMapHandler);
-      AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "ScenarioTree", this.UiScenarioTreeHandler);
-      AddonLifecycle.RegisterListener(AddonEvent.PreUpdate, "Journal", this.UiJournalQuestHandler);
-      AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "Journal", this.UiJournalDetailHandler);
-      AddonLifecycle.RegisterListener(AddonEvent.PreRequestedUpdate, "JournalDetail", this.UiJournalDetailHandler);
-      AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
-      AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
+      if (this.configuration.TranslateJournal)
+      {
+        AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalResult", this.UiJournalResultHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PostReceiveEvent, "RecommendList", this.UiRecommendListHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "RecommendList", this.UiRecommendListHandlerAsync);
+        AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "AreaMap", this.UiAreaMapHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PreRefresh, "ScenarioTree", this.UiScenarioTreeHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PreUpdate, "Journal", this.UiJournalQuestHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "Journal", this.UiJournalDetailHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PreRequestedUpdate, "JournalDetail", this.UiJournalDetailHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PreSetup, "JournalAccept", this.UiJournalAcceptHandler);
+        AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
+      }
 
       /*"PreSetup","PostSetup", "PreUpdate", "PostUpdate", "PreDraw", "PostDraw", "PreFinalize", "PreReceiveEvent", "PostReceiveEvent", "PreRequestedUpdate", "PostRequestedUpdate", "PreRefresh", "PostRefresh" */
     }

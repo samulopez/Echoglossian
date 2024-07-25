@@ -584,7 +584,7 @@ namespace Echoglossian
       {
         var addon = GameGui.GetAddonByName(this.addonName, 1);
 
-        PluginLog.Warning($"Addon {this.addonName} found in SetTranslationToAddon.");
+        PluginLog.Debug($"Addon {this.addonName} found in SetTranslationToAddon.");
         foundAddon = (AtkUnitBase*)addon;
 
         if (foundAddon == null)
@@ -690,13 +690,13 @@ namespace Echoglossian
 
             if (this.configuration.TranslateNpcNames)
             {
-              PluginLog.Warning($"Setting name node text in SetTranslationToAddon.");
+              PluginLog.Debug($"Setting name node text in SetTranslationToAddon.");
               nameNodeAsTextNode->SetText(translatedName);
               nameNodeAsTextNode->ResizeNodeForCurrentText();
             }
             else
             {
-              PluginLog.Warning($"Setting name node text in SetTranslationToAddon.");
+              PluginLog.Debug($"Setting name node text in SetTranslationToAddon.");
               nameNodeAsTextNode->SetText(this.addonCharacteristicsInfo.TalkMessage.SenderName + TranslationMarker);
               nameNodeAsTextNode->ResizeNodeForCurrentText();
             }
@@ -717,13 +717,13 @@ namespace Echoglossian
 
             if (this.configuration.TranslateNpcNames)
             {
-              PluginLog.Warning($"Setting name node text in SetTranslationToAddon.");
+              PluginLog.Debug($"Setting name node text in SetTranslationToAddon.");
               nameNodeAsTextNode->SetText(translatedName);
               nameNodeAsTextNode->ResizeNodeForCurrentText();
             }
             else
             {
-              PluginLog.Warning($"Setting name node text in SetTranslationToAddon.");
+              PluginLog.Debug($"Setting name node text in SetTranslationToAddon.");
               nameNodeAsTextNode->SetText(this.addonCharacteristicsInfo.BattleTalkMessage.SenderName + TranslationMarker);
               nameNodeAsTextNode->ResizeNodeForCurrentText();
             }
@@ -764,7 +764,7 @@ namespace Echoglossian
           PluginLog.Debug($"Comparison to SetTranslationToAddon: '!translatedMessage.Contains(TranslationMarker)' is {!messageTextFromNode.Contains(TranslationMarker)} and the result is {!messageTextFromNode.Contains(TranslationMarker)}");
           if (!cleanMessageTextFromNode.Contains(TranslationMarker))
           {
-            PluginLog.Warning($"Setting message node text in SetTranslationToAddon.");
+            PluginLog.Debug($"Setting message node text in SetTranslationToAddon.");
 
             // messageNodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[this.addonCharacteristicsInfo.MessageNodeId];
             var parentNode = foundAddon->GetNodeById(1);
@@ -796,7 +796,7 @@ namespace Echoglossian
 
       if (addonRefreshArgs == null)
       {
-        Echoglossian.PluginLog.Warning($"AddonRefreshArgs is null in SetTranslationToAddon.");
+        Echoglossian.PluginLog.Debug($"AddonRefreshArgs is null in SetTranslationToAddon.");
         return;
       }
 
@@ -806,7 +806,7 @@ namespace Echoglossian
       {
         var addon = GameGui.GetAddonByName(this.addonName, 1);
 
-        PluginLog.Warning($"Addon {this.addonName} found in SetTranslationToAddon.");
+        PluginLog.Debug($"Addon {this.addonName} found in SetTranslationToAddon.");
         foundAddon = (AtkUnitBase*)addon;
 
         if (foundAddon == null)
@@ -912,7 +912,7 @@ namespace Echoglossian
 
             if (this.configuration.TranslateNpcNames)
             {
-              PluginLog.Warning($"Setting name node text in SetTranslationToAddon using RefeshArgs.");
+              PluginLog.Debug($"Setting name node text in SetTranslationToAddon using RefeshArgs.");
 
               if (addonAtkValues != null)
               {
@@ -921,7 +921,7 @@ namespace Echoglossian
             }
             else
             {
-              PluginLog.Warning($"Setting name node text in SetTranslationToAddon using RefeshArgs");
+              PluginLog.Debug($"Setting name node text in SetTranslationToAddon using RefeshArgs");
 
               addonAtkValues[this.addonCharacteristicsInfo.AtkValuesNameStringIndex].SetManagedString(this.addonCharacteristicsInfo.TalkMessage.SenderName + TranslationMarker);
             }
@@ -942,7 +942,7 @@ namespace Echoglossian
 
             if (this.configuration.TranslateNpcNames)
             {
-              PluginLog.Warning($"Setting name node text in SetTranslationToAddon using RefeshArgs");
+              PluginLog.Debug($"Setting name node text in SetTranslationToAddon using RefeshArgs");
 
               if (addonAtkValues != null)
               {
@@ -965,7 +965,7 @@ namespace Echoglossian
             }
             else
             {
-              PluginLog.Warning($"Setting name node text in SetTranslationToAddon using RefeshArgs");
+              PluginLog.Debug($"Setting name node text in SetTranslationToAddon using RefeshArgs");
 
               addonAtkValues[this.addonCharacteristicsInfo.AtkValuesNameStringIndex].SetManagedString(this.addonCharacteristicsInfo.BattleTalkMessage.SenderName + TranslationMarker);
             }
@@ -1006,7 +1006,7 @@ namespace Echoglossian
           PluginLog.Debug($"Comparison to SetTranslationToAddon: '!translatedMessage.Contains(TranslationMarker)' is {!messageTextFromNode.Contains(TranslationMarker)} and the result is {!messageTextFromNode.Contains(TranslationMarker)}");
           if (!cleanMessageTextFromNode.Contains(TranslationMarker))
           {
-            PluginLog.Warning($"Setting message node text in SetTranslationToAddon.");
+            PluginLog.Debug($"Setting message node text in SetTranslationToAddon.");
 
             // messageNodeAsTextNode->TextFlags = (byte)this.addonNodesFlags[this.addonCharacteristicsInfo.MessageNodeId];
             if (addonAtkValues != null)

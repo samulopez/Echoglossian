@@ -17,9 +17,9 @@ public partial class Echoglossian
   public static readonly string FontFileName = "NotoSans-Medium.ttf";
   public bool FontLoaded;
   public bool FontLoadFailed;
-  public GCHandle? glyphRangeConfigText;
+  public GCHandle? GlyphRangeConfigText;
 
-  public GCHandle? glyphRangeMainText;
+  public GCHandle? GlyphRangeMainText;
 
   public bool LanguageComboFontLoaded;
   public bool LanguageComboFontLoadFailed;
@@ -36,6 +36,8 @@ public partial class Echoglossian
     var lang = SelectedLanguage;
     SpecialFontFileName = lang.FontName;
     ScriptCharList = lang.ExclusiveCharsToAdd;
+
+    PluginLog.Debug("Lang:\n " + lang + "\nSpecialFontFileName:\n " + SpecialFontFileName + "\nScriptCharList:\n " + ScriptCharList);
   }
 
   public static void MountFontPaths()
@@ -49,6 +51,9 @@ public partial class Echoglossian
           $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}symbols.ttf";
     DummyFontFilePath =
           $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSans-Regular.ttf";
+    LangComboFontFilePath =
+          $@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}NotoSans-Medium-Custom2.otf";
+    PluginLog.Debug("Fonts paths:\n " + SpecialFontFilePath + "\n " + FontFilePath + "\n " + SymbolsFontFilePath + "\n " + DummyFontFilePath);
   }
 
   private unsafe void AddCharsFromIntPtr(List<ushort> chars, ushort* ptr)

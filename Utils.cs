@@ -151,7 +151,7 @@ namespace Echoglossian
     public Image DrawText(string text, Font? fontOptional = null, Color? textColorOptional = null, Color? backColorOptional = null, Size? minSizeOptional = null)
     {
 #if DEBUG
-      PluginLog.Warning("Inside image creation method");
+      PluginLog.Debug("Inside image creation method");
 #endif
       PrivateFontCollection pfc = new();
       pfc.AddFontFile($@"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Font{Path.DirectorySeparatorChar}{SpecialFontFileName}");
@@ -211,7 +211,7 @@ namespace Echoglossian
         }
       }
 #if DEBUG
-      PluginLog.Warning("Before returning the image created");
+      PluginLog.Debug("Before returning the image created");
 #endif
       return textAsImage;
     }
@@ -224,7 +224,7 @@ namespace Echoglossian
     private byte[] TranslationImageConverter(Image image)
     {
 #if DEBUG
-      PluginLog.Warning("Conversion to byte");
+      PluginLog.Debug("Conversion to byte");
 #endif
       ImageConverter imageConverter = new ImageConverter();
       return (byte[])imageConverter.ConvertTo(image, typeof(byte[]));

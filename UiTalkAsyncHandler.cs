@@ -64,7 +64,7 @@ namespace Echoglossian
           }
           catch (Exception e)
           {
-            PluginLog.Warning("TranslateTalkReplacing Exception: " + e);
+            PluginLog.Debug("TranslateTalkReplacing Exception: " + e);
           }
         });
     }
@@ -109,7 +109,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning("TranslateTalkReplacing Exception: " + e);
+        PluginLog.Debug("TranslateTalkReplacing Exception: " + e);
       }
     }
 
@@ -231,7 +231,7 @@ namespace Echoglossian
         }
         catch (Exception e)
         {
-          PluginLog.Warning("TranslateTalkUsingImGuiAndSwapping Exception: " + e);
+          PluginLog.Debug("TranslateTalkUsingImGuiAndSwapping Exception: " + e);
         }
       });
     }
@@ -330,7 +330,7 @@ namespace Echoglossian
           }
           catch (Exception e)
           {
-            PluginLog.Warning("TranslateTalkUsingImGuiWithoutSwapping Exception: " + e);
+            PluginLog.Debug("TranslateTalkUsingImGuiWithoutSwapping Exception: " + e);
           }
         });
     }
@@ -419,7 +419,7 @@ namespace Echoglossian
       }
       catch (Exception e)
       {
-        PluginLog.Warning("UiTalkAsyncHandler Exception: " + e);
+        PluginLog.Debug("UiTalkAsyncHandler Exception: " + e);
       }
     }
   }
