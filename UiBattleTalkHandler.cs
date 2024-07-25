@@ -4,6 +4,8 @@
 // </copyright>
 
 using System;
+using System.Threading;
+
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace Echoglossian
@@ -23,6 +25,8 @@ namespace Echoglossian
           this.battleTalkTextDimensions.Y = battleTalkMaster->RootNode->Height * battleTalkMaster->Scale;
           this.battleTalkTextPosition.X = battleTalkMaster->RootNode->X;
           this.battleTalkTextPosition.Y = battleTalkMaster->RootNode->Y;
+
+          Thread.Sleep(this.delayBetweenVisibilityCheckForOverlay);
         }
 
         this.battleTalkDisplayTranslation = false;
