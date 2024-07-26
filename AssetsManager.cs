@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using Dalamud.Interface.ImGuiNotification;
@@ -56,7 +57,7 @@ namespace Echoglossian
         }
       }
 
-      if (this.MissingAssetFiles?.Any() != true)
+      if (this.MissingAssetFiles.Count == 0)
       {
         this.pluginAssetsState = true;
         this.configuration.PluginAssetsDownloaded = true;
@@ -75,7 +76,7 @@ namespace Echoglossian
 
       foreach (string f in this.MissingAssetFiles)
       {
-        this.DownloadPluginAssets(this.MissingAssetFiles.IndexOf(f));
+        this.DownloadPluginAssets(this.MissingAssetFiles.IndexOf(f), f);
       }
 
       var assetsDownloadNotification = new Notification
@@ -88,13 +89,14 @@ namespace Echoglossian
       NotificationManager.AddNotification(assetsDownloadNotification);
     }
 
-    private void DownloadPluginAssets(int missingAssetIndex)
+    private void DownloadPluginAssets(int missingAssetIndex, string assetFile)
     {
-      Task assetGrab = Task.Run(() => this.DownloadAssets(missingAssetIndex));
-      if (assetGrab.IsCompleted)
+      Task.Run(() =>
       {
-        this.MissingAssetFiles.RemoveAt(missingAssetIndex);
-        if (this.MissingAssetFiles?.Any() != true)
+        this.DownloadAssets(missingAssetIndex);
+        this.MissingAssetFiles.Remove(assetFile);
+
+        if (this.MissingAssetFiles.Count == 0)
         {
           this.pluginAssetsState = true;
           this.configuration.PluginAssetsDownloaded = true;
@@ -111,14 +113,13 @@ namespace Echoglossian
           NotificationManager.AddNotification(assetsSuccessNotification);
           this.config = true;
         }
-      }
+      });
     }
 
     private void DownloadAssets(int index)
     {
-#pragma warning disable SYSLIB0014
-      using WebClient client = new WebClient();
-#pragma warning restore SYSLIB0014
+      using HttpClient client = new HttpClient();
+
       try
       {
         string path = this.assetsPath;
@@ -129,36 +130,31 @@ namespace Echoglossian
           case 0: // hk
             uri = new Uri(
               "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/TraditionalChineseHK/NotoSansCJKhk-Regular.otf");
-            client.DownloadFileAsync(uri, $"{path}{this.AssetFiles[index]}");
-            client.DownloadProgressChanged += this.WebClientDownloadProgressChanged;
-            client.DownloadDataCompleted += this.WebClientDownloadCompleted;
+            DownloadFileAsync(client, uri, $"{path}{this.AssetFiles[index]}").Wait();
+            this.WebClientDownloadCompleted();
             break;
           case 1: // jp
             uri = new Uri(
               "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/Japanese/NotoSansCJKjp-Regular.otf");
-            client.DownloadFileAsync(uri, $"{path}{this.AssetFiles[index]}");
-            client.DownloadProgressChanged += this.WebClientDownloadProgressChanged;
-            client.DownloadDataCompleted += this.WebClientDownloadCompleted;
+            DownloadFileAsync(client, uri, $"{path}{this.AssetFiles[index]}").Wait();
+            this.WebClientDownloadCompleted();
             break;
           case 2: // kr
             uri = new Uri("https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/Korean/NotoSansCJKkr-Regular.otf");
-            client.DownloadFileAsync(uri, $"{path}{this.AssetFiles[index]}");
-            client.DownloadProgressChanged += this.WebClientDownloadProgressChanged;
-            client.DownloadDataCompleted += this.WebClientDownloadCompleted;
+            DownloadFileAsync(client, uri, $"{path}{this.AssetFiles[index]}").Wait();
+            this.WebClientDownloadCompleted();
             break;
           case 3: // sc
             uri = new Uri(
               "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-Regular.otf");
-            client.DownloadFileAsync(uri, $"{path}{this.AssetFiles[index]}");
-            client.DownloadProgressChanged += this.WebClientDownloadProgressChanged;
-            client.DownloadDataCompleted += this.WebClientDownloadCompleted;
+            DownloadFileAsync(client, uri, $"{path}{this.AssetFiles[index]}").Wait();
+            this.WebClientDownloadCompleted();
             break;
           case 4: // tc
             uri = new Uri(
               "https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/TraditionalChinese/NotoSansCJKtc-Regular.otf");
-            client.DownloadFileAsync(uri, $"{path}{this.AssetFiles[index]}");
-            client.DownloadProgressChanged += this.WebClientDownloadProgressChanged;
-            client.DownloadDataCompleted += this.WebClientDownloadCompleted;
+            DownloadFileAsync(client, uri, $"{path}{this.AssetFiles[index]}").Wait();
+            this.WebClientDownloadCompleted();
             break;
         }
       }
@@ -178,6 +174,17 @@ namespace Echoglossian
       }
     }
 
+    private static async Task DownloadFileAsync(HttpClient client, Uri uri, string filename)
+    {
+      using (var s = await client.GetStreamAsync(uri))
+      {
+        using (var fs = new FileStream(filename, FileMode.CreateNew))
+        {
+          await s.CopyToAsync(fs);
+        }
+      }
+    }
+
     private void WebClientDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
     {
 #if DEBUG
@@ -185,7 +192,7 @@ namespace Echoglossian
 #endif
     }
 
-    private void WebClientDownloadCompleted(object sender, DownloadDataCompletedEventArgs e)
+    private void WebClientDownloadCompleted()
     {
 #if DEBUG
       PluginLog.Debug("Download finished!");
@@ -201,7 +208,7 @@ namespace Echoglossian
 
       NotificationManager.AddNotification(assetsDownloadCompleteNotification);
 
-      if (this.MissingAssetFiles?.Any() != true)
+      if (this.MissingAssetFiles.Count == 0)
       {
         this.pluginAssetsState = true;
         this.configuration.PluginAssetsDownloaded = true;
