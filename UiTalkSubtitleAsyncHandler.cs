@@ -4,6 +4,7 @@
 // </copyright>
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Dalamud.Game.Addon.Lifecycle;
@@ -249,6 +250,8 @@ namespace Echoglossian
           this.talkSubtitleTextDimensions.Y = talkSubtitleMaster->RootNode->Height * talkSubtitleMaster->Scale;
           this.talkSubtitleTextPosition.X = talkSubtitleMaster->RootNode->X;
           this.talkSubtitleTextPosition.Y = talkSubtitleMaster->RootNode->Y;
+
+          Thread.Sleep(this.delayBetweenVisibilityCheckForOverlay);
         }
 
         this.talkSubtitleDisplayTranslation = false;

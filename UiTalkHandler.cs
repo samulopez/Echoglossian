@@ -4,12 +4,16 @@
 // </copyright>
 
 using System;
+using System.Threading;
+
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace Echoglossian
 {
   public partial class Echoglossian
   {
+    private readonly int delayBetweenVisibilityCheckForOverlay = 100;
+
     private unsafe void TalkHandler(string addonName, int index)
     {
       IntPtr talk = GameGui.GetAddonByName(addonName, index);
@@ -23,6 +27,8 @@ namespace Echoglossian
           this.talkTextDimensions.Y = talkMaster->RootNode->Height * talkMaster->Scale;
           this.talkTextPosition.X = talkMaster->RootNode->X;
           this.talkTextPosition.Y = talkMaster->RootNode->Y;
+
+          Thread.Sleep(this.delayBetweenVisibilityCheckForOverlay);
 #if DEBUG
           // PluginLog.Debug("Inside Talk Handler.");
 #endif
