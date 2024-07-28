@@ -25,7 +25,6 @@ namespace Echoglossian
       this.pluginLog = pluginLog;
       this.apiKey = apiKey;
 
-      // Simplificando a configuração do HttpClientHandler
       HttpClientHandler handler = new HttpClientHandler
       {
         AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli
@@ -43,7 +42,6 @@ namespace Echoglossian
       {
 
         var systemContent = ((dynamic)systemMessage).content.Replace("{targetLanguage}", FormatTargetLanguage(targetLanguage));
-        this.pluginLog.Warning($"{systemContent}");
         var messages = new List<Object>
         {
           new { role = "system", content = systemContent },
