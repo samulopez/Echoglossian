@@ -22,6 +22,7 @@ public partial class Echoglossian
   {
     "Google Translate",
     "DeepL",
+    "ChatGPT",
   };
 
   private void EchoglossianConfigUi()
@@ -578,6 +579,19 @@ public partial class Echoglossian
               {
                 this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
               }
+            }
+
+            break;
+          case 2:
+            ImGui.TextWrapped(Resources.SettingsForChatGptTransText);
+            ImGui.Spacing();
+
+            var chatGptApiKey = this.configuration.ChatGptApiKey;
+            if (ImGui.InputText(Resources.ChatGptApiKey, ref chatGptApiKey, 100))
+            {
+              saveConfig = true;
+              this.configuration.ChatGptApiKey = chatGptApiKey;
+              this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
             }
 
             break;

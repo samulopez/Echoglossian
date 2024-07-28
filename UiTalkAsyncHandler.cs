@@ -102,7 +102,7 @@ namespace Echoglossian
         var parentNode = talkAddon->GetNodeById(10);
         textNode->TextFlags = (byte)(TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine | (byte)TextFlags.AutoAdjustNodeSize);
         var charCount = this.translatedText.Length;
-        textNode->FontSize = (byte)(charCount >= 256 ? 12 : 14);
+        textNode->FontSize = (byte)(charCount >= 350 ? 11 : (charCount >= 256 ? 12 : 14));
         textNode->SetWidth(parentNode->GetWidth());
         textNode->SetText(this.translatedText);
         textNode->ResizeNodeForCurrentText();
