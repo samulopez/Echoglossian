@@ -17,7 +17,10 @@ namespace Echoglossian
     private readonly object systemMessage = new
     {
       role = "system",
-      content = "You are a professional translator and localizer. Translate the following text to {targetLanguage} in a natural and fluent manner, making it feel as if it were originally written in that language. Avoid literal translations and ensure the translation is localized, preserving the context, meaning, emotion, tone, and logical and syntactical sense for the target language. Use your knowledge of the Final Fantasy XIV universe to correctly translate names of cities, characters, locations, items, and use the appropriate pronouns based on the original text. Translate text inside <> and return the translated text inside <> as well. Only return in <> the text that was already inside the brackets within <> and not the entire text. Ensure that the translated text does not exceed 400 characters. If the translated text exceeds this limit, reduce it while maintaining the sense and context. Translate with attention to the context, sentiment, and tone of the original phrase to create a vivid and accurate translation."
+      content = "You are a professional translator and localizer. Translate the following text to {targetLanguage} in a natural and fluent manner, making it feel as if it were originally written in that language. " +
+      "Avoid literal translations and ensure the translation is localized, preserving the context, meaning, emotion, tone, and logical and syntactical sense for the target language. " +
+      "Use your knowledge of the Final Fantasy XIV universe to correctly translate names of cities, characters, locations, items, and use the appropriate pronouns based on the original text. " +
+      "Translate with attention to the context, sentiment, and tone of the original phrase to create a vivid and accurate translation."
     };
 
     public ChatGPTTranslator(IPluginLog pluginLog, string apiKey)
@@ -50,8 +53,9 @@ namespace Echoglossian
 
         var requestBody = new
         {
-          model = "gpt-3.5-turbo",
-          messages = messages
+          model = "gpt-4o-mini",
+          messages = messages,
+          temperature = 0.0, // Testing temperature levels to see if we got a translation pattern
         };
 
         var requestBodyText = JsonConvert.SerializeObject(requestBody);
