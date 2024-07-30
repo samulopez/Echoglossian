@@ -631,7 +631,7 @@
         </member>
         <member name="P:Echoglossian.Properties.Resources.SettingsForChatGptTransText">
             <summary>
-              Consulta uma cadeia de caracteres localizada semelhante a Configurations for ChatGPT.
+              Consulta uma cadeia de caracteres localizada semelhante a Settings for ChatGPT.
             </summary>
         </member>
         <member name="P:Echoglossian.Properties.Resources.SettingsForDeepLTransText">
