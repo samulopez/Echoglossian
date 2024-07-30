@@ -1,122 +1,84 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Dalamud.Plugin.Services;
-using Newtonsoft.Json;
+using OpenAI.Chat;
 
 namespace Echoglossian
 {
-  public partial class ChatGPTTranslator : ITranslator
+  public class ChatGPTTranslator : ITranslator
   {
+    private readonly ChatClient chatClient;
     private readonly IPluginLog pluginLog;
-    private readonly string apiKey;
-    private readonly HttpClient httpClient;
-    private readonly object systemMessage = new
-    {
-      role = "system",
-      content = "You are a professional translator and localizer. Translate the following text to {targetLanguage} in a natural and fluent manner, making it feel as if it were originally written in that language. " +
-      "Avoid literal translations and ensure the translation is localized, preserving the context, meaning, emotion, tone, and logical and syntactical sense for the target language. " +
-      "Use your knowledge of the Final Fantasy XIV universe to correctly translate names of cities, characters, locations, items, and use the appropriate pronouns based on the original text. " +
-      "Translate with attention to the context, sentiment, and tone of the original phrase to create a vivid and accurate translation."
-    };
+    private readonly string model;
+    private Dictionary<string, string> translationCache = new Dictionary<string, string>();
 
-    public ChatGPTTranslator(IPluginLog pluginLog, string apiKey)
+    public ChatGPTTranslator(IPluginLog pluginLog, string apiKey, string model = "gpt-4o-mini")
     {
+      this.chatClient = new ChatClient(model, apiKey);
       this.pluginLog = pluginLog;
-      this.apiKey = apiKey;
-
-      HttpClientHandler handler = new HttpClientHandler
-      {
-        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate | DecompressionMethods.Brotli
-      };
-
-      this.httpClient = new HttpClient(handler);
-      this.httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {this.apiKey}");
-    }
-
-    public async Task<string> TranslateAsync(string text, string sourceLanguage, string targetLanguage)
-    {
-      this.pluginLog.Debug("inside ChatGPTTranslator TranslateAsync method");
-
-      try
-      {
-
-        var systemContent = ((dynamic)systemMessage).content.Replace("{targetLanguage}", FormatTargetLanguage(targetLanguage));
-        var messages = new List<Object>
-        {
-          new { role = "system", content = systemContent },
-          new { role = "user", content = text }
-        };
-
-        var requestBody = new
-        {
-          model = "gpt-4o-mini",
-          messages = messages,
-          temperature = 0.0, // Testing temperature levels to see if we got a translation pattern
-        };
-
-        var requestBodyText = JsonConvert.SerializeObject(requestBody);
-
-        var response = await this.httpClient.PostAsync("https://api.openai.com/v1/chat/completions", new StringContent(
-            requestBodyText,
-            Encoding.UTF8,
-            "application/json"));
-
-        if (response.IsSuccessStatusCode)
-        {
-          var jsonString = await response.Content.ReadAsStringAsync();
-          var gptResponse = JsonConvert.DeserializeObject<ChatGPTResponse>(jsonString);
-          var finalTranslatedText = gptResponse.Choices[0].Message.Content;
-          this.pluginLog.Warning($"FinalTranslatedText: {finalTranslatedText}");
-          return finalTranslatedText;
-        }
-        else
-        {
-          this.pluginLog.Warning($"ChatGPTTranslator TranslateAsync error: {response.StatusCode}");
-          return text;
-        }
-      }
-      catch (Exception exception)
-      {
-        this.pluginLog.Warning($"ChatGPTTranslator TranslateAsync: {exception.Message}");
-        return text;
-      }
+      this.model = model;
     }
 
     public string Translate(string text, string sourceLanguage, string targetLanguage)
     {
-      return this.TranslateAsync(text, sourceLanguage, targetLanguage).Result;
+      return TranslateAsync(text, sourceLanguage, targetLanguage).GetAwaiter().GetResult();
     }
 
-    private string FormatTargetLanguage(string source)
+    public async Task<string> TranslateAsync(string text, string sourceLanguage, string targetLanguage)
     {
-      switch (source)
+      string cacheKey = $"{text}_{sourceLanguage}_{targetLanguage}";
+      if (translationCache.TryGetValue(cacheKey, out string cachedTranslation))
       {
-        case "es":
-          return "Spanish";
-        case "pt":
-          return "Brazilian Portuguese";
-        default:
-          return source.ToUpper();
+        return cachedTranslation;
       }
+
+      string prompt = @$"As a professional translator and cultural expert, translate the following text from {sourceLanguage} to {targetLanguage}. 
+                         Your translation should sound natural and localized, as if it were originally written in {targetLanguage}. 
+                         Consider cultural nuances, idiomatic expressions, and context to ensure the translation resonates with native {targetLanguage} speakers.
+
+                          Important: The final translation MUST NOT exceed 256 characters. If the initial translation is longer, carefully adapt and shorten it while preserving the core meaning and context.
+
+                          Text to translate: ""{text}""
+
+                          Provide only the translated text in your response, without any explanations, additional comments, or quotation marks.";
+
+      try
+      {
+        ChatCompletion completion = await chatClient.CompleteChatAsync(prompt);
+        string translatedText = completion.ToString().Trim();
+
+        translatedText = translatedText.Trim('"');
+
+        if (translatedText.Length > 256)
+        {
+          prompt = @$"The following translation exceeds 256 characters. Please adapt and shorten it to fit within 256 characters while preserving the core meaning and context:
+
+                    {translatedText}
+
+                    Provide only the adapted translation, without any explanations, additional comments, or quotation marks.";
+
+          completion = await chatClient.CompleteChatAsync(prompt);
+          translatedText = completion.ToString().Trim().Trim('"');
+        }
+
+        if (!string.IsNullOrEmpty(translatedText) && translatedText.Length <= 300)
+        {
+          translationCache[cacheKey] = translatedText;
+          return translatedText;
+        }
+        else
+        {
+          pluginLog.Error($"Translation failed or exceeded 300 characters: {translatedText.Length} characters");
+          return null;
+        }
+      }
+      catch (Exception ex)
+      {
+        pluginLog.Error($"Translation error: {ex.Message}");
+      }
+
+      return null;
     }
-  }
-
-  public class ChatGPTResponse
-  {
-    public Choice[] Choices { get; set; }
-  }
-
-  public class Choice
-  {
-    public Message Message { get; set; }
-  }
-
-  public class Message
-  {
-    public string Content { get; set; }
   }
 }
