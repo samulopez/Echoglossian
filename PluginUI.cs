@@ -688,7 +688,7 @@ public partial class Echoglossian
       saveConfig = true;
       Process.Start(new ProcessStartInfo
       {
-        FileName = "https://github.com/lokinmodar/Echoglossian/projects/1",
+        FileName = "https://github.com/users/lokinmodar/projects/2",
         UseShellExecute = true,
       });
       this.config = false;
