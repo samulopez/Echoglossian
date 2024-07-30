@@ -406,6 +406,6 @@
     <value>Chave API do ChatGPT</value>
   </data>
   <data name="SettingsForChatGptTransText" xml:space="preserve">
-    <value>Configurações para o ChatGPT</value>
+    <value>Configurações para o ChatGPT:</value>
   </data>
 </root>

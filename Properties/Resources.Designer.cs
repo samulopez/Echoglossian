@@ -751,7 +751,7 @@ namespace Echoglossian.Properties {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a Configurations for ChatGPT.
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Settings for ChatGPT.
         /// </summary>
         public static string SettingsForChatGptTransText {
             get {

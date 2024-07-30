@@ -434,6 +434,6 @@
     <value>ChatGPT API Key</value>
   </data>
   <data name="SettingsForChatGptTransText" xml:space="preserve">
-    <value>Configurations for ChatGPT</value>
+    <value>Settings for ChatGPT</value>
   </data>
 </root>
