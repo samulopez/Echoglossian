@@ -11,6 +11,7 @@ namespace Echoglossian
     private readonly ChatClient chatClient;
     private readonly IPluginLog pluginLog;
     private readonly string model;
+    private readonly float temperature;
     private Dictionary<string, string> translationCache = new Dictionary<string, string>();
 
     public ChatGPTTranslator(IPluginLog pluginLog, string apiKey, string model = "gpt-4o-mini")
@@ -18,6 +19,7 @@ namespace Echoglossian
       this.chatClient = new ChatClient(model, apiKey);
       this.pluginLog = pluginLog;
       this.model = model;
+      this.temperature = 0.1f;
     }
 
     public string Translate(string text, string sourceLanguage, string targetLanguage)
@@ -45,7 +47,17 @@ namespace Echoglossian
 
       try
       {
-        ChatCompletion completion = await chatClient.CompleteChatAsync(prompt);
+        var chatCompletionOptions = new ChatCompletionOptions
+        {
+          Temperature = this.temperature,
+        };
+
+        var messages = new List<ChatMessage>
+        {
+          ChatMessage.CreateUserMessage(prompt)
+        };
+
+        ChatCompletion completion = await chatClient.CompleteChatAsync(messages, chatCompletionOptions);
         string translatedText = completion.ToString().Trim();
 
         translatedText = translatedText.Trim('"');
