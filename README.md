@@ -26,15 +26,17 @@ Enable the desired translations and configure the various options through the Co
 
 ## TODOs
 
-- [Non-exhaustive list](https://github.com/lokinmodar/Echoglossian/projects/1)
+- [Non-exhaustive list](https://github.com/users/lokinmodar/projects/2)
 
 ## Thanks
 - annaclemens for XivCommon
+- midorikami for AddonLifecycle
 - goaats for FFXIVQuickLauncher
 - haplo for ChatTranslator plugin
 - Eternita-S for their contribution
 - Bluefissure for their contribution
 - Soreepeong aka Kizer for the fontConfig fix
+- samulopez for all the contributions
 
 
 ## Contributors
