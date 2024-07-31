@@ -74,14 +74,14 @@ namespace Echoglossian
           translatedText = completion.ToString().Trim().Trim('"');
         }
 
-        if (!string.IsNullOrEmpty(translatedText) && translatedText.Length <= 300)
+        if (!string.IsNullOrEmpty(translatedText) && translatedText.Length <= 350)
         {
           translationCache[cacheKey] = translatedText;
           return translatedText;
         }
         else
         {
-          pluginLog.Error($"Translation failed or exceeded 300 characters: {translatedText.Length} characters");
+          pluginLog.Error($"Translation failed or exceeded 350 characters: {translatedText.Length} characters");
           return null;
         }
       }
