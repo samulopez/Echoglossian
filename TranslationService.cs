@@ -32,6 +32,9 @@ namespace Echoglossian
         case TransEngines.Deepl:
           this.translator = new DeepLTranslator(pluginLog, config.DeeplTranslatorUsingApiKey, config.DeeplTranslatorApiKey);
           break;
+        case TransEngines.ChatGPT:
+          this.translator = new ChatGPTTranslator(pluginLog, config.ChatGptApiKey);
+          break;
         case TransEngines.Bing:
           break;
         case TransEngines.Yandex:
@@ -41,8 +44,6 @@ namespace Echoglossian
         case TransEngines.Amazon:
           break;
         case TransEngines.Azure:
-          break;
-        case TransEngines.ChatGPT:
           break;
         case TransEngines.GoogleCloud:
           break;

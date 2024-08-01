@@ -324,4 +324,10 @@
   <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
     <value>Перевод субтитров к кат-сценам</value>
   </data>
+  <data name="ChatGptApiKey" xml:space="preserve">
+    <value>API-ключ ChatGPT</value>
+  </data>
+  <data name="SettingsForChatGptTransText" xml:space="preserve">
+    <value>Настройки для ChatGPT</value>
+  </data>
 </root>

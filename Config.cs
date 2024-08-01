@@ -112,6 +112,8 @@ namespace Echoglossian
 
     public bool DeeplTranslatorUsingApiKey = false;
 
+    public string ChatGptApiKey { get; set; } = string.Empty;
+
     public float FontScale = 1;
 
     public float BattleTalkFontScale = 1;

@@ -80,6 +80,7 @@ namespace Echoglossian
       this.configuration.TranslateAlreadyTranslatedTexts = false;
       this.configuration.DeeplTranslatorApiKey = string.Empty;
       this.configuration.DeeplTranslatorUsingApiKey = false;
+      this.configuration.ChatGptApiKey = string.Empty;
       this.configuration.PluginVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
       this.configuration.Version = 5;
 
@@ -128,12 +129,12 @@ namespace Echoglossian
     {
       Google = 0, // Google Translator (free engine)
       Deepl = 1, // DeepL Translator
-      Bing = 2, // Microsoft Bing Translator (free engine)
-      Yandex = 3, // Yandex Translator
-      GTranslate = 4, // Uses Google, Bing and Yandex (free engines)
-      Amazon = 5, // Amazon Translate
-      Azure = 6, // Microsoft Azure Translate
-      ChatGPT = 7, // Chat GPT
+      ChatGPT = 2, // Chat GPT
+      Bing = 3, // Microsoft Bing Translator (free engine)
+      Yandex = 4, // Yandex Translator
+      GTranslate = 5, // Uses Google, Bing and Yandex (free engines)
+      Amazon = 6, // Amazon Translate
+      Azure = 7, // Microsoft Azure Translate
       GoogleCloud = 8, // Google Cloud Translate
       All = Google | Deepl | Bing | Yandex | GTranslate | Amazon | Azure | ChatGPT | GoogleCloud,
     }

@@ -324,4 +324,10 @@
   <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
     <value>Eszenen azpitituluak itzuli</value>
   </data>
+  <data name="ChatGptApiKey" xml:space="preserve">
+    <value>ChatGPT API gakoa</value>
+  </data>
+  <data name="SettingsForChatGptTransText" xml:space="preserve">
+    <value>ChatGPT-ren ezarpenak</value>
+  </data>
 </root>
