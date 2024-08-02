@@ -81,13 +81,13 @@ namespace Echoglossian
         }
         else
         {
-          pluginLog.Error($"Translation failed or exceeded 350 characters: {translatedText.Length} characters");
-          return null;
+          return $"[Translation Error: Exceeded character limit ({translatedText.Length} characters)]";
         }
       }
       catch (Exception ex)
       {
         pluginLog.Error($"Translation error: {ex.Message}");
+        return $"[Translation Error: {ex.Message}]";
       }
 
       return null;
