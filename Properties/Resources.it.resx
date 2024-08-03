@@ -324,4 +324,10 @@
   <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
     <value>Traduci i sottotitoli dei filmati</value>
   </data>
+  <data name="ChatGptApiKey" xml:space="preserve">
+    <value>Chiave API ChatGPT</value>
+  </data>
+  <data name="SettingsForChatGptTransText" xml:space="preserve">
+    <value>Impostazioni per ChatGPT</value>
+  </data>
 </root>

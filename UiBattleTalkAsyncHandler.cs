@@ -135,13 +135,14 @@ namespace Echoglossian
         textNode->TextFlags = (byte)(TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine | (byte)TextFlags.AutoAdjustNodeSize);
         textNode->FontSize = 14;
         var timerNode = battleTalkAddon->GetNodeById(2);
-
+        textNode->SetWidth(640);
         timerNode->SetXShort((short)(textNode->GetWidth() + 40));
 
-        parentNode->SetWidth(640 + 256);
+        parentNode->SetWidth((ushort)(textNode->GetWidth() + 128));
         parentNode->SetHeight((ushort)(textNode->GetHeight() + 48));
-        nineGridNode->SetWidth(640 + 256);
+        nineGridNode->SetWidth((ushort)(textNode->GetWidth() + 128));
         nineGridNode->SetHeight((ushort)(textNode->GetHeight() + 48));
+
         textNode->SetText(this.lastBattleTalkMessage.TranslatedBattleTalkMessage);
         textNode->ResizeNodeForCurrentText();
       }
@@ -218,12 +219,12 @@ namespace Echoglossian
         textNode->TextFlags = (byte)(TextFlags)((byte)TextFlags.WordWrap | (byte)TextFlags.MultiLine | (byte)TextFlags.AutoAdjustNodeSize);
         textNode->FontSize = 14;
         var timerNode = battleTalkAddon->GetNodeById(2);
-
+        textNode->SetWidth(640);
         timerNode->SetXShort((short)(textNode->GetWidth() + 40));
 
-        parentNode->SetWidth(640 + 256);
+        parentNode->SetWidth((ushort)(textNode->GetWidth() + 128));
         parentNode->SetHeight((ushort)(textNode->GetHeight() + 48));
-        nineGridNode->SetWidth(640 + 256);
+        nineGridNode->SetWidth((ushort)(textNode->GetWidth() + 128));
         nineGridNode->SetHeight((ushort)(textNode->GetHeight() + 48));
         textNode->SetText(this.lastBattleTalkMessage.TranslatedBattleTalkMessage);
         textNode->ResizeNodeForCurrentText();
