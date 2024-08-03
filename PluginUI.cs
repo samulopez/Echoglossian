@@ -525,11 +525,11 @@ public partial class Echoglossian
         ImGui.EndTabItem();
       }
 
-      if (ImGui.BeginTabItem(Resources.ConfigTab6Name))
+      /*if (ImGui.BeginTabItem(Resources.ConfigTab6Name))
       {
         ImGui.Text("This is the Onion tab!\nblah blah blah blah blah");
         ImGui.EndTabItem();
-      }
+      }*/
 
       if (ImGui.BeginTabItem(Resources.ConfigTab7Name))
       {

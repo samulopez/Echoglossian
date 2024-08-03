@@ -298,9 +298,9 @@
     <value>Traducir subtítulos de escenas</value>
   </data>
   <data name="ChatGptApiKey" xml:space="preserve">
-    <value>Clave de API de ChatGPT</value>
+    <value>Clave API de ChatGPT</value>
   </data>
   <data name="SettingsForChatGptTransText" xml:space="preserve">
-    <value>Configuración de ChatGPT:</value>
+    <value>Configuración de ChatGPT</value>
   </data>
 </root>

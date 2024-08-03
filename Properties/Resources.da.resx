@@ -297,7 +297,7 @@
     <value>Oversæt cutscene undertekster</value>
   </data>
   <data name="ChatGptApiKey" xml:space="preserve">
-    <value>ChatGPT API NØGLE</value>
+    <value>ChatGPT API-nøgle</value>
   </data>
   <data name="SettingsForChatGptTransText" xml:space="preserve">
     <value>Indstillinger for ChatGPT</value>

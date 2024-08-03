@@ -421,6 +421,14 @@
           <source>Translate Cutscene Subtitles</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">Eszenen azpitituluak itzuli</target>
         </trans-unit>
+        <trans-unit id="ChatGptApiKey" translate="yes" xml:space="preserve">
+          <source>ChatGPT API Key</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">ChatGPTren API klabea</target>
+        </trans-unit>
+        <trans-unit id="SettingsForChatGptTransText" translate="yes" xml:space="preserve">
+          <source>Settings for ChatGPT</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">ChatGPTren konfigurazioa</target>
+        </trans-unit>
       </group>
     </body>
   </file>

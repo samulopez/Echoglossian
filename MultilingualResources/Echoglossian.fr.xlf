@@ -427,6 +427,14 @@
           <source>Translate Cutscene Subtitles</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">Traduire les sous-titres de la cinématique</target>
         </trans-unit>
+        <trans-unit id="ChatGptApiKey" translate="yes" xml:space="preserve">
+          <source>ChatGPT API Key</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Clé API ChatGPT</target>
+        </trans-unit>
+        <trans-unit id="SettingsForChatGptTransText" translate="yes" xml:space="preserve">
+          <source>Settings for ChatGPT</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Paramètres pour ChatGPT</target>
+        </trans-unit>
       </group>
     </body>
   </file>

@@ -298,9 +298,9 @@
     <value>Traduzir legendas de cutscene</value>
   </data>
   <data name="ChatGptApiKey" xml:space="preserve">
-    <value>Chave da API do ChatGPT</value>
+    <value>Chave de API do ChatGPT</value>
   </data>
   <data name="SettingsForChatGptTransText" xml:space="preserve">
-    <value>Configurações para o ChatGPT:</value>
+    <value>Configurações para ChatGPT</value>
   </data>
 </root>

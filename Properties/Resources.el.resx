@@ -324,10 +324,4 @@
   <data name="TranslateTalkSubtitleToggleLabel" xml:space="preserve">
     <value>Μετάφραση Cutscene Subtitles</value>
   </data>
-  <data name="ChatGptApiKey" xml:space="preserve">
-    <value>Κλειδί API ChatGPT</value>
-  </data>
-  <data name="SettingsForChatGptTransText" xml:space="preserve">
-    <value>Ρυθμίσεις για το ChatGPT</value>
-  </data>
 </root>

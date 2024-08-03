@@ -328,6 +328,6 @@
     <value>Clé API ChatGPT</value>
   </data>
   <data name="SettingsForChatGptTransText" xml:space="preserve">
-    <value>Paramètres de ChatGPT :</value>
+    <value>Paramètres pour ChatGPT</value>
   </data>
 </root>

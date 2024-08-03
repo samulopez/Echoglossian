@@ -325,7 +325,7 @@
     <value>Untertitel von Zwischensequenzen übersetzen</value>
   </data>
   <data name="ChatGptApiKey" xml:space="preserve">
-    <value>ChatGPT API-Schlüssel</value>
+    <value>ChatGPT-API-Schlüssel</value>
   </data>
   <data name="SettingsForChatGptTransText" xml:space="preserve">
     <value>Einstellungen für ChatGPT</value>
