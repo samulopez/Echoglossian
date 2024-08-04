@@ -250,7 +250,7 @@ public partial class Echoglossian
             ref this.configuration.TranslateBattleTalk);
 
           ImGui.BeginGroup();
-          if (this.configuration.OverlayOnlyLanguage)
+          /*if (this.configuration.OverlayOnlyLanguage)
           {
             this.configuration.TranslateBattleTalk = false; // had disabled so no texts are lost while we fix this
             saveConfig |=
@@ -264,7 +264,7 @@ public partial class Echoglossian
             saveConfig |= ImGui.Checkbox(
               Resources.OverlayToggleLabel,
               ref this.configuration.UseImGuiForBattleTalk);
-          }
+          }*/
 
           saveConfig |= ImGui.Checkbox(
             Resources.TranslateNpcNamesToggle,
@@ -585,6 +585,16 @@ public partial class Echoglossian
           case 2:
             ImGui.TextWrapped(Resources.SettingsForChatGptTransText);
             ImGui.Spacing();
+            if (ImGui.Button(Resources.ChatGPTAPIKeyLink))
+            {
+              saveConfig = true;
+              Process.Start(new ProcessStartInfo
+              {
+                FileName = "https://platform.openai.com/settings/profile?tab=api-keys",
+                UseShellExecute = true,
+              });
+              this.config = false;
+            }
 
             var chatGptApiKey = this.configuration.ChatGptApiKey;
             if (ImGui.InputText(Resources.ChatGptApiKey, ref chatGptApiKey, 100))

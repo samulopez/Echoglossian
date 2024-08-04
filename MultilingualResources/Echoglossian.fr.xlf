@@ -435,6 +435,10 @@
           <source>Settings for ChatGPT</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">Paramètres pour ChatGPT</target>
         </trans-unit>
+        <trans-unit id="ChatGPTAPIKeyLink" translate="yes" xml:space="preserve">
+          <source>Click here to create a OpenAi API Key</source>
+          <target state="needs-review-translation" state-qualifier="mt-suggestion">Cliquez ici pour créer une clé API OpenAi</target>
+        </trans-unit>
       </group>
     </body>
   </file>

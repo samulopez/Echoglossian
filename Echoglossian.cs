@@ -279,6 +279,7 @@ namespace Echoglossian
 
       // Disabling BattleTalk translation by default if the language is not supported by the game font while we fix the overlays
       this.configuration.TranslateBattleTalk = this.configuration.OverlayOnlyLanguage ? false : true;
+      this.configuration.UseImGuiForBattleTalk = false;
     }
 
     /// <inheritdoc />

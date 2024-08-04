@@ -279,6 +279,11 @@
               Looks up a localized string similar to ChatGPT API Key.
             </summary>
         </member>
+        <member name="P:Echoglossian.Properties.Resources.ChatGPTAPIKeyLink">
+            <summary>
+              Looks up a localized string similar to Click here to create a OpenAi API Key.
+            </summary>
+        </member>
         <member name="P:Echoglossian.Properties.Resources.choice">
             <summary>
               Looks up a localized resource of type System.Byte[].

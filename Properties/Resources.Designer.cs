@@ -115,6 +115,15 @@ namespace Echoglossian.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click here to create a OpenAi API Key.
+        /// </summary>
+        public static string ChatGPTAPIKeyLink {
+            get {
+                return ResourceManager.GetString("ChatGPTAPIKeyLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         public static byte[] choice {

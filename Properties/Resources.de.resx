@@ -330,4 +330,7 @@
   <data name="SettingsForChatGptTransText" xml:space="preserve">
     <value>Einstellungen für ChatGPT</value>
   </data>
+  <data name="ChatGPTAPIKeyLink" xml:space="preserve">
+    <value>Klicken Sie hier, um einen OpenAi API-Schlüssel zu erstellen</value>
+  </data>
 </root>
