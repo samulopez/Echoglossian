@@ -83,6 +83,12 @@
     <None Remove="Font\NotoSansTamil-Medium.ttf" />
     <None Remove="Font\NotoSansTelugu-Medium.ttf" />
     <None Remove="Font\NotoSansThai-Medium.ttf" />
+    <None Remove="Font\NotoSansJP-VF-3.ttf" />
+    <None Remove="Font\NotoSansJP-VF-4.ttf" />
+    <None Remove="Font\NotoSansJP-VF-5.ttf" />
+    <None Remove="Font\NotoSansJP-VF-6.ttf" />
+    <None Remove="Font\NotoSansJP-VF-7.ttf" />
+    <None Remove="Font\symbols.ttf" />
     <None Remove="images\icon.png" />
     <None Remove="images\logo.png" />
     <None Remove="minfilia.ico" />
@@ -209,6 +215,24 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Font\NotoSansThai-Medium.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Font\symbols.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Font\NotoSansJP-VF-3.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Font\NotoSansJP-VF-4.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Font\NotoSansJP-VF-5.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Font\NotoSansJP-VF-6.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Font\NotoSansJP-VF-7.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\icon.png">
