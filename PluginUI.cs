@@ -188,7 +188,7 @@ public partial class Echoglossian
               ImGui.SameLine();
               saveConfig |= ImGui.ColorEdit3(
                 Resources.OverlayColorSelectName,
-                ref this.configuration.OverlayTextColor,
+                ref this.configuration.OverlayTalkTextColor,
                 ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoLabel);
 
               ImGui.SameLine();
@@ -473,7 +473,7 @@ public partial class Echoglossian
               ImGui.SameLine();
               saveConfig |= ImGui.ColorEdit3(
                 Resources.OverlayColorSelectName,
-                ref this.configuration.OverlayTextColor,
+                ref this.configuration.OverlayTalkTextColor,
                 ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoLabel);
 
               ImGui.SameLine();

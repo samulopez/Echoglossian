@@ -99,7 +99,7 @@ namespace Echoglossian
           (this.textDimensions.X * this.configuration.ImGuiTalkWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
           (ImGui.CalcTextSize(this.translation).X * 1.25f) + (ImGui.GetStyle().WindowPadding.X * 2));
       ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size, this.textDimensions.Y * this.configuration.ImGuiTalkWindowHeightMult));
-      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
+      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTalkTextColor, 255));
       if (this.configuration.TranslateNpcNames)
       {
         string name = string.Empty;//GetTranslatedNpcNameForWindow();

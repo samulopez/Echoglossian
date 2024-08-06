@@ -244,7 +244,7 @@ namespace Echoglossian
           (this.talkTextDimensions.X * this.configuration.ImGuiTalkWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
           (ImGui.CalcTextSize(this.currentTalkTranslation).X * 1.25f) + (ImGui.GetStyle().WindowPadding.X * 2));
       ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size, this.talkTextDimensions.Y * this.configuration.ImGuiTalkWindowHeightMult));
-      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
+      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTalkTextColor, 255));
       if (this.configuration.TranslateNpcNames)
       {
         string name = this.GetTranslatedNpcNameForWindow();
@@ -328,7 +328,7 @@ namespace Echoglossian
           (this.talkSubtitleTextDimensions.X * this.configuration.ImGuiTalkSubtitleWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
           (ImGui.CalcTextSize(this.currentTalkSubtitleTranslation).X * 1.25f) + (ImGui.GetStyle().WindowPadding.X * 2));
       ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size, this.talkSubtitleTextDimensions.Y * this.configuration.ImGuiTalkSubtitleWindowHeightMult));
-      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
+      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTalkTextColor, 255));
 
 
       ImGui.Begin(
@@ -382,7 +382,7 @@ namespace Echoglossian
           this.toastTranslationTextDimensions.X * this.configuration.ImGuiToastWindowWidthMult,
           ImGui.CalcTextSize(this.currentToastTranslation).X + (ImGui.GetStyle().WindowPadding.X * 2));
         ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size * 4f, this.toastTranslationTextDimensions.Y * 2));
-        ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
+        ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTalkTextColor, 255));
 
         UINewFontHandler.LanguageFontHandle.Push();
 
@@ -429,7 +429,7 @@ namespace Echoglossian
 #if DEBUG
       // PluginLog.Debug($"size min: {new Vector2(size, 0)}, Size max: {new Vector2(size * 4, this.errorToastTranslationTextDimensions.Y * 2)}");
 #endif
-      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
+      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTalkTextColor, 255));
 
       UINewFontHandler.LanguageFontHandle.Push();
 
@@ -478,7 +478,7 @@ namespace Echoglossian
 #if DEBUG
       PluginLog.Debug($"size min: {new Vector2(size, 0)}, Size max: {new Vector2(size * 4, this.classChangeToastTranslationTextDimensions.Y * 2)}");
 #endif
-      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTextColor, 255));
+      ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTalkTextColor, 255));
 
       UINewFontHandler.LanguageFontHandle.Push();
 

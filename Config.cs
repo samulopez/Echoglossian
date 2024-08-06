@@ -102,9 +102,13 @@ namespace Echoglossian
 
     public float ImGuiToastWindowWidthMult = 1.5f;
 
-    public Vector3 OverlayTextColor = new(1.0f, 1.0f, 1.0f);
+    public Vector3 OverlayTalkTextColor = new(1.0f, 1.0f, 1.0f);
 
     public Vector3 OverlayBattleTalkTextColor = new(1.0f, 1.0f, 1.0f);
+
+    public Vector3 OverlayTalkSubtitleTextColor = new(1.0f, 1.0f, 1.0f);
+
+    public Vector3 OverlayToastTextColor = new(1.0f, 1.0f, 1.0f);
 
     public bool CopyTranslationToClipboard = false;
 
@@ -112,7 +116,7 @@ namespace Echoglossian
 
     public bool DeeplTranslatorUsingApiKey = false;
 
-    public string ChatGptApiKey { get; set; } = string.Empty;
+    public string ChatGptApiKey = string.Empty;
 
     public float FontScale = 1;
 
