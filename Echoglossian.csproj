@@ -13,7 +13,7 @@
     <Authors>lokinmodar</Authors>
     <NeutralLanguage>en</NeutralLanguage>
     <VersionMajor>3</VersionMajor>
-    <VersionMinor>13</VersionMinor>
+    <VersionMinor>14</VersionMinor>
     <VersionPatch Condition="'$(VersionPatch)' == ''">$([System.DateTime]::UtcNow.ToString("yyMM"))</VersionPatch>
     <VersionRevision Condition="'$(VersionRevision)' == ''">$([System.DateTime]::UtcNow.TimeOfDay.TotalMinutes.ToString("0"))</VersionRevision>
     <Version>$(VersionMajor).$(VersionMinor).$(VersionPatch).$(VersionRevision)</Version>
@@ -243,10 +243,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Translate" Version="3.7.400.2" />
+    <PackageReference Include="AWSSDK.Translate" Version="3.7.400.3" />
     <PackageReference Include="DalamudPackager" Version="2.1.13" />
     <PackageReference Include="DeepL.net" Version="1.9.0" />
-    <PackageReference Include="GTranslate" Version="2.2.5" />
+    <PackageReference Include="GTranslate" Version="2.2.6" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.62" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
@@ -257,7 +257,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="NTextCat" Version="0.3.65" />
     <PackageReference Include="OpenAI" Version="2.0.0-beta.8" />
-    <PackageReference Include="RestSharp" Version="111.4.0" />
+    <PackageReference Include="RestSharp" Version="111.4.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
       <PrivateAssets>all</PrivateAssets>
       <!--<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>-->

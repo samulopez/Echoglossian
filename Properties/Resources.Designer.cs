@@ -733,6 +733,15 @@ namespace Echoglossian.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parse the translated text replacing diacritics with their common letter equivalents.
+        /// </summary>
+        public static string RemoveDiacriticsToggle {
+            get {
+                return ResourceManager.GetString("RemoveDiacriticsToggle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reset Settings.
         /// </summary>
         public static string ResetConfigsButton {

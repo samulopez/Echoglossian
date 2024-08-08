@@ -169,7 +169,14 @@ namespace Echoglossian
       ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size, this.battleTalkTextDimensions.Y * 2.5f * this.configuration.ImGuiBattleTalkWindowHeightMult));
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayBattleTalkTextColor, 255));
 
-      UINewFontHandler.LanguageFontHandle.Push();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Push();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Push();
+      }
 
       if (this.configuration.TranslateNpcNames)
       {
@@ -226,7 +233,14 @@ namespace Echoglossian
 
       ImGui.End();
 
-      UINewFontHandler.LanguageFontHandle.Pop();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Pop();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Pop();
+      }
     }
 
     private void DrawTranslatedDialogueWindow()
@@ -238,7 +252,14 @@ namespace Echoglossian
           this.talkTextPosition.X + (this.talkTextDimensions.X / 2) - (this.talkTextImguiSize.X / 2),
           this.talkTextPosition.Y - this.talkTextImguiSize.Y - 20) + this.configuration.ImGuiWindowPosCorrection);
 
-      UINewFontHandler.LanguageFontHandle.Push();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Push();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Push();
+      }
 
       float size = Math.Min(
           (this.talkTextDimensions.X * this.configuration.ImGuiTalkWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
@@ -310,7 +331,14 @@ namespace Echoglossian
 
       ImGui.End();
 
-      UINewFontHandler.LanguageFontHandle.Pop();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Pop();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Pop();
+      }
     }
 
     private void DrawTranslatedTalkSubtitleWindow()
@@ -322,7 +350,14 @@ namespace Echoglossian
           this.talkSubtitleTextPosition.X + (this.talkSubtitleTextDimensions.X / 2) - (this.talkSubtitleTextImguiSize.X / 2),
           this.talkSubtitleTextPosition.Y - this.talkSubtitleTextImguiSize.Y - 20) + this.configuration.ImGuiWindowPosCorrection);
 
-      UINewFontHandler.LanguageFontHandle.Push();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Push();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Push();
+      }
 
       float size = Math.Min(
           (this.talkSubtitleTextDimensions.X * this.configuration.ImGuiTalkSubtitleWindowWidthMult) + (ImGui.GetStyle().WindowPadding.X * 2),
@@ -368,7 +403,14 @@ namespace Echoglossian
 
       ImGui.End();
 
-      UINewFontHandler.LanguageFontHandle.Pop();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Pop();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Pop();
+      }
     }
 
     private void DrawTranslatedToastWindow()
@@ -384,7 +426,16 @@ namespace Echoglossian
         ImGui.SetNextWindowSizeConstraints(new Vector2(size, 0), new Vector2(size * 4f, this.toastTranslationTextDimensions.Y * 2));
         ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTalkTextColor, 255));
 
-        UINewFontHandler.LanguageFontHandle.Push();
+
+        if (this.configuration.SwapTextsUsingImGui == true)
+        {
+          UINewFontHandler.GeneralFontHandle.Push();
+        }
+        else
+        {
+          UINewFontHandler.LanguageFontHandle.Push();
+        }
+
 
         ImGui.Begin(
           "Toast Translation",
@@ -407,7 +458,14 @@ namespace Echoglossian
         this.toastTranslationTextImguiSize = ImGui.GetWindowSize();
         ImGui.PopStyleColor(1);
         ImGui.End();
-        UINewFontHandler.LanguageFontHandle.Pop();
+        if (this.configuration.SwapTextsUsingImGui == true)
+        {
+          UINewFontHandler.GeneralFontHandle.Pop();
+        }
+        else
+        {
+          UINewFontHandler.LanguageFontHandle.Pop();
+        }
       }
     }
 
@@ -431,7 +489,14 @@ namespace Echoglossian
 #endif
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTalkTextColor, 255));
 
-      UINewFontHandler.LanguageFontHandle.Push();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Push();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Push();
+      }
 
       ImGui.Begin(
         "Error Toast Translation",
@@ -457,7 +522,14 @@ namespace Echoglossian
       ImGui.PopStyleColor(1);
       ImGui.End();
 
-      UINewFontHandler.LanguageFontHandle.Pop();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Pop();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Pop();
+      }
     }
 
     private void DrawTranslatedClassChangeToastWindow()
@@ -480,7 +552,14 @@ namespace Echoglossian
 #endif
       ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(this.configuration.OverlayTalkTextColor, 255));
 
-      UINewFontHandler.LanguageFontHandle.Push();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Push();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Push();
+      }
 
       ImGui.Begin(
         "Error Toast Translation",
@@ -506,7 +585,14 @@ namespace Echoglossian
       ImGui.PopStyleColor(1);
       ImGui.End();
 
-      UINewFontHandler.LanguageFontHandle.Pop();
+      if (this.configuration.SwapTextsUsingImGui == true)
+      {
+        UINewFontHandler.GeneralFontHandle.Pop();
+      }
+      else
+      {
+        UINewFontHandler.LanguageFontHandle.Pop();
+      }
     }
   }
 }

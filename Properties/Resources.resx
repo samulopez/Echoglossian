@@ -439,4 +439,7 @@
   <data name="ChatGPTAPIKeyLink" xml:space="preserve">
     <value>Click here to create a OpenAi API Key</value>
   </data>
+  <data name="RemoveDiacriticsToggle" xml:space="preserve">
+    <value>Parse the translated text replacing diacritics with their common letter equivalents</value>
+  </data>
 </root>

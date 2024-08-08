@@ -74,9 +74,16 @@ namespace Echoglossian
 #if DEBUG
             PluginLog.Debug($"Name from database: {questNameText} -> {foundQuestPlate.TranslatedQuestName}");
 #endif
+            var translatedQuestName = foundQuestPlate.TranslatedQuestName;
+
+            if (this.configuration.RemoveDiacriticsFromLettersWhenUsingTextReplacement)
+            {
+              translatedQuestName = this.RemoveDiacritics(translatedQuestName, this.SpecialCharsSupportedByGameFont);
+            }
+
             // because we are translating names, it's safer to use SetString instead of SetText
-            questName->NodeText.SetString(foundQuestPlate.TranslatedQuestName);
-            this.translatedQuestNames.TryAdd(foundQuestPlate.TranslatedQuestName, true);
+            questName->NodeText.SetString(translatedQuestName);
+            this.translatedQuestNames.TryAdd(translatedQuestName, true);
           }
         }
       }

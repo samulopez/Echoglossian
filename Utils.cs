@@ -4,11 +4,13 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 using Dalamud.Interface.ImGuiNotification;
@@ -281,6 +283,30 @@ namespace Echoglossian
       }
 
       return result;
+    }
+
+    public string RemoveDiacritics(string text, HashSet<char> supportedChars)
+    {
+      if (string.IsNullOrEmpty(text))
+      {
+        return text;
+      }
+
+      var normalizedString = text.Normalize(NormalizationForm.FormD);
+      var stringBuilder = new StringBuilder();
+
+      foreach (var c in normalizedString)
+      {
+        var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+        if (unicodeCategory != UnicodeCategory.NonSpacingMark || supportedChars.Contains(c))
+        {
+          stringBuilder.Append(c);
+        }
+      }
+
+      return stringBuilder
+          .ToString()
+          .Normalize(NormalizationForm.FormC);
     }
 
   }

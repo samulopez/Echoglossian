@@ -54,6 +54,11 @@ namespace Echoglossian
 #if DEBUG
           PluginLog.Debug($"Name from database: {questNameText} -> {foundQuestPlate.TranslatedQuestName}");
 #endif
+          if (this.configuration.RemoveDiacriticsFromLettersWhenUsingTextReplacement)
+          {
+            foundQuestPlate.TranslatedQuestName = this.RemoveDiacritics(foundQuestPlate.TranslatedQuestName, this.SpecialCharsSupportedByGameFont);
+          }
+
           setupAtkValues[1].SetManagedString(foundQuestPlate.TranslatedQuestName);
         }
         else
@@ -78,6 +83,12 @@ namespace Echoglossian
 #if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
 #endif
+
+          if (this.configuration.RemoveDiacriticsFromLettersWhenUsingTextReplacement)
+          {
+            translatedNameText = this.RemoveDiacritics(translatedNameText, this.SpecialCharsSupportedByGameFont);
+          }
+
           setupAtkValues[1].SetManagedString(translatedNameText);
         }
       }

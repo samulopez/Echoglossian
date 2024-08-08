@@ -182,6 +182,19 @@ namespace Echoglossian
 #endif
       }
 
+      if (this.configuration.RemoveDiacriticsFromLettersWhenUsingTextReplacement)
+      {
+        translatedQuestName = this.RemoveDiacritics(translatedQuestName, this.SpecialCharsSupportedByGameFont);
+        translatedQuestMessage = this.RemoveDiacritics(translatedQuestMessage, this.SpecialCharsSupportedByGameFont);
+        translatedQuestObjective = this.RemoveDiacritics(translatedQuestObjective, this.SpecialCharsSupportedByGameFont);
+        translatedQuestSummary = this.RemoveDiacritics(translatedQuestSummary, this.SpecialCharsSupportedByGameFont);
+
+        foreach (var summary in summaries)
+        {
+          summary.TranslatedText = this.RemoveDiacritics(summary.TranslatedText, this.SpecialCharsSupportedByGameFont);
+        }
+      }
+
       questNameNode->SetText(translatedQuestName);
       descriptionNode->SetText(translatedQuestMessage);
       objectiveNode->SetText(translatedQuestObjective);

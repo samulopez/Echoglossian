@@ -434,6 +434,10 @@
           <source>Click here to create a OpenAi API Key</source>
           <target state="needs-review-translation" state-qualifier="mt-suggestion">Haga clic aquí para crear una clave API de OpenAi</target>
         </trans-unit>
+        <trans-unit id="RemoveDiacriticsToggle" translate="yes" xml:space="preserve">
+          <source>Parse the translated text replacing diacritics with their common letter equivalents</source>
+          <target state="new">Parse the translated text replacing diacritics with their common letter equivalents</target>
+        </trans-unit>
       </group>
     </body>
   </file>

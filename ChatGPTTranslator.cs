@@ -24,13 +24,13 @@ namespace Echoglossian
 
     public string Translate(string text, string sourceLanguage, string targetLanguage)
     {
-      return TranslateAsync(text, sourceLanguage, targetLanguage).GetAwaiter().GetResult();
+      return this.TranslateAsync(text, sourceLanguage, targetLanguage).GetAwaiter().GetResult();
     }
 
     public async Task<string> TranslateAsync(string text, string sourceLanguage, string targetLanguage)
     {
       string cacheKey = $"{text}_{sourceLanguage}_{targetLanguage}";
-      if (translationCache.TryGetValue(cacheKey, out string cachedTranslation))
+      if (this.translationCache.TryGetValue(cacheKey, out string cachedTranslation))
       {
         return cachedTranslation;
       }
@@ -57,7 +57,7 @@ namespace Echoglossian
           ChatMessage.CreateUserMessage(prompt)
         };
 
-        ChatCompletion completion = await chatClient.CompleteChatAsync(messages, chatCompletionOptions);
+        ChatCompletion completion = await this.chatClient.CompleteChatAsync(messages, chatCompletionOptions);
         string translatedText = completion.ToString().Trim();
 
         translatedText = translatedText.Trim('"');
@@ -70,13 +70,13 @@ namespace Echoglossian
 
                     Provide only the adapted translation, without any explanations, additional comments, or quotation marks.";
 
-          completion = await chatClient.CompleteChatAsync(prompt);
+          completion = await this.chatClient.CompleteChatAsync(prompt);
           translatedText = completion.ToString().Trim().Trim('"');
         }
 
         if (!string.IsNullOrEmpty(translatedText) && translatedText.Length <= 350)
         {
-          translationCache[cacheKey] = translatedText;
+          this.translationCache[cacheKey] = translatedText;
           return translatedText;
         }
         else
@@ -86,7 +86,7 @@ namespace Echoglossian
       }
       catch (Exception ex)
       {
-        pluginLog.Error($"Translation error: {ex.Message}");
+        this.pluginLog.Error($"Translation error: {ex.Message}");
         return $"[Translation Error: {ex.Message}]";
       }
 

@@ -619,6 +619,11 @@
               Looks up a localized string similar to Scan the QR code to send me a PIX - only valid in Brazil.
             </summary>
         </member>
+        <member name="P:Echoglossian.Properties.Resources.RemoveDiacriticsToggle">
+            <summary>
+              Looks up a localized string similar to Parse the translated text replacing diacritics with their common letter equivalents.
+            </summary>
+        </member>
         <member name="P:Echoglossian.Properties.Resources.ResetConfigsButton">
             <summary>
               Looks up a localized string similar to Reset Settings.
