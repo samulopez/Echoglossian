@@ -174,7 +174,14 @@ namespace Echoglossian
 #if DEBUG
             PluginLog.Debug($"Name from database: {quest.Text} -> {foundQuestPlate.TranslatedQuestName}");
 #endif
-            todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(foundQuestPlate.TranslatedQuestName);
+
+            var foundTranslatedQuestName = foundQuestPlate.TranslatedQuestName;
+            if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
+            {
+              foundTranslatedQuestName = this.RemoveDiacritics(foundTranslatedQuestName, this.SpecialCharsSupportedByGameFont);
+            }
+
+            todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(foundTranslatedQuestName);
 
             List<string> translatedStoredObjectives = new();
             foreach (var objective in objectives)
@@ -198,6 +205,12 @@ namespace Echoglossian
                 PluginLog.Debug($"Objective from database: {objective.Text} {storedObjectiveText}");
 #endif
                 translatedStoredObjectives.Add(storedObjectiveText);
+
+                if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
+                {
+                  storedObjectiveText = this.RemoveDiacritics(storedObjectiveText, this.SpecialCharsSupportedByGameFont);
+                }
+
                 todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(storedObjectiveText);
                 continue;
               }
@@ -210,6 +223,11 @@ namespace Echoglossian
 #if DEBUG
               PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Update operation result: {resultUpdate}");
 #endif
+              if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
+              {
+                translatedQuestObjective = this.RemoveDiacritics(translatedQuestObjective, this.SpecialCharsSupportedByGameFont);
+              }
+
               todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedQuestObjective);
             }
 
@@ -235,6 +253,12 @@ namespace Echoglossian
             this.configuration.ChosenTransEngine,
             DateTime.Now,
             DateTime.Now);
+
+          if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
+          {
+            translatedNameText = this.RemoveDiacritics(translatedNameText, this.SpecialCharsSupportedByGameFont);
+          }
+
           todoList->UldManager.NodeList[quest.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[quest.IndexJ]->GetAsAtkTextNode()->SetText(translatedNameText);
 
           List<string> translatedObjectives = new();
@@ -259,6 +283,12 @@ namespace Echoglossian
 #endif
             translatedObjectives.Add(translatedObjectiveText);
             translatedQuestPlate.Objectives.TryAdd(objective.Text, translatedObjectiveText);
+
+            if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
+            {
+              translatedObjectiveText = this.RemoveDiacritics(translatedObjectiveText, this.SpecialCharsSupportedByGameFont);
+            }
+
             todoList->UldManager.NodeList[objective.IndexI]->GetAsAtkComponentNode()->Component->UldManager.NodeList[objective.IndexJ]->GetAsAtkTextNode()->SetText(translatedObjectiveText);
           }
 

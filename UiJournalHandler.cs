@@ -182,7 +182,7 @@ namespace Echoglossian
 #endif
       }
 
-      if (this.configuration.RemoveDiacriticsFromLettersWhenUsingTextReplacement)
+      if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
       {
         translatedQuestName = this.RemoveDiacritics(translatedQuestName, this.SpecialCharsSupportedByGameFont);
         translatedQuestMessage = this.RemoveDiacritics(translatedQuestMessage, this.SpecialCharsSupportedByGameFont);
@@ -341,6 +341,12 @@ namespace Echoglossian
 #if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
 #endif
+        }
+
+        if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
+        {
+          translatedQuestName = this.RemoveDiacritics(translatedQuestName, this.SpecialCharsSupportedByGameFont);
+          translatedQuestMessage = this.RemoveDiacritics(translatedQuestMessage, this.SpecialCharsSupportedByGameFont);
         }
 
         questNameNode->SetText(translatedQuestName);

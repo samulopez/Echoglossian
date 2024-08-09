@@ -292,15 +292,32 @@ namespace Echoglossian
         return text;
       }
 
-      var normalizedString = text.Normalize(NormalizationForm.FormD);
       var stringBuilder = new StringBuilder();
 
-      foreach (var c in normalizedString)
+      foreach (var c in text)
       {
-        var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
-        if (unicodeCategory != UnicodeCategory.NonSpacingMark || supportedChars.Contains(c))
+        if (supportedChars.Contains(c))
         {
+          // Directly append supported characters without alteration
           stringBuilder.Append(c);
+        }
+        else if (CustomReplacements.ContainsKey(c))
+        {
+          // Replace with custom replacement if character is not in supportedChars
+          stringBuilder.Append(CustomReplacements[c]);
+        }
+        else
+        {
+          // Normalize and handle diacritics for the remaining characters
+          var normalizedChar = c.ToString().Normalize(NormalizationForm.FormD);
+          foreach (var nc in normalizedChar)
+          {
+            var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(nc);
+            if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+            {
+              stringBuilder.Append(nc);
+            }
+          }
         }
       }
 
@@ -308,6 +325,5 @@ namespace Echoglossian
           .ToString()
           .Normalize(NormalizationForm.FormC);
     }
-
   }
 }

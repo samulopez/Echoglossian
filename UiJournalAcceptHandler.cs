@@ -89,7 +89,7 @@ namespace Echoglossian
 #if DEBUG
         PluginLog.Debug($"Using QuestPlate Replace - {translatedQuestName}: {translatedQuestMessage}");
 #endif
-        if (this.configuration.RemoveDiacriticsFromLettersWhenUsingTextReplacement)
+        if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
         {
           translatedQuestName = this.RemoveDiacritics(translatedQuestName, this.SpecialCharsSupportedByGameFont);
           translatedQuestMessage = this.RemoveDiacritics(translatedQuestMessage, this.SpecialCharsSupportedByGameFont);

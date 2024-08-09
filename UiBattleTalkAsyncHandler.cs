@@ -127,7 +127,14 @@ namespace Echoglossian
 
         if (this.configuration.TranslateNpcNames && nameNode != null && !nameNode->NodeText.IsEmpty)
         {
-          nameNode->SetText(this.lastBattleTalkMessage.TranslatedSenderName);
+          var translatedSName = this.lastBattleTalkMessage.TranslatedSenderName;
+
+          if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk && translatedSName != null)
+          {
+            translatedSName = this.RemoveDiacritics(translatedSName, this.SpecialCharsSupportedByGameFont);
+          }
+
+          nameNode->SetText(translatedSName);
         }
 
         var parentNode = battleTalkAddon->GetNodeById(1);
@@ -143,7 +150,14 @@ namespace Echoglossian
         nineGridNode->SetWidth((ushort)(textNode->GetWidth() + 128));
         nineGridNode->SetHeight((ushort)(textNode->GetHeight() + 48));
 
-        textNode->SetText(this.lastBattleTalkMessage.TranslatedBattleTalkMessage);
+        var translatedBTMessage = this.lastBattleTalkMessage.TranslatedBattleTalkMessage;
+
+        if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk && translatedBTMessage != null)
+        {
+          translatedBTMessage = this.RemoveDiacritics(translatedBTMessage, this.SpecialCharsSupportedByGameFont);
+        }
+
+        textNode->SetText(translatedBTMessage);
         textNode->ResizeNodeForCurrentText();
       }
       catch (Exception e)
@@ -204,14 +218,29 @@ namespace Echoglossian
 
         if (this.configuration.TranslateNpcNames && nameNode != null && !nameNode->NodeText.IsEmpty)
         {
-          nameNode->SetText(this.lastBattleTalkMessage.TranslatedSenderName);
+          var translatedSName = this.lastBattleTalkMessage.TranslatedSenderName;
+
+          if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk && translatedSName != null)
+          {
+            translatedSName = this.RemoveDiacritics(translatedSName, this.SpecialCharsSupportedByGameFont);
+          }
+
+          nameNode->SetText(translatedSName);
         }
+
         var textTranslation = this.Translate(textToTranslate);
         var nameTranslation = this.configuration.TranslateNpcNames ? (nameToTranslate.IsNullOrEmpty() ? string.Empty : this.Translate(nameToTranslate)) : nameToTranslate;
 
         if (this.configuration.TranslateNpcNames && nameNode != null && !nameNode->NodeText.IsEmpty)
         {
-          nameNode->SetText(this.lastBattleTalkMessage.TranslatedSenderName);
+          var translatedSName = this.lastBattleTalkMessage.TranslatedSenderName;
+
+          if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk && translatedSName != null)
+          {
+            translatedSName = this.RemoveDiacritics(translatedSName, this.SpecialCharsSupportedByGameFont);
+          }
+
+          nameNode->SetText(translatedSName);
         }
 
         var parentNode = battleTalkAddon->GetNodeById(1);
@@ -226,7 +255,15 @@ namespace Echoglossian
         parentNode->SetHeight((ushort)(textNode->GetHeight() + 48));
         nineGridNode->SetWidth((ushort)(textNode->GetWidth() + 128));
         nineGridNode->SetHeight((ushort)(textNode->GetHeight() + 48));
-        textNode->SetText(this.lastBattleTalkMessage.TranslatedBattleTalkMessage);
+
+        var translatedBTMessage = this.lastBattleTalkMessage.TranslatedBattleTalkMessage;
+
+        if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk && translatedBTMessage != null)
+        {
+          translatedBTMessage = this.RemoveDiacritics(translatedBTMessage, this.SpecialCharsSupportedByGameFont);
+        }
+
+        textNode->SetText(translatedBTMessage);
         textNode->ResizeNodeForCurrentText();
 
         this.currentSenderTranslationId = Environment.TickCount;

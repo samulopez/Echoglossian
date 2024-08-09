@@ -76,7 +76,7 @@ namespace Echoglossian
 #endif
             var translatedQuestName = foundQuestPlate.TranslatedQuestName;
 
-            if (this.configuration.RemoveDiacriticsFromLettersWhenUsingTextReplacement)
+            if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
             {
               translatedQuestName = this.RemoveDiacritics(translatedQuestName, this.SpecialCharsSupportedByGameFont);
             }

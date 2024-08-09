@@ -112,7 +112,9 @@ namespace Echoglossian
 
     public bool CopyTranslationToClipboard = false;
 
-    public bool RemoveDiacriticsFromLettersWhenUsingTextReplacement = false;
+    public bool RemoveDiacriticsWhenUsingReplacementQuest = false;
+
+    public bool RemoveDiacriticsWhenUsingReplacementTalkBTalk = false;
 
     public string DeeplTranslatorApiKey = string.Empty;
 

@@ -242,7 +242,7 @@ public partial class Echoglossian
               {
                 saveConfig |= ImGui.Checkbox(
                                    Resources.RemoveDiacriticsToggle,
-                                   ref this.configuration.RemoveDiacriticsFromLettersWhenUsingTextReplacement);
+                                   ref this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk);
               }
             }
           }
@@ -427,6 +427,13 @@ public partial class Echoglossian
           saveConfig |= ImGui.Checkbox(
             Resources.TranslateJournalToggle,
             ref this.configuration.TranslateJournal);
+        }
+
+        if (langToRemoveDiacritics)
+        {
+          saveConfig |= ImGui.Checkbox(
+                             Resources.RemoveDiacriticsToggle,
+                             ref this.configuration.RemoveDiacriticsWhenUsingReplacementQuest);
         }
 
         ImGui.EndTabItem();

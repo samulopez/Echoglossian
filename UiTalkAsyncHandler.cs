@@ -96,7 +96,13 @@ namespace Echoglossian
 
         if (this.configuration.TranslateNpcNames && nameNode != null && !nameNode->NodeText.IsEmpty)
         {
-          nameNode->SetText(this.translatedName);
+          var translatedSName = this.translatedName;
+          if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk && translatedSName != null)
+          {
+            translatedSName = this.RemoveDiacritics(translatedSName, this.SpecialCharsSupportedByGameFont);
+          }
+
+          nameNode->SetText(translatedSName);
         }
 
         var parentNode = talkAddon->GetNodeById(10);
@@ -104,7 +110,14 @@ namespace Echoglossian
         var charCount = this.translatedText.Length;
         textNode->FontSize = (byte)(charCount >= 350 ? 11 : (charCount >= 256 ? 12 : 14));
         textNode->SetWidth(parentNode->GetWidth());
-        textNode->SetText(this.translatedText);
+
+        var translatedTMessage = this.translatedText;
+        if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk && translatedTMessage != null)
+        {
+          translatedTMessage = this.RemoveDiacritics(translatedTMessage, this.SpecialCharsSupportedByGameFont);
+        }
+
+        textNode->SetText(translatedTMessage);
         textNode->ResizeNodeForCurrentText();
       }
       catch (Exception e)
