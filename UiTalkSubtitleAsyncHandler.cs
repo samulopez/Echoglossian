@@ -98,9 +98,16 @@ namespace Echoglossian
           return;
         }
 
-        textNode->SetText(translatedTalkSubtitleText);
-        textNode3->SetText(translatedTalkSubtitleText);
-        textNode4->SetText(translatedTalkSubtitleText);
+        var translTalkSubtitleText = translatedTalkSubtitleText;
+
+        if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk)
+        {
+          translTalkSubtitleText = this.RemoveDiacritics(translTalkSubtitleText, this.SpecialCharsSupportedByGameFont);
+        }
+
+        textNode->SetText(translTalkSubtitleText);
+        textNode3->SetText(translTalkSubtitleText);
+        textNode4->SetText(translTalkSubtitleText);
       }
       catch (Exception ex)
       {

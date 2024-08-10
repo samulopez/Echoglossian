@@ -316,6 +316,11 @@ namespace Echoglossian
         {
           string messageTranslatedText = this.Translate(messageTextToTranslate);
 
+          if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk)
+          {
+            messageTranslatedText = this.RemoveDiacritics(messageTranslatedText, this.SpecialCharsSupportedByGameFont);
+          }
+
           message = messageTranslatedText;
         }
         else
@@ -349,9 +354,9 @@ namespace Echoglossian
       {
         return;
       }
-#if DEBUG
-      using StreamWriter logStream = new(this.configDir + "GetToastLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new(this.configDir + "GetToastLog.txt", append: true);
+      #endif*/
 
       string messageTextToTranslate = message.TextValue;
       ToastMessage errorToastToHandle = this.FormatToastMessage("Error", message.TextValue);
@@ -378,14 +383,20 @@ namespace Echoglossian
             PluginLog.Debug("if not found and if not using imgui");
 #endif
             string translatedToastMessage = this.Translate(message.TextValue);
+
+            if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk)
+            {
+              translatedToastMessage = this.RemoveDiacritics(translatedToastMessage, this.SpecialCharsSupportedByGameFont);
+            }
+
             message = translatedToastMessage;
 
             ToastMessage translatedToastData = new ToastMessage("Error", messageTextToTranslate, LangIdentify(messageTextToTranslate),
               translatedToastMessage, langDict[languageInt].Code, this.configuration.ChosenTransEngine, DateTime.Now,
               DateTime.Now);
-#if DEBUG
-            logStream.WriteLineAsync($"Before Toast Messages table data insertion:  {translatedToastData}");
-#endif
+            /*#if DEBUG
+                        logStream.WriteLineAsync($"Before Toast Messages table data insertion:  {translatedToastData}");
+            #endif*/
             string result = this.InsertErrorToastMessageData(translatedToastData);
 #if DEBUG
             PluginLog.Debug($"Toast Message DB Insert operation result: {result}");
@@ -437,8 +448,17 @@ namespace Echoglossian
         {
 #if DEBUG
           PluginLog.Debug("if found and if not using imgui");
+
+
 #endif
-          message = this.FoundToastMessage.TranslatedToastMessage;
+          var foundToastMessage = this.FoundToastMessage.TranslatedToastMessage;
+
+          if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk)
+          {
+            foundToastMessage = this.RemoveDiacritics(foundToastMessage, this.SpecialCharsSupportedByGameFont);
+          }
+
+          message = foundToastMessage;
 #if DEBUG
           PluginLog.Error($"Text replacement - message found in DB: {message.TextValue} ");
 #endif
@@ -481,9 +501,9 @@ namespace Echoglossian
       {
         return;
       }
-#if DEBUG
-      using StreamWriter logStream = new(this.configDir + "GetNonErrorToastLog.txt", append: true);
-#endif
+      /*#if DEBUG
+            using StreamWriter logStream = new(this.configDir + "GetNonErrorToastLog.txt", append: true);
+      #endif*/
 
       string messageTextToTranslate = message.TextValue;
       ToastMessage toastToHandle = this.FormatToastMessage("NonError", message.TextValue);
@@ -510,14 +530,20 @@ namespace Echoglossian
             PluginLog.Debug("if not found and if not using imgui");
 #endif
             string translatedToastMessage = this.Translate(message.TextValue);
+
+            if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk)
+            {
+              translatedToastMessage = this.RemoveDiacritics(translatedToastMessage, this.SpecialCharsSupportedByGameFont);
+            }
+
             message = translatedToastMessage;
 
             ToastMessage translatedToastData = new ToastMessage("NonError", messageTextToTranslate, LangIdentify(messageTextToTranslate),
               translatedToastMessage, langDict[languageInt].Code, this.configuration.ChosenTransEngine, DateTime.Now,
               DateTime.Now);
-#if DEBUG
-            logStream.WriteLineAsync($"Before Toast Messages table data insertion:  {translatedToastData}");
-#endif
+            /*#if DEBUG
+                        logStream.WriteLineAsync($"Before Toast Messages table data insertion:  {translatedToastData}");
+            #endif*/
             string result = this.InsertOtherToastMessageData(translatedToastData);
 #if DEBUG
             PluginLog.Debug($"Toast Message DB Insert operation result: {result}");
@@ -570,7 +596,13 @@ namespace Echoglossian
 #if DEBUG
           PluginLog.Debug("if found and if not using imgui");
 #endif
-          message = this.FoundToastMessage.TranslatedToastMessage;
+          var foundToastMessage = this.FoundToastMessage.TranslatedToastMessage;
+
+          if (this.configuration.RemoveDiacriticsWhenUsingReplacementTalkBTalk)
+          {
+            foundToastMessage = this.RemoveDiacritics(foundToastMessage, this.SpecialCharsSupportedByGameFont);
+          }
+          message = foundToastMessage;
 #if DEBUG
           PluginLog.Error($"Text replacement - message found in DB: {message.TextValue} ");
 #endif

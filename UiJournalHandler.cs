@@ -440,8 +440,15 @@ namespace Echoglossian
           {
 #if DEBUG
             PluginLog.Debug($"Name from database: {questName->NodeText} -> {foundQuestPlate.TranslatedQuestName}");
-            questName->SetText(foundQuestPlate.TranslatedQuestName);
 #endif
+            var translQuestName = foundQuestPlate.TranslatedQuestName;
+            if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
+            {
+              translQuestName = this.RemoveDiacritics(foundQuestPlate.TranslatedQuestName, this.SpecialCharsSupportedByGameFont);
+            }
+
+            questName->SetText(translQuestName);
+
             this.translatedQuestNames.TryAdd(foundQuestPlate.TranslatedQuestName, true);
             continue;
           }
@@ -466,6 +473,11 @@ namespace Echoglossian
 #if DEBUG
           PluginLog.Debug($"Using QuestPlate Replace - QuestPlate DB Insert operation result: {result}");
 #endif
+          if (this.configuration.RemoveDiacriticsWhenUsingReplacementQuest)
+          {
+            translatedNameText = this.RemoveDiacritics(translatedNameText, this.SpecialCharsSupportedByGameFont);
+          }
+
           questName->SetText(translatedNameText);
           this.translatedQuestNames.TryAdd(translatedNameText, true);
         }
