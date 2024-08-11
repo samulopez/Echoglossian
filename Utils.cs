@@ -12,9 +12,10 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-
+using Dalamud.Game.Text;
 using Dalamud.Interface.ImGuiNotification;
 using Echoglossian.Properties;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
 
 namespace Echoglossian
 {
@@ -324,6 +325,19 @@ namespace Echoglossian
       return stringBuilder
           .ToString()
           .Normalize(NormalizationForm.FormC);
+    }
+
+    public unsafe void /*string */GetGameVersion()
+    {
+      // var gameVersion = Framework.Instance()->GameVersionString;
+      // ChatGuiInterface.Print(new XivChatEntry { Message = $"framework {gameVersion}" });
+
+      var gv = DManager.GameData.Repositories?["ffxiv"].Version;
+      // ChatGuiInterface.Print(new XivChatEntry { Message = $"repositories game version {gv}" });
+
+
+
+      /*return gameVersion;*/
     }
   }
 }

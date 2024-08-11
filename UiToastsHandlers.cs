@@ -20,7 +20,7 @@ namespace Echoglossian
   {
     private unsafe void ToastHandler(string toastName, int index)
     {
-      IntPtr toastByName = GameGui.GetAddonByName(toastName, index);
+      IntPtr toastByName = GameGuiInterface.GetAddonByName(toastName, index);
       if (toastByName != IntPtr.Zero)
       {
         AtkUnitBase* toastByNameMaster = (AtkUnitBase*)toastByName;
@@ -45,7 +45,7 @@ namespace Echoglossian
 
     private unsafe void QuestToastHandler(string questToastName, int index)
     {
-      IntPtr questToastByName = GameGui.GetAddonByName(questToastName, index);
+      IntPtr questToastByName = GameGuiInterface.GetAddonByName(questToastName, index);
       if (questToastByName != IntPtr.Zero)
       {
         AtkUnitBase* questToastByNameMaster = (AtkUnitBase*)questToastByName;
@@ -76,7 +76,7 @@ namespace Echoglossian
         return;
       }
 
-      IntPtr classChangeToastByName = GameGui.GetAddonByName(classChangeToastName, index);
+      IntPtr classChangeToastByName = GameGuiInterface.GetAddonByName(classChangeToastName, index);
 
       if (classChangeToastByName != IntPtr.Zero)
       {
@@ -191,7 +191,7 @@ namespace Echoglossian
 
     private unsafe void TextErrorToastHandler(string toastName, int index)
     {
-      IntPtr errorToastByName = GameGui.GetAddonByName(toastName, index);
+      IntPtr errorToastByName = GameGuiInterface.GetAddonByName(toastName, index);
 
       if (errorToastByName != IntPtr.Zero)
       {
@@ -228,7 +228,7 @@ namespace Echoglossian
 
     private unsafe void AreaToastHandler(string areaToastName, int index)
     {
-      IntPtr areaToastByName = GameGui.GetAddonByName(areaToastName, index);
+      IntPtr areaToastByName = GameGuiInterface.GetAddonByName(areaToastName, index);
       if (areaToastByName != IntPtr.Zero)
       {
         AtkUnitBase* areaToastByNameMaster = (AtkUnitBase*)areaToastByName;
@@ -253,7 +253,7 @@ namespace Echoglossian
 
     private unsafe void WideTextToastHandler(string wideTextToastName, int index)
     {
-      IntPtr wideTextToastByName = GameGui.GetAddonByName(wideTextToastName, index);
+      IntPtr wideTextToastByName = GameGuiInterface.GetAddonByName(wideTextToastName, index);
       if (wideTextToastByName != IntPtr.Zero)
       {
         AtkUnitBase* wideTextToastByNameMaster = (AtkUnitBase*)wideTextToastByName;
@@ -278,7 +278,7 @@ namespace Echoglossian
 
     private unsafe void AddonHandlers(string addonName, int index)
     {
-      IntPtr addonByName = GameGui.GetAddonByName(addonName, index);
+      IntPtr addonByName = GameGuiInterface.GetAddonByName(addonName, index);
       if (addonByName != IntPtr.Zero)
       {
         AtkUnitBase* addonByNameMaster = (AtkUnitBase*)addonByName;

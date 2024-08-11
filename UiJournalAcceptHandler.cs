@@ -40,7 +40,7 @@ namespace Echoglossian
         string questMessage = MemoryHelper.ReadSeStringAsString(out _, (nint)setupAtkValues[12].String);
 
 #if DEBUG
-        PluginLog.Debug($"Language: {ClientState.ClientLanguage.Humanize()}");
+        PluginLog.Debug($"Language: {ClientStateInterface.ClientLanguage.Humanize()}");
         PluginLog.Debug($"Quest name: {questName}");
         PluginLog.Debug($"Quest message: {questMessage}");
 #endif
@@ -64,7 +64,7 @@ namespace Echoglossian
           QuestPlate translatedQuestPlate = new(
             questName,
             questMessage,
-            ClientState.ClientLanguage.Humanize(),
+            ClientStateInterface.ClientLanguage.Humanize(),
             translatedQuestName,
             translatedQuestMessage,
             string.Empty,

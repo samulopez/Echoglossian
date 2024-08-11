@@ -16,7 +16,7 @@ namespace Echoglossian
 
     private unsafe void TalkHandler(string addonName, int index)
     {
-      IntPtr talk = GameGui.GetAddonByName(addonName, index);
+      IntPtr talk = GameGuiInterface.GetAddonByName(addonName, index);
       if (talk != IntPtr.Zero)
       {
         AtkUnitBase* talkMaster = (AtkUnitBase*)talk;

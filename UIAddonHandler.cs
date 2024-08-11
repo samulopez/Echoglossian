@@ -24,7 +24,7 @@ using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace Echoglossian
 {
-  internal class UIAddonHandler : IDisposable
+  internal class UiAddonHandler : IDisposable
   {
     private bool disposedValue;
     private CancellationTokenSource cts;
@@ -54,7 +54,7 @@ namespace Echoglossian
     private AddonRequestedUpdateArgs addonRequestedUpdateArgs = null;
     private AddonRefreshArgs addonRefreshArgs = null;
 
-    public UIAddonHandler(
+    public UiAddonHandler(
         Config configuration = default,
         ImFontPtr uiFont = default,
         bool fontLoaded = default,
@@ -64,7 +64,7 @@ namespace Echoglossian
       this.uiFont = uiFont;
       this.fontLoaded = fontLoaded;
       this.langToTranslateTo = langToTranslateTo;
-      this.clientLanguage = ClientState.ClientLanguage;
+      this.clientLanguage = ClientStateInterface.ClientLanguage;
       this.translationService = new TranslationService(configuration, PluginLog, new Sanitizer(this.clientLanguage));
       this.translations = new ConcurrentDictionary<int, TranslationEntry>();
       this.configDir = PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar;
@@ -255,7 +255,7 @@ namespace Echoglossian
 
       try
       {
-        var addon = GameGui.GetAddonByName(this.addonName, 1);
+        var addon = GameGuiInterface.GetAddonByName(this.addonName, 1);
         foundAddon = (AtkUnitBase*)addon;
         if (foundAddon == null)
         {
@@ -582,7 +582,7 @@ namespace Echoglossian
 
       try
       {
-        var addon = GameGui.GetAddonByName(this.addonName, 1);
+        var addon = GameGuiInterface.GetAddonByName(this.addonName, 1);
 
         PluginLog.Debug($"Addon {this.addonName} found in SetTranslationToAddon.");
         foundAddon = (AtkUnitBase*)addon;
@@ -804,7 +804,7 @@ namespace Echoglossian
 
       try
       {
-        var addon = GameGui.GetAddonByName(this.addonName, 1);
+        var addon = GameGuiInterface.GetAddonByName(this.addonName, 1);
 
         PluginLog.Debug($"Addon {this.addonName} found in SetTranslationToAddon.");
         foundAddon = (AtkUnitBase*)addon;

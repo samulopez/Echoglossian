@@ -14,11 +14,14 @@ using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Command;
 using Dalamud.Game.Text.Sanitizer;
 using Dalamud.Interface.Textures.TextureWraps;
+using FFXIVClientStructs.FFXIV.Client;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using Lumina.Data;
 
 namespace Echoglossian
 {
@@ -35,16 +38,19 @@ namespace Echoglossian
     public static ICommandManager CommandManager { get; private set; } = null!;
 
     [PluginService]
-    public static IFramework Framework { get; private set; } = null!;
+    public static IFramework FrameworkInterface { get; private set; } = null!;
 
     [PluginService]
-    public static IGameGui GameGui { get; private set; } = null!;
+    public static IGameGui GameGuiInterface { get; private set; } = null!;
 
     [PluginService]
-    public static IClientState ClientState { get; private set; } = null!;
+    public static IChatGui ChatGuiInterface { get; private set; } = null!;
 
     [PluginService]
-    public static IToastGui ToastGui { get; private set; } = null!;
+    public static IClientState ClientStateInterface { get; private set; } = null!;
+
+    [PluginService]
+    public static IToastGui ToastGuiInterface { get; private set; } = null!;
 
     [PluginService]
     public static IAddonEventManager EventManager { get; private set; } = null!;
@@ -128,9 +134,9 @@ namespace Echoglossian
 
     private AtkTextNodeBufferWrapper AtkTextNodeBufferWrapper;
 
-    private UIAddonHandler uiBattleTalkAddonHandler;
-    private UIAddonHandler uiTalkAddonHandler;
-    private UIAddonHandler uiTalkSubtitleHandler;
+    private UiAddonHandler uiBattleTalkAddonHandler;
+    private UiAddonHandler uiTalkAddonHandler;
+    private UiAddonHandler uiTalkSubtitleHandler;
 
     private TranslationService translationService;
 
@@ -139,6 +145,8 @@ namespace Echoglossian
     public List<ToastMessage> QuestToastsCache { get; set; }
 
     public List<ToastMessage> OtherToastsCache { get; set; }
+
+
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Echoglossian"/> class.
@@ -156,13 +164,11 @@ namespace Echoglossian
 
       sanitizer = PluginInterface.Sanitizer as Sanitizer;
 
-      // Resolver.Initialize();
-      // Resolver.GetInstance.SetupSearchSpace();
-      // Resolver.GetInstance.Resolve();
+
       langDict = this.languagesDictionary;
       identifier = Factory.Load($"{PluginInterface.AssemblyLocation.DirectoryName}{Path.DirectorySeparatorChar}Wiki82.profile.xml");
 
-      // Common = new XivCommonBase((DalamudPluginInterface)PluginInterface, Hooks.Talk | Hooks.BattleTalk);
+
       try
       {
         this.CreateOrUseDb();
@@ -214,7 +220,7 @@ namespace Echoglossian
       SelectedLanguage = this.languagesDictionary[this.configuration.Lang];
 
       // this.ListCultureInfos();
-      this.pixImage = TextureProvider.CreateFromImageAsync(Resources.pix).Result; // needs checking
+      this.pixImage = TextureProvider.CreateFromImageAsync(Resources.pix).Result;
       this.choiceImage = TextureProvider.CreateFromImageAsync(Resources.choice).Result;
       this.cutsceneChoiceImage = TextureProvider.CreateFromImageAsync(Resources.cutscenechoice).Result;
       this.talkImage = TextureProvider.CreateFromImageAsync(Resources.prttws).Result;
@@ -245,7 +251,7 @@ namespace Echoglossian
       this.LoadAllErrorToasts();
       this.LoadAllOtherToasts();
 
-      Framework.Update += this.Tick;
+      FrameworkInterface.Update += this.Tick;
 
       this.talkTranslationSemaphore = new SemaphoreSlim(1, 1);
       this.nameTranslationSemaphore = new SemaphoreSlim(1, 1);
@@ -260,19 +266,19 @@ namespace Echoglossian
       this.wideTextToastTranslationSemaphore = new SemaphoreSlim(1, 1);
       this.questToastTranslationSemaphore = new SemaphoreSlim(1, 1);
 
-      ToastGui.Toast += this.OnToast;
-      ToastGui.ErrorToast += this.OnErrorToast;
-      ToastGui.QuestToast += this.OnQuestToast;
+      ToastGuiInterface.Toast += this.OnToast;
+      ToastGuiInterface.ErrorToast += this.OnErrorToast;
+      ToastGuiInterface.QuestToast += this.OnQuestToast;
 
-      this.uiTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
-      this.uiBattleTalkAddonHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
-      this.uiTalkSubtitleHandler = new UIAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
+      this.uiTalkAddonHandler = new UiAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
+      this.uiBattleTalkAddonHandler = new UiAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
+      this.uiTalkSubtitleHandler = new UiAddonHandler(this.configuration, this.UiFont, this.FontLoaded, this.LangToTranslateTo);
 
       this.EgloAddonHandler();
 
       PluginInterface.UiBuilder.Draw += this.BuildUi;
 
-      /* if (ClientState.IsLoggedIn)
+      /* if (ClientStateInterface.IsLoggedIn)
        {
          this.ParseUi();
        }*/
@@ -291,9 +297,9 @@ namespace Echoglossian
 
     protected virtual void Dispose(bool disposing)
     {
-      ToastGui.Toast -= this.OnToast;
-      ToastGui.ErrorToast -= this.OnErrorToast;
-      ToastGui.QuestToast -= this.OnQuestToast;
+      ToastGuiInterface.Toast -= this.OnToast;
+      ToastGuiInterface.ErrorToast -= this.OnErrorToast;
+      ToastGuiInterface.QuestToast -= this.OnQuestToast;
 
       PluginInterface.UiBuilder.OpenConfigUi -= this.ConfigWindow;
 
@@ -354,7 +360,7 @@ namespace Echoglossian
         AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "_ToDoList", this.UiToDoListHandler);
       }
 
-      Framework.Update -= this.Tick;
+      FrameworkInterface.Update -= this.Tick;
 
       this.GlyphRangeConfigText?.Free();
       this.GlyphRangeMainText = null;
@@ -373,6 +379,11 @@ namespace Echoglossian
         return;
       }
 
+      if (ClientStateInterface.IsLoggedIn)
+      {
+        this.TranslateCharacterWindow();
+      }
+
       switch (this.configuration.UseImGuiForTalk || this.configuration.UseImGuiForBattleTalk ||
               this.configuration.UseImGuiForToasts)
       {
@@ -380,7 +391,7 @@ namespace Echoglossian
           return;
         case true:
           {
-            switch (ClientState.IsLoggedIn)
+            switch (ClientStateInterface.IsLoggedIn)
             {
               case true:
                 this.TextErrorToastHandler("_TextError", 1);

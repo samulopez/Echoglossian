@@ -14,7 +14,7 @@ namespace Echoglossian
   {
     private unsafe void BattleTalkHandler(string addonName, int index)
     {
-      IntPtr battleTalk = GameGui.GetAddonByName(addonName, index);
+      IntPtr battleTalk = GameGuiInterface.GetAddonByName(addonName, index);
       if (battleTalk != IntPtr.Zero)
       {
         AtkUnitBase* battleTalkMaster = (AtkUnitBase*)battleTalk;

@@ -150,7 +150,7 @@ namespace Echoglossian
         QuestPlate translatedQuestPlate = new(
           questName,
           questMessage,
-          ClientState.ClientLanguage.Humanize(),
+          ClientStateInterface.ClientLanguage.Humanize(),
           translatedQuestName,
           translatedQuestMessage,
           string.Empty,
@@ -329,7 +329,7 @@ namespace Echoglossian
           QuestPlate translatedQuestPlate = new(
             questName,
             questMessage,
-            ClientState.ClientLanguage.Humanize(),
+            ClientStateInterface.ClientLanguage.Humanize(),
             translatedQuestName,
             translatedQuestMessage,
             string.Empty,
@@ -372,7 +372,7 @@ namespace Echoglossian
         return;
       }
 #if DEBUG
-      PluginLog.Debug($"Language: {ClientState.ClientLanguage.Humanize()}");
+      PluginLog.Debug($"Language: {ClientStateInterface.ClientLanguage.Humanize()}");
       PluginLog.Debug($"Translate JournalDetail");
 #endif
 
@@ -397,7 +397,7 @@ namespace Echoglossian
       }
 
 #if DEBUG
-      PluginLog.Debug($"Language: {ClientState.ClientLanguage.Humanize()}");
+      PluginLog.Debug($"Language: {ClientStateInterface.ClientLanguage.Humanize()}");
       PluginLog.Debug($"Translate JournalQuests");
 #endif
       try
@@ -460,7 +460,7 @@ namespace Echoglossian
           QuestPlate translatedQuestPlate = new(
             questNameText,
             string.Empty,
-            ClientState.ClientLanguage.Humanize(),
+            ClientStateInterface.ClientLanguage.Humanize(),
             translatedNameText,
             string.Empty,
             string.Empty,

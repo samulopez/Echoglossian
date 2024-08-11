@@ -50,8 +50,8 @@ namespace Echoglossian
               TalkMessage translatedTalkData = new TalkMessage(
                  nameToTranslate,
                  textToTranslate,
-                 ClientState.ClientLanguage.Humanize(),
-                 ClientState.ClientLanguage.Humanize(),
+                 ClientStateInterface.ClientLanguage.Humanize(),
+                 ClientStateInterface.ClientLanguage.Humanize(),
                  nameTranslation,
                  textTranslation,
                  langDict[languageInt].Code,
@@ -80,7 +80,7 @@ namespace Echoglossian
 
       try
       {
-        var addon = GameGui.GetAddonByName("Talk");
+        var addon = GameGuiInterface.GetAddonByName("Talk");
         var talkAddon = (AtkUnitBase*)addon;
         if (talkAddon == null || !talkAddon->IsVisible)
         {
@@ -195,8 +195,8 @@ namespace Echoglossian
             TalkMessage translatedTalkData = new TalkMessage(
                nameToTranslate,
                textToTranslate,
-               ClientState.ClientLanguage.Humanize(),
-               ClientState.ClientLanguage.Humanize(),
+               ClientStateInterface.ClientLanguage.Humanize(),
+               ClientStateInterface.ClientLanguage.Humanize(),
                nameTranslation,
                textTranslation,
                langDict[languageInt].Code,
@@ -298,8 +298,8 @@ namespace Echoglossian
                 TalkMessage translatedTalkData = new TalkMessage(
                   nameToTranslate,
                   textToTranslate,
-                  ClientState.ClientLanguage.Humanize(),
-                  ClientState.ClientLanguage.Humanize(),
+                  ClientStateInterface.ClientLanguage.Humanize(),
+                  ClientStateInterface.ClientLanguage.Humanize(),
                   this.configuration.TranslateNpcNames ? this.currentNameTranslation : string.Empty,
                   this.currentTalkTranslation,
                   langDict[languageInt].Code,
@@ -377,7 +377,7 @@ namespace Echoglossian
         case AddonEvent.PreReceiveEvent:
           // to be sure we don't show the same text twice
 
-          var addon = GameGui.GetAddonByName("Talk");
+          var addon = GameGuiInterface.GetAddonByName("Talk");
           var talkAddon = (AtkUnitBase*)addon;
           if (talkAddon == null || !talkAddon->IsVisible)
           { return; }

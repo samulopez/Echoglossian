@@ -68,7 +68,7 @@ namespace Echoglossian
           QuestPlate translatedQuestPlate = new(
             questNameText,
             string.Empty,
-            ClientState.ClientLanguage.Humanize(),
+            ClientStateInterface.ClientLanguage.Humanize(),
             translatedNameText,
             string.Empty,
             string.Empty,

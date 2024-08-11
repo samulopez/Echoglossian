@@ -17,7 +17,7 @@ namespace Echoglossian
 
     public void ParseUi()
     {
-      ExcelSheet<Addon> uiStuffz = DManager.GetExcelSheet<Addon>(ClientState.ClientLanguage);
+      ExcelSheet<Addon> uiStuffz = DManager.GetExcelSheet<Addon>(ClientStateInterface.ClientLanguage);
 
       var addonList = uiStuffz?.ToList();
 

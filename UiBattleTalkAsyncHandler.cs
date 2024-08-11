@@ -34,7 +34,7 @@ namespace Echoglossian
         {
           for (int i = 0; i < 5; i++)
           {
-            var addon = GameGui.GetAddonByName("_BattleTalk");
+            var addon = GameGuiInterface.GetAddonByName("_BattleTalk");
             var battleTalkAddon = (AtkUnitBase*)addon;
             if (battleTalkAddon == null || !battleTalkAddon->IsVisible)
             {
@@ -69,9 +69,9 @@ namespace Echoglossian
             this.lastBattleTalkMessage = new BattleTalkMessage(
                   senderName: nameToTranslate,
                   originalBattleTalkMessage: textToTranslate,
-                  originalSenderNameLang: ClientState.ClientLanguage.Humanize(),
+                  originalSenderNameLang: ClientStateInterface.ClientLanguage.Humanize(),
                   translatedBattleTalkMessage: string.Empty,
-                  originalBattleTalkMessageLang: ClientState.ClientLanguage.Humanize(),
+                  originalBattleTalkMessageLang: ClientStateInterface.ClientLanguage.Humanize(),
                   translationLang: langDict[languageInt].Code,
                   translationEngine: this.configuration.ChosenTransEngine,
                   translatedSenderName: string.Empty,
@@ -111,7 +111,7 @@ namespace Echoglossian
 
       try
       {
-        var addon = GameGui.GetAddonByName("_BattleTalk");
+        var addon = GameGuiInterface.GetAddonByName("_BattleTalk");
         var battleTalkAddon = (AtkUnitBase*)addon;
         if (battleTalkAddon == null || !battleTalkAddon->IsVisible)
         {
@@ -192,7 +192,7 @@ namespace Echoglossian
 
       try
       {
-        var addon = GameGui.GetAddonByName("_BattleTalk");
+        var addon = GameGuiInterface.GetAddonByName("_BattleTalk");
         var battleTalkAddon = (AtkUnitBase*)addon;
         if (battleTalkAddon == null || !battleTalkAddon->IsVisible)
         {
@@ -332,7 +332,7 @@ namespace Echoglossian
 
       try
       {
-        var addon = GameGui.GetAddonByName("_BattleTalk");
+        var addon = GameGuiInterface.GetAddonByName("_BattleTalk");
         var battleTalkAddon = (AtkUnitBase*)addon;
         if (battleTalkAddon == null || !battleTalkAddon->IsVisible)
         {

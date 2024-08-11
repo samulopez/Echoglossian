@@ -39,7 +39,7 @@ namespace Echoglossian
             string textTranslation = this.Translate(textToTranslate);
 
             TalkSubtitleMessage translatedTalkSubtitleData = new TalkSubtitleMessage(
-              textToTranslate, ClientState.ClientLanguage.Humanize(), textTranslation, langDict[languageInt].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
+              textToTranslate, ClientStateInterface.ClientLanguage.Humanize(), textTranslation, langDict[languageInt].Code, this.configuration.ChosenTransEngine, DateTime.Now, DateTime.Now);
 
             string result = InsertTalkSubtitleData(translatedTalkSubtitleData);
             PluginLog.Debug("TalkSubtitle Insert Result: " + result);
@@ -73,7 +73,7 @@ namespace Echoglossian
 
       try
       {
-        var addon = GameGui.GetAddonByName("TalkSubtitle");
+        var addon = GameGuiInterface.GetAddonByName("TalkSubtitle");
         if (addon == IntPtr.Zero)
         {
           return;
@@ -246,7 +246,7 @@ namespace Echoglossian
 
     private unsafe void TalkSubtitleHandler(string addonName, int index)
     {
-      IntPtr talkSubtitle = GameGui.GetAddonByName(addonName, index);
+      IntPtr talkSubtitle = GameGuiInterface.GetAddonByName(addonName, index);
       if (talkSubtitle != IntPtr.Zero)
       {
         AtkUnitBase* talkSubtitleMaster = (AtkUnitBase*)talkSubtitle;
