@@ -20,6 +20,7 @@ using Humanizer;
 using ImGuiNET;
 
 using static Echoglossian.Echoglossian;
+
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace Echoglossian

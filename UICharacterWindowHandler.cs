@@ -5,33 +5,27 @@
 
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using Newtonsoft.Json;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace Echoglossian
 {
   public partial class Echoglossian
   {
+
+    public bool GatheringCharacterWindowAtkValuesComplete = false;
+    public Dictionary<int, string> CharacterWindowAtkValues = new Dictionary<int, string>();
+    public string CharacterWindowAtkValuesString = string.Empty; // New string to store the concatenated output
+
     private unsafe void TranslateCharacterWindow()
     {
-      /*      var characterW = GameGuiInterface.GetAddonByName("Character");
-
-            var characterWindowA = (AtkUnitBase*)characterW;
-
-            if (characterWindowA == null || !characterWindowA->IsVisible)
-            {
-              return;
-            }
-
-            PluginLog.Debug("Character window is visible using Method A");*/
-      var characterWindowAtkValues = new Dictionary<int, string>();
-
-
       var atkStg = AtkStage.Instance();
       var characterWB = atkStg->RaptureAtkUnitManager->GetAddonByName("Character");
 
@@ -40,41 +34,42 @@ namespace Echoglossian
         return;
       }
 
-      // PluginLog.Debug("Character window is visible using Method B");
-
       var cwAtkVals = characterWB->AtkValues;
+      var cwAtkValsCount = characterWB->AtkValuesCount;
 
       if (cwAtkVals == null)
       {
         return;
       }
 
-      for (var i = 0; i < 100; i++)
-      {
-        if (cwAtkVals[i].Type == ValueType.String)
-        {
-          var cwAtkValStr = cwAtkVals[i].String;
-          if (cwAtkValStr != null)
+      // Use LINQ to gather values into the dictionary
+      this.CharacterWindowAtkValues = Enumerable.Range(0, cwAtkValsCount)
+          .Where(i => cwAtkVals[i].Type == ValueType.String)
+          .Select(i => new
           {
-            var cwAtkValStrVal = MemoryHelper.ReadSeStringAsString(out _, (nint)cwAtkValStr);
-            if (cwAtkValStrVal != null)
-            {
-              characterWindowAtkValues.Add(i, cwAtkValStrVal);
-            }
-          }
-        }
-      }
+            Index = i,
+            Value = MemoryHelper.ReadSeStringAsString(out _, (nint)cwAtkVals[i].String),
+          })
+          .Where(x => x.Value != null)
+          .ToDictionary(x => x.Index, x => x.Value);
 
-      if (characterWindowAtkValues.Count > 0)
+      if (this.CharacterWindowAtkValues.Count > 0)
       {
-        foreach (var kvp in characterWindowAtkValues)
-        {
-          PluginLog.Debug($"Character window AtkValue: {kvp.Key} - {kvp.Value}");
-        }
+        string jsonOutput = JsonConvert.SerializeObject(this.CharacterWindowAtkValues, Formatting.Indented);
+        PluginLog.Debug($"Character window AtkValues: {jsonOutput}");
+
+        // Concatenate key-value pairs into a single string
+        this.CharacterWindowAtkValuesString = string.Join("|", this.CharacterWindowAtkValues.Select(kvp => $"{kvp.Key}|{kvp.Value}"));
       }
 
+      bool isGatheringComplete = this.CharacterWindowAtkValues.Count > 0;
+      this.GatheringCharacterWindowAtkValuesComplete = isGatheringComplete;
 
-
+      if (isGatheringComplete)
+      {
+        PluginLog.Debug("Finished gathering all Character window AtkValues.");
+        PluginLog.Debug($"Character window AtkValues string: {this.CharacterWindowAtkValuesString}");
+      }
     }
   }
 }

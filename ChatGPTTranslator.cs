@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using Dalamud.Plugin.Services;
 using OpenAI.Chat;
 
@@ -59,7 +60,7 @@ namespace Echoglossian
 
         var messages = new List<ChatMessage>
         {
-          ChatMessage.CreateUserMessage(prompt)
+          ChatMessage.CreateUserMessage(prompt),
         };
 
         ChatCompletion completion = await this.chatClient.CompleteChatAsync(messages, chatCompletionOptions);

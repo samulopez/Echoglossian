@@ -379,7 +379,7 @@ namespace Echoglossian
         return;
       }
 
-      if (ClientStateInterface.IsLoggedIn)
+      if (ClientStateInterface.IsLoggedIn && !this.GatheringCharacterWindowAtkValuesComplete)
       {
         this.TranslateCharacterWindow();
       }
