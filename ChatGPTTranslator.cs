@@ -22,10 +22,27 @@ namespace Echoglossian
 
     public ChatGPTTranslator(IPluginLog pluginLog, string apiKey, string model = "gpt-4o-mini")
     {
-      this.chatClient = new ChatClient(model, apiKey);
       this.pluginLog = pluginLog;
       this.model = model;
       this.temperature = 0.1f;
+
+      if (string.IsNullOrWhiteSpace(apiKey))
+      {
+        this.pluginLog.Warning("API Key is empty or invalid. ChatGPT transaltion will not be available.");
+        this.chatClient = null;
+      }
+      else
+      {
+        try
+        {
+          this.chatClient = new ChatClient(model, apiKey);
+        }
+        catch (Exception ex)
+        {
+          this.pluginLog.Error($"Failed to initialize GPT ChatClient: {ex.Message}");
+          this.chatClient = null;
+        }
+      }
     }
 
     public string Translate(string text, string sourceLanguage, string targetLanguage)
@@ -35,6 +52,12 @@ namespace Echoglossian
 
     public async Task<string> TranslateAsync(string text, string sourceLanguage, string targetLanguage)
     {
+
+      if (this.chatClient == null)
+      {
+        return "[ChatGPT translation unavailable. Please check your API key.]";
+      }
+
       string cacheKey = $"{text}_{sourceLanguage}_{targetLanguage}";
       if (this.translationCache.TryGetValue(cacheKey, out string cachedTranslation))
       {
@@ -44,8 +67,6 @@ namespace Echoglossian
       string prompt = @$"As a professional translator and cultural expert, translate the following text from {sourceLanguage} to {targetLanguage}. 
                          Your translation should sound natural and localized, as if it were originally written in {targetLanguage}. 
                          Consider cultural nuances, idiomatic expressions, and context to ensure the translation resonates with native {targetLanguage} speakers.
-
-                          Important: The final translation MUST NOT exceed 256 characters. If the initial translation is longer, carefully adapt and shorten it while preserving the core meaning and context.
 
                           Text to translate: ""{text}""
 
@@ -68,26 +89,10 @@ namespace Echoglossian
 
         translatedText = translatedText.Trim('"');
 
-        if (translatedText.Length > 256)
-        {
-          prompt = @$"The following translation exceeds 256 characters. Please adapt and shorten it to fit within 256 characters while preserving the core meaning and context:
-
-                    {translatedText}
-
-                    Provide only the adapted translation, without any explanations, additional comments, or quotation marks.";
-
-          completion = await this.chatClient.CompleteChatAsync(prompt);
-          translatedText = completion.ToString().Trim().Trim('"');
-        }
-
-        if (!string.IsNullOrEmpty(translatedText) && translatedText.Length <= 350)
+        if (!string.IsNullOrEmpty(translatedText))
         {
           this.translationCache[cacheKey] = translatedText;
           return translatedText;
-        }
-        else
-        {
-          return $"[Translation Error: Exceeded character limit ({translatedText.Length} characters)]";
         }
       }
       catch (Exception ex)
