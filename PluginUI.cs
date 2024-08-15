@@ -622,7 +622,7 @@ public partial class Echoglossian
             }
 
             var chatGptApiKey = this.configuration.ChatGptApiKey;
-            if (ImGui.InputText(Resources.ChatGptApiKey, ref chatGptApiKey, 100))
+            if (ImGui.InputText(Resources.ChatGptApiKey, ref chatGptApiKey, 300))
             {
               saveConfig = true;
               this.configuration.ChatGptApiKey = chatGptApiKey;
