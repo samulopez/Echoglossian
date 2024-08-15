@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -345,21 +346,16 @@ namespace Echoglossian
 
     public Dictionary<int, string> ParseStringToDictionary(string input)
     {
-      // input string nust obey to this format "key1|value1|key2|value2|key3|value3|..."
-      var dictionary = new Dictionary<int, string>();
-
-      // Split the input string by the '|' character
-      var parts = input.Split('|');
-
-      // Iterate over the parts in pairs of key and value
-      for (int i = 0; i < parts.Length; i += 2)
-      {
-        if (int.TryParse(parts[i], out int key) && i + 1 < parts.Length)
-        {
-          string value = parts[i + 1];
-          dictionary[key] = value;
-        }
-      }
+      // input string must obey this format "key1|value1|key2|value2|key3|value3|..."
+      var dictionary = input
+          .Split('|')
+          .Select((value, index) => new { value, index })
+          .GroupBy(x => x.index / 2)
+          .Where(g => int.TryParse(g.First().value, out _))
+          .ToDictionary(
+              g => int.Parse(g.First().value),
+              g => g.Skip(1).First().value
+          );
 
       // Output the dictionary as JSON
       string jsonOutput = JsonConvert.SerializeObject(dictionary, Formatting.Indented);
