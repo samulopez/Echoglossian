@@ -22,6 +22,7 @@ using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using Lumina.Data;
+using FFXIVClientStructs.FFXIV.Client.Game.Event;
 
 namespace Echoglossian
 {

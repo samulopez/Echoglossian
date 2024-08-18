@@ -14,6 +14,7 @@ namespace Echoglossian.EFCoreSqlite
 {
   public class EchoglossianDbContext : DbContext
   {
+    public DbSet<GameWindow> GameWindow { get; set; }
     public DbSet<TalkSubtitleMessage> TalkSubtitleMessage { get; set; }
 
     public DbSet<ToastMessage> ToastMessage { get; set; }
@@ -38,10 +39,13 @@ namespace Echoglossian.EFCoreSqlite
     /// <summary>
     /// Initializes a new instance of the <see cref="EchoglossianDbContext"/> class.
     /// </summary>
-    /// <param name="configDir"></param>
+    /// <param name="configDir">PluginConfigs directory</param>
     public EchoglossianDbContext(string configDir)
     {
       this.DbPath = $"{configDir}Echoglossian.db";
+
+      Echoglossian.PluginLog.Debug($"DBPath: {this.DbPath}");
+
 #if DEBUG
       // this.LogStream = new StreamWriter($"{configDir}DBContextLog.txt", append: true);
       // Echoglossian.PluginLog.Debug($"DBPath {this.DbPath}");

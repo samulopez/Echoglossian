@@ -22,22 +22,19 @@ namespace Echoglossian.EFCoreSqlite.Models.Journal
     public string QuestId { get; set; }
 
     [Required]
-    [MaxLength(200)]
+
     public string QuestName { get; set; }
 
     [Required]
-    [MaxLength(2500)]
     public string OriginalQuestMessage { get; set; }
 
     [Required]
     public string OriginalLang { get; set; }
 
     [Required]
-    [MaxLength(200)]
     public string TranslatedQuestName { get; set; }
 
     [Required]
-    [MaxLength(2500)]
     public string TranslatedQuestMessage { get; set; }
 
     [Required]

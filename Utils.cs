@@ -17,7 +17,9 @@ using System.Text.RegularExpressions;
 using Dalamud.Game.Text;
 using Dalamud.Interface.ImGuiNotification;
 using Echoglossian.Properties;
+using FFXIVClientStructs.FFXIV.Client.Game.Event;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using Lumina;
 using Newtonsoft.Json;
 
 namespace Echoglossian
@@ -362,6 +364,27 @@ namespace Echoglossian
       PluginLog.Debug($"Parsed Dictionary JSON: {jsonOutput}");
 
       return dictionary;
+    }
+
+    public unsafe Tuple<bool, int> IsInInstance()
+    {
+      var icDirector = EventFramework.Instance() != null ? EventFramework.Instance()->GetInstanceContentDirector() : null;
+
+      var isInstanceContent = icDirector != null && icDirector->InstanceContentType != 0;
+
+      if (isInstanceContent)
+      {
+        PluginLog.Debug($"IsInstance: {isInstanceContent}, InstanceContentType: {icDirector->InstanceContentType}");
+      }
+
+      return new Tuple<bool, int>(isInstanceContent, (int)icDirector->InstanceContentType);
+    }
+
+    public bool DisableTranslationAccordingToState()
+    {
+      var state = ClientStateInterface.IsPvP || ClientStateInterface.IsPvPExcludingDen;
+
+      return state;
     }
   }
 }

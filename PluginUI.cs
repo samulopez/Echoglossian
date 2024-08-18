@@ -621,11 +621,10 @@ public partial class Echoglossian
               this.config = false;
             }
 
-            var chatGptApiKey = this.configuration.ChatGptApiKey;
-            if (ImGui.InputText(Resources.ChatGptApiKey, ref chatGptApiKey, 300))
+            ImGui.Spacing();
+
+            if (ImGui.InputText(Resources.ChatGptApiKey, ref this.configuration.ChatGptApiKey, 400))
             {
-              saveConfig = true;
-              this.configuration.ChatGptApiKey = chatGptApiKey;
               this.translationService = new TranslationService(this.configuration, PluginLog, sanitizer);
             }
 

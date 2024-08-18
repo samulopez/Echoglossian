@@ -16,7 +16,6 @@ namespace Echoglossian.EFCoreSqlite.Models
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(400)]
     public string OriginalLocationName { get; set; }
 
     [Required]

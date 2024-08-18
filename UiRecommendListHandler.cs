@@ -186,6 +186,12 @@ namespace Echoglossian
 #if DEBUG
       PluginLog.Debug($"UiRecommendListHandler AddonEvent: {type} {args.AddonName}");
 #endif
+
+      if (this.DisableTranslationAccordingToState())
+      {
+        return;
+      }
+
       if (!this.configuration.TranslateJournal)
       {
         return;

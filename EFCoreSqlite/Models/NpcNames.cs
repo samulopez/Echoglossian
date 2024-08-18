@@ -16,13 +16,11 @@ namespace Echoglossian.EFCoreSqlite.Models
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(400)]
     public string OriginalNpcName { get; set; }
 
     [Required]
     public string OriginalNpcNameLang { get; set; }
 
-    [MaxLength(400)]
     public string TranslatedNpcName { get; set; }
 
     [Required]

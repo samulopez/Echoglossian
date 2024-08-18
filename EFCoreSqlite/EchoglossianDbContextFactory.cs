@@ -17,7 +17,7 @@ namespace Echoglossian.EFCoreSqlite
       string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
       string fullPath = Path.Combine(appDataPath, "XIVLauncher", "pluginConfigs", "Echoglossian");
 
-      var configDir = fullPath; /*Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar;*/
+      var configDir = fullPath + Path.DirectorySeparatorChar; /*Echoglossian.PluginInterface.GetPluginConfigDirectory() + Path.DirectorySeparatorChar;*/
       return new EchoglossianDbContext(configDir);
     }
   }

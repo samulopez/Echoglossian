@@ -99,7 +99,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:Echoglossian.EFCoreSqlite.EchoglossianDbContext"/> class.
             </summary>
-            <param name="configDir"></param>
+            <param name="configDir">PluginConfigs directory</param>
         </member>
         <member name="T:Echoglossian.EFCoreSqlite.Migrations.EchoglossianDBupd">
             <inheritdoc />
@@ -149,6 +149,20 @@
             <param name="translatedBattleTalkMessage"></param>
             <param name="translationLang"></param>
             <param name="translationEngine"></param>
+            <param name="createdDate"></param>
+            <param name="updatedDate"></param>
+        </member>
+        <member name="M:Echoglossian.EFCoreSqlite.Models.GameWindow.#ctor(System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.DateTime,System.Nullable{System.DateTime})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Echoglossian.EFCoreSqlite.Models.GameWindow"/> class.
+            </summary>
+            <param name="windowAddonName"></param>
+            <param name="originalWindowStrings"></param>
+            <param name="originalWindowStringsLang"></param>
+            <param name="translatedWindowStrings"></param>
+            <param name="translationLang"></param>
+            <param name="translationEngine"></param>
+            <param name="gameVersion"></param>
             <param name="createdDate"></param>
             <param name="updatedDate"></param>
         </member>

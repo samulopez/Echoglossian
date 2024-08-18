@@ -16,11 +16,9 @@ namespace Echoglossian.EFCoreSqlite.Models
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(100)]
     public string SenderName { get; set; }
 
     [Required]
-    [MaxLength(400)]
     public string OriginalBattleTalkMessage { get; set; }
 
     [Required]
@@ -29,10 +27,8 @@ namespace Echoglossian.EFCoreSqlite.Models
     [Required]
     public string OriginalBattleTalkMessageLang { get; set; }
 
-    [MaxLength(100)]
     public string TranslatedSenderName { get; set; }
 
-    [MaxLength(400)]
     public string TranslatedBattleTalkMessage { get; set; }
 
     [Required]

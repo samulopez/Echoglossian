@@ -12,6 +12,7 @@ using Dalamud.Game.Gui.Toast;
 using Dalamud.Game.Text.SeStringHandling;
 using Echoglossian.EFCoreSqlite.Models;
 using Echoglossian.Properties;
+using FFXIVClientStructs.FFXIV.Client.Game.Event;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace Echoglossian
@@ -301,8 +302,14 @@ namespace Echoglossian
       }
     }
 
-    private void OnQuestToast(ref SeString message, ref QuestToastOptions options, ref bool ishandled)
+    private unsafe void OnQuestToast(ref SeString message, ref QuestToastOptions options, ref bool ishandled)
     {
+
+      if (this.DisableTranslationAccordingToState())
+      {
+        return;
+      }
+
       if (!this.configuration.TranslateToast || !this.configuration.TranslateQuestToast || !this.configuration.TranslateWideTextToast)
       {
         return;
@@ -350,13 +357,20 @@ namespace Echoglossian
 
     private void OnErrorToast(ref SeString message, ref bool ishandled)
     {
+      if (this.DisableTranslationAccordingToState())
+      {
+        return;
+      }
+
+      if (!this.configuration.TranslateToast)
+      {
+        return;
+      }
+
       if (!this.configuration.TranslateErrorToast)
       {
         return;
       }
-      /*#if DEBUG
-            using StreamWriter logStream = new(this.configDir + "GetToastLog.txt", append: true);
-      #endif*/
 
       string messageTextToTranslate = message.TextValue;
       ToastMessage errorToastToHandle = this.FormatToastMessage("Error", message.TextValue);
@@ -497,13 +511,15 @@ namespace Echoglossian
 
     private void OnToast(ref SeString message, ref ToastOptions options, ref bool ishandled)
     {
+      if (this.DisableTranslationAccordingToState())
+      {
+        return;
+      }
+
       if (!this.configuration.TranslateToast)
       {
         return;
       }
-      /*#if DEBUG
-            using StreamWriter logStream = new(this.configDir + "GetNonErrorToastLog.txt", append: true);
-      #endif*/
 
       string messageTextToTranslate = message.TextValue;
       ToastMessage toastToHandle = this.FormatToastMessage("NonError", message.TextValue);
